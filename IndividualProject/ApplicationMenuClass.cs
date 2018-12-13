@@ -23,7 +23,7 @@ namespace IndividualProject
                     break;
 
                 case ConsoleKey.D2:
-                    CreateNewAccountClass.CreateNewAccount();
+                    CreateNewAccountClass.CreateNewAccountRequest();
                     break;
             }
         }
