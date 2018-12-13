@@ -14,3 +14,5 @@ SELECT username, passphrase
 FROM LoginCredentials
 
 SELECT * FROM vShowLoginCredentials
+
+CREATE PROCEDURE AddNewUserRequest

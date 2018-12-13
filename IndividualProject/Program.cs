@@ -11,7 +11,8 @@ namespace IndividualProject
     {
         static void Main(string[] args)
         {
-            ConnectToServerClass.UserLoginCredentials();
+            ApplicationMenuClass.LoginScreen();
+            //ConnectToServerClass.LoginOrRegisterAccount();
 
             Console.ReadKey();
         }

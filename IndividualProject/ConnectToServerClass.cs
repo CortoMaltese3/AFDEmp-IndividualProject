@@ -9,21 +9,42 @@ namespace IndividualProject
 {
     static class ConnectToServerClass
     {
+        //public static void LoginOrRegisterAccount()
+        //{
+        //    Console.Write("Press '1' to login with your credentials or '2' to create a new account: ");
+        //    ConsoleKey loginOrRegisterInput = Console.ReadKey().Key;
+
+        //    switch (loginOrRegisterInput)
+        //    {
+        //        case ConsoleKey.D1:
+        //            UserLoginCredentials();
+        //            break;
+
+        //        case ConsoleKey.D2:
+
+        //            break;
+        //    }
+        //}
         public static void UserLoginCredentials()
         {
-            var connection = new SqlConnection($"Server=localhost; Database = Project1_Individual; User Id = {UsernameInput()}; Password = {PassphraseInput()}");
+            string username = UsernameInput();
+            string passphrase = PassphraseInput();
+            var connectionString = new SqlConnection($"Server=localhost; Database = Project1_Individual; User Id = {username}; Password = {passphrase}");
             byte loginFailCount = 0;
             while (loginFailCount < 2)
             {
-                if (TestConnectionToSqlServer(connection))
+                if (TestConnectionToSqlServer(connectionString))
                 {
-                    Console.WriteLine("Connection Established!");
+                    Console.WriteLine($"Connection Established! Weclome back {username}!");
+                    return;
                 }
                 else
                 {
                     Console.WriteLine($"You have {2 - loginFailCount} attempts available");
                     loginFailCount++;
-                    connection = new SqlConnection($"Server=localhost; Database = Project1_Individual; User Id = {UsernameInput()}; Password = {PassphraseInput()}");
+                    username = UsernameInput();
+                    passphrase = PassphraseInput();
+                    connectionString = new SqlConnection($"Server=localhost; Database = Project1_Individual; User Id = {username}; Password = {passphrase}");
                 }
             }
             if (loginFailCount == 2)
@@ -32,15 +53,15 @@ namespace IndividualProject
             }
         }
 
-        public static bool TestConnectionToSqlServer(this SqlConnection connection)
+        public static bool TestConnectionToSqlServer(this SqlConnection connectionString)
         {
             Console.WriteLine("Attempting connection to server...");
             //TODO increase sleap time to 3000, maybe try to find dots blinking
             System.Threading.Thread.Sleep(1000);
             try
             {
-                connection.Open();
-                connection.Close();
+                connectionString.Open();
+                connectionString.Close();
             }
             catch (SqlException e)
             {
@@ -52,7 +73,7 @@ namespace IndividualProject
 
         public static string UsernameInput()
         {
-            Console.Write("username: ");
+            Console.Write("\r\nusername: ");
             string usernameInput = Console.ReadLine();
             while (usernameInput.Length > 20)
             {
