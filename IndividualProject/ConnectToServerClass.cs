@@ -9,6 +9,30 @@ namespace IndividualProject
 {
     static class ConnectToServerClass
     {
+        public static void UserInputCredentials()
+        {
+            Console.Write("username: ");
+            string usernameInput = Console.ReadLine();
+            while (usernameInput.Length > 20)
+            {
+                Console.Write("username cannot be longer than 20 characters");
+                usernameInput = Console.ReadLine();
+            }
+
+            Console.WriteLine("passphrase: ");
+            string passphraseInput = Console.ReadLine();
+            while (passphraseInput.Length > 20)
+            {
+                Console.WriteLine("passphrase cannot be longer than 20 characters");
+                passphraseInput = Console.ReadLine();
+            }
+
+            if (usernameInput == "admin" && passphraseInput == "admin")
+            {
+                TestConnectionToServer();
+            }
+        }
+
         public static bool SqlServerAvailable(this SqlConnection connection)
         {
             Console.WriteLine("Attempting connection to server...");
@@ -26,30 +50,10 @@ namespace IndividualProject
             return true;
         }
 
-        public static bool UsernameAndPassphraseCheck()
-        {
-            Console.WriteLine("Press '1' to login with your credentials or '2' to create a new account: ");
-            ConsoleKey loginOrRegisterInput = Console.ReadKey().Key;
-
-            switch (loginOrRegisterInput)
-            {
-                case ConsoleKey.D1:
-
-                    break;
-
-
-            }
-
-            
-        }
-
-        public static void 
-
-
-        public static void check()
+        public static void TestConnectionToServer()
         {
             //TODO : Check if server must be localhost
-            var connection = new SqlConnection($"Server=localhost; Database = Project1_Individual; User Id = {username}; Password = {passphrase}");
+            var connection = new SqlConnection($"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin");
             if (connection.SqlServerAvailable())
             {
                 Console.WriteLine("Connection Established!");
