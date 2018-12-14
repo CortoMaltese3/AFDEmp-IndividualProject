@@ -12,7 +12,6 @@ namespace IndividualProject
         static void Main(string[] args)
         {
             ApplicationMenuClass.LoginScreen();
-            //ConnectToServerClass.LoginOrRegisterAccount();
 
             Console.ReadKey();
         }

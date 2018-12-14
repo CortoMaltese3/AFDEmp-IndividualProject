@@ -1,71 +1,79 @@
 ﻿using System;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 
 namespace IndividualProject
 {
     class CreateNewAccountClass
     {
-        
-
-        public static void CreateNewAccountRequest()
+        internal static void CreateNewAccountRequest()
         {
-            var path = @"C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\NewUserRequest.txt";
-            //try
-            //{
-            //    File.Exists(path);
-            //}
-            //catch (DirectoryNotFoundException e)
-            //{
-            //    Console.WriteLine(e.Message);
-            //}
+            //string path = @"C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\NewUserRequest.txt";
             try
             {
                 Console.WriteLine("\r\nChoose your username and password. Both must be limited to 20 characters");
-                string username = ConnectToServerClass.UsernameInput();
-                string passphrase = ConnectToServerClass.PassphraseInput();
-                while (CheckUsernameAvailability(username) != 0)
+                string username = UserInputControlClass.UsernameInput();
+                string passphrase = UserInputControlClass.PassphraseInput();
+                while (CheckUsernameAvailabilityInDatabase(username) == false)
                 {
-                    Console.WriteLine("This username is already in use. Choose a different one");
-                    username = ConnectToServerClass.UsernameInput();
+                    username = UserInputControlClass.UsernameInput();
+                    passphrase = UserInputControlClass.PassphraseInput();
+                    CheckUsernameAvailabilityInDatabase(username); 
                 }
 
-                //FileStream NewUserRequest = File.OpenWrite(path);
-                //creates a file and writes collection of string (array) and closes the File
-                //File.WriteAllLines(path, new string[] {$"username: {username}", $"passphrase: {passphrase}" });
-                //NewUserRequest.Write(new string[] { $"username: {username}", $"passphrase: {passphrase}" });
-                //NewUserRequest.Close();
-                //StreamWriter NewUserRequest = new StreamWriter(path, true);
-
-                //check why catch fails, it creates a new file if it doesnt exist
-
-                using (StreamWriter NewUserRequest = File.AppendText(path))
-                {
-                    NewUserRequest.WriteLine($"username: {username}");
-                    NewUserRequest.WriteLine($"password: {passphrase}");
-                    NewUserRequest.WriteLine();
-                }
+                CheckUsernameAvailabilityInPendingList(username, passphrase);
             }
-            catch (DirectoryNotFoundException e)
+
+            catch (DirectoryNotFoundException d)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine(d.Message);
             }
-
-            Console.WriteLine("Your Account Request is Pending. Please wait for the administrator to grant you access.");
         }
 
-        public static int CheckUsernameAvailability(string usernameCheck)
+        public static bool CheckUsernameAvailabilityInDatabase(string usernameCheck)
         {
             //TODO : Check if this is a vulnerability
-            var connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
+            string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
             using (SqlConnection dbcon = new SqlConnection(connectionString))
             {
                 dbcon.Open();
-
                 SqlCommand checkUsername = new SqlCommand($"SELECT COUNT(*) FROM LoginCredentials WHERE (username = '{usernameCheck}')", dbcon);
                 int UserCount = (int)checkUsername.ExecuteScalar();
-                return UserCount;
+                if (UserCount != 0)
+                {
+                    Console.WriteLine("This username is already in use. Choose a different one");
+                    return false;
+                }
+                return true;
             }
         }
+
+        public static void CheckUsernameAvailabilityInPendingList(string usernameCheck, string passphraseCheck)
+        {
+            var path = @"C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\NewUserRequest.txt";
+            string pendingUsernameCheck = File.ReadLines(path).First();
+
+            if (pendingUsernameCheck == $"username: {usernameCheck}")
+            {
+                Console.WriteLine("Your Account Request is Pending. Please wait for the administrator to grant you access.");
+            }
+            else
+            {
+                NewUsernameRequestToList(usernameCheck, passphraseCheck);
+            }
+
+        }
+
+        public static void NewUsernameRequestToList(string usernameAdd, string passphraseAdd)
+        {
+            var path = @"C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\NewUserRequest.txt";
+            {
+                //creates a file and writes collection of string (array) and closes the File - //check why catch fails, it creates a new file if it doesnt exist
+                File.WriteAllLines(path, new string[] { $"username: {usernameAdd}", $"passphrase: {passphraseAdd}" });
+                Console.WriteLine("New account request is registered. Please wait for the administrator to grant you access.");
+            }
+        }
+
     }
 }

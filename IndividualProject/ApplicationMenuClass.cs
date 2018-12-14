@@ -20,6 +20,8 @@ namespace IndividualProject
             {
                 case ConsoleKey.D1:
                     ConnectToServerClass.UserLoginCredentials();
+
+                    
                     break;
 
                 case ConsoleKey.D2:

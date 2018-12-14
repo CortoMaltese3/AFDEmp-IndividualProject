@@ -2,56 +2,47 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IndividualProject
 {
     static class ConnectToServerClass
     {
-        //public static void LoginOrRegisterAccount()
-        //{
-        //    Console.Write("Press '1' to login with your credentials or '2' to create a new account: ");
-        //    ConsoleKey loginOrRegisterInput = Console.ReadKey().Key;
-
-        //    switch (loginOrRegisterInput)
-        //    {
-        //        case ConsoleKey.D1:
-        //            UserLoginCredentials();
-        //            break;
-
-        //        case ConsoleKey.D2:
-
-        //            break;
-        //    }
-        //}
         public static void UserLoginCredentials()
         {
-            string username = UsernameInput();
-            string passphrase = PassphraseInput();
-            var connectionString = new SqlConnection($"Server=localhost; Database = Project1_Individual; User Id = {username}; Password = {passphrase}");
+            string username = UserInputControlClass.UsernameInput();
+            string passphrase = UserInputControlClass.PassphraseInput();
+            var connectionString = new SqlConnection("Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin");
+
             byte loginFailCount = 0;
-            while (loginFailCount < 2)
+            while (TestConnectionToSqlServer(connectionString))
             {
-                if (TestConnectionToSqlServer(connectionString))
+                if (CheckUsernameAvailabilityInDatabase(username, passphrase))
                 {
                     Console.WriteLine($"Connection Established! Weclome back {username}!");
                     return;
                 }
                 else
                 {
-                    Console.WriteLine($"You have {2 - loginFailCount} attempts available");
-                    loginFailCount++;
-                    username = UsernameInput();
-                    passphrase = PassphraseInput();
-                    connectionString = new SqlConnection($"Server=localhost; Database = Project1_Individual; User Id = {username}; Password = {passphrase}");
+                    while (loginFailCount < 2)
+                    {
+                        Console.WriteLine($"Invalid Username or Passphrase. You have {2 - loginFailCount} attempts available");
+                        loginFailCount++;
+                        username = UserInputControlClass.UsernameInput();
+                        passphrase = UserInputControlClass.PassphraseInput();
+                        if (CheckUsernameAvailabilityInDatabase(username, passphrase))
+                        {
+                            Console.WriteLine($"Connection Established! Weclome back {username}!");
+                            return;
+                        }
+                }
+                if (loginFailCount == 2)
+                {
+                    Console.WriteLine("Failed to login for more than 3 times in a row. Program will now terminate");
+                    return;
                 }
             }
-            if (loginFailCount == 2)
-            {
-                Console.WriteLine("Failed to login for more than 3 times in a row. Program will now terminate");
             }
-        }
+        }      
 
         public static bool TestConnectionToSqlServer(this SqlConnection connectionString)
         {
@@ -71,28 +62,23 @@ namespace IndividualProject
             return true;
         }
 
-        public static string UsernameInput()
+        public static bool CheckUsernameAvailabilityInDatabase(string usernameCheck, string passphraseCheck)
         {
-            Console.Write("\r\nusername: ");
-            string usernameInput = Console.ReadLine();
-            while (usernameInput.Length > 20)
+            //TODO : Check if this is a vulnerability
+            string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
+            using (SqlConnection dbcon = new SqlConnection(connectionString))
             {
-                Console.Write("username cannot be longer than 20 characters");
-                usernameInput = Console.ReadLine();
+                dbcon.Open();
+                SqlCommand checkUsername = new SqlCommand($"SELECT COUNT(*) FROM LoginCredentials " +
+                    $"                                      WHERE (username = '{usernameCheck}' " +
+                    $"                                      AND passphrase = '{passphraseCheck}')", dbcon);
+                int UserCount = (int)checkUsername.ExecuteScalar();
+                if (UserCount != 0)
+                {
+                        return true;    
+                }
+                return false;
             }
-            return usernameInput;
-        }
-
-        public static string PassphraseInput()
-        {
-            Console.Write("passphrase: ");
-            string passphraseInput = Console.ReadLine();
-            while (passphraseInput.Length > 20)
-            {
-                Console.Write("passphrase cannot be longer than 20 characters");
-                passphraseInput = Console.ReadLine();
-            }
-            return passphraseInput;
         }
     }
 }
