@@ -35,9 +35,35 @@ namespace IndividualProject
 
         public static ConsoleKey TerminateProgramCommand()
         {
-            Console.WriteLine("Press any key to continue or escape to terminate the program");
+            //Console.WriteLine("Press any key to continue or escape to terminate the program");
             ConsoleKey escape = Console.ReadKey().Key;
             return escape;
+        }
+
+        public static void ClearScreen()
+        {
+            Console.WriteLine("press any key to continue");
+            Console.ReadKey();
+            Console.Clear();
+        }
+
+        public static string SelectUserRole()
+        {
+            Console.WriteLine("Please choose one of the following user roles : Administrator, Moderator, User");
+            string pendingRole = Console.ReadLine();
+            List<string> roleList = new List<string>();
+            roleList.Add("Administrator");
+            roleList.Add("Moderator");
+            roleList.Add("User");
+
+            bool notInRoleList = roleList.Any(x => x.Contains(pendingRole));
+
+            while (notInRoleList == false)
+            {
+                Console.WriteLine("Please choose one of the following user roles : Administrator, Moderator, User");
+                pendingRole = Console.ReadLine();
+            }
+            return pendingRole;
         }
 
     }

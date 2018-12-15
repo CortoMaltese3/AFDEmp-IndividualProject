@@ -55,10 +55,14 @@ namespace IndividualProject
             if (pendingUsernameCheck == $"username: {usernameCheck}")
             {
                 Console.WriteLine("Your Account Request is Pending. Please wait for the administrator to grant you access.");
+                UserInputControlClass.ClearScreen();
+                ApplicationMenuClass.LoginScreen();
             }
             else
             {
                 NewUsernameRequestToList(usernameCheck, passphraseCheck);
+                UserInputControlClass.ClearScreen();
+                ApplicationMenuClass.LoginScreen();
             }
         }
 

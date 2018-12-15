@@ -20,8 +20,6 @@ namespace IndividualProject
                 {
                     StoreCurrentLoginCredentialsToDatabase(username, passphrase);
                     Console.WriteLine($"Connection Established! Welcome back {username}!");
-
-                    
                     return true;
                 }
                 else
@@ -100,6 +98,18 @@ namespace IndividualProject
                 SqlCommand RetrieveLoginCredentials = new SqlCommand($"SELECT username FROM CurrentLoginCredentials", dbcon);
                 string currentUsername = (string)RetrieveLoginCredentials.ExecuteScalar();
                 return currentUsername;
+            }
+        }
+
+        public static string RetrieveCurrentUsernameRoleFromDatabase()
+        {
+            string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
+            using (SqlConnection dbcon = new SqlConnection(connectionString))
+            {
+                dbcon.Open();
+                SqlCommand RetrieveCurrentUsernameRole = new SqlCommand($"SELECT userRole FROM UserLevelAccess u INNER JOIN CurrentLoginCredentials c ON c.username = u.username", dbcon);
+                string currentRole = (string)RetrieveCurrentUsernameRole.ExecuteScalar();
+                return currentRole;
             }
         }
     }

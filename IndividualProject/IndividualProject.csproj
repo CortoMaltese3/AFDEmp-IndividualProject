@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActiveUserLoggedIncs.cs" />
     <Compile Include="ApplicationMenuClass.cs" />
     <Compile Include="ConnectToServerClass.cs" />
     <Compile Include="CreateNewAccountClass.cs" />
