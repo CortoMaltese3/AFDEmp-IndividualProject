@@ -11,23 +11,37 @@ namespace IndividualProject
     {
         public static void LoginScreen()
         {
-            Console.WriteLine("Welcome to ITCrowd CRM Program");
-            Console.Write("Press '1' to login with your credentials or '2' to create a new account: ");
-            ConsoleKey loginOrRegisterInput = Console.ReadKey().Key;
-
-            //make input be 1 or 2
-            switch (loginOrRegisterInput)
+            while (UserInputControlClass.TerminateProgramCommand() != ConsoleKey.Escape)
             {
-                case ConsoleKey.D1:
-                    ConnectToServerClass.UserLoginCredentials();
+                Console.WriteLine("Welcome to ITCrowd CRM Program");
+                Console.Write("Press '1' to login with your credentials or '2' to create a new account: ");
+                ConsoleKey loginOrRegisterInput = Console.ReadKey().Key;
 
-                    
-                    break;
+                //make input be 1 or 2
+                switch (loginOrRegisterInput)
+                {
+                    case ConsoleKey.D1:
+                        if (ConnectToServerClass.UserLoginCredentials())
+                        {
+                            string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
+                            if(currentUsername == "admin")
+                            {
+                                Console.WriteLine("select a user to remove from database");
+                                string deleteUser = UserInputControlClass.UsernameInput();
+                                SuperAmdin.DeleteUserFromDatabase(deleteUser);
+                            }
+                        }
 
-                case ConsoleKey.D2:
-                    CreateNewAccountClass.CreateNewAccountRequest();
-                    break;
+
+                        break;
+
+                    case ConsoleKey.D2:
+                        CreateNewAccountClass.CreateNewAccountRequest();
+                        break;
+                }
             }
+            UserInputControlClass.TerminateProgramCommand();
+
         }
 
     }

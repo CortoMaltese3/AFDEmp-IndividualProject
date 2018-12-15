@@ -7,42 +7,41 @@ namespace IndividualProject
 {
     static class ConnectToServerClass
     {
-        public static void UserLoginCredentials()
+        public static bool UserLoginCredentials()
         {
             string username = UserInputControlClass.UsernameInput();
             string passphrase = UserInputControlClass.PassphraseInput();
+            
             var connectionString = new SqlConnection("Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin");
-
-            byte loginFailCount = 0;
+            
             while (TestConnectionToSqlServer(connectionString))
             {
-                if (CheckUsernameAvailabilityInDatabase(username, passphrase))
+                if (CheckUsernameAndPasswordMatchInDatabase(username, passphrase))
                 {
-                    Console.WriteLine($"Connection Established! Weclome back {username}!");
-                    return;
+                    StoreCurrentLoginCredentialsToDatabase(username, passphrase);
+                    Console.WriteLine($"Connection Established! Welcome back {username}!");
+
+                    
+                    return true;
                 }
                 else
                 {
-                    while (loginFailCount < 2)
+                    while (true)
                     {
-                        Console.WriteLine($"Invalid Username or Passphrase. You have {2 - loginFailCount} attempts available");
-                        loginFailCount++;
+                        Console.WriteLine($"Invalid Username or Passphrase. Try again.");
                         username = UserInputControlClass.UsernameInput();
                         passphrase = UserInputControlClass.PassphraseInput();
-                        if (CheckUsernameAvailabilityInDatabase(username, passphrase))
+                        if (CheckUsernameAndPasswordMatchInDatabase(username, passphrase))
                         {
-                            Console.WriteLine($"Connection Established! Weclome back {username}!");
-                            return;
+                            StoreCurrentLoginCredentialsToDatabase(username, passphrase);
+                            Console.WriteLine($"Connection Established! Welcome back {username}!");
+                            return true;
                         }
-                }
-                if (loginFailCount == 2)
-                {
-                    Console.WriteLine("Failed to login for more than 3 times in a row. Program will now terminate");
-                    return;
+                    }
                 }
             }
-            }
-        }      
+            return false;
+        }
 
         public static bool TestConnectionToSqlServer(this SqlConnection connectionString)
         {
@@ -62,7 +61,7 @@ namespace IndividualProject
             return true;
         }
 
-        public static bool CheckUsernameAvailabilityInDatabase(string usernameCheck, string passphraseCheck)
+        public static bool CheckUsernameAndPasswordMatchInDatabase(string usernameCheck, string passphraseCheck)
         {
             //TODO : Check if this is a vulnerability
             string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
@@ -75,9 +74,32 @@ namespace IndividualProject
                 int UserCount = (int)checkUsername.ExecuteScalar();
                 if (UserCount != 0)
                 {
-                        return true;    
+                    return true;
                 }
                 return false;
+            }
+        }
+
+        static void StoreCurrentLoginCredentialsToDatabase(string currentUsername, string currentPassphrase)
+        {
+            string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
+            using (SqlConnection dbcon = new SqlConnection(connectionString))
+            {
+                dbcon.Open();
+                SqlCommand StoreLoginCredentials = new SqlCommand($"UPDATE CurrentLoginCredentials SET username = '{currentUsername}', passphrase = '{currentPassphrase}'", dbcon);
+                StoreLoginCredentials.ExecuteScalar();
+            }
+        }
+
+        public static string RetrieveCurrentLoginCredentialsFromDatabase()
+        {
+            string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
+            using (SqlConnection dbcon = new SqlConnection(connectionString))
+            {
+                dbcon.Open();
+                SqlCommand RetrieveLoginCredentials = new SqlCommand($"SELECT username FROM CurrentLoginCredentials", dbcon);
+                string currentUsername = (string)RetrieveLoginCredentials.ExecuteScalar();
+                return currentUsername;
             }
         }
     }

@@ -19,12 +19,10 @@ namespace IndividualProject
                 {
                     username = UserInputControlClass.UsernameInput();
                     passphrase = UserInputControlClass.PassphraseInput();
-                    CheckUsernameAvailabilityInDatabase(username); 
                 }
 
                 CheckUsernameAvailabilityInPendingList(username, passphrase);
             }
-
             catch (DirectoryNotFoundException d)
             {
                 Console.WriteLine(d.Message);
@@ -62,7 +60,6 @@ namespace IndividualProject
             {
                 NewUsernameRequestToList(usernameCheck, passphraseCheck);
             }
-
         }
 
         public static void NewUsernameRequestToList(string usernameAdd, string passphraseAdd)
@@ -74,6 +71,5 @@ namespace IndividualProject
                 Console.WriteLine("New account request is registered. Please wait for the administrator to grant you access.");
             }
         }
-
     }
 }

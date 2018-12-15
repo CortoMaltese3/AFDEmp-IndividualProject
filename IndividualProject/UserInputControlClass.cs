@@ -32,5 +32,13 @@ namespace IndividualProject
             }
             return passphraseInput;
         }
+
+        public static ConsoleKey TerminateProgramCommand()
+        {
+            Console.WriteLine("Press any key to continue or escape to terminate the program");
+            ConsoleKey escape = Console.ReadKey().Key;
+            return escape;
+        }
+
     }
 }
