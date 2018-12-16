@@ -13,12 +13,12 @@ namespace IndividualProject
             try
             {
                 Console.WriteLine("\r\nChoose your username and password. Both must be limited to 20 characters");
-                string username = UserInputControlClass.UsernameInput();
-                string passphrase = UserInputControlClass.PassphraseInput();
+                string username = InputOutputControlClass.UsernameInput();
+                string passphrase = InputOutputControlClass.PassphraseInput();
                 while (CheckUsernameAvailabilityInDatabase(username) == false)
                 {
-                    username = UserInputControlClass.UsernameInput();
-                    passphrase = UserInputControlClass.PassphraseInput();
+                    username = InputOutputControlClass.UsernameInput();
+                    passphrase = InputOutputControlClass.PassphraseInput();
                 }
 
                 CheckUsernameAvailabilityInPendingList(username, passphrase);
@@ -55,13 +55,13 @@ namespace IndividualProject
             if (pendingUsernameCheck == $"username: {usernameCheck}")
             {
                 Console.WriteLine("Your Account Request is Pending. Please wait for the administrator to grant you access.");
-                UserInputControlClass.ClearScreen();
+                InputOutputControlClass.ClearScreen();
                 ApplicationMenuClass.LoginScreen();
             }
             else
             {
                 NewUsernameRequestToList(usernameCheck, passphraseCheck);
-                UserInputControlClass.ClearScreen();
+                InputOutputControlClass.ClearScreen();
                 ApplicationMenuClass.LoginScreen();
             }
         }

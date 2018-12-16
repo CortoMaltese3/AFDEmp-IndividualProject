@@ -9,8 +9,8 @@ namespace IndividualProject
     {
         public static bool UserLoginCredentials()
         {
-            string username = UserInputControlClass.UsernameInput();
-            string passphrase = UserInputControlClass.PassphraseInput();
+            string username = InputOutputControlClass.UsernameInput();
+            string passphrase = InputOutputControlClass.PassphraseInput();
             
             var connectionString = new SqlConnection("Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin");
             
@@ -27,8 +27,8 @@ namespace IndividualProject
                     while (true)
                     {
                         Console.WriteLine($"Invalid Username or Passphrase. Try again.");
-                        username = UserInputControlClass.UsernameInput();
-                        passphrase = UserInputControlClass.PassphraseInput();
+                        username = InputOutputControlClass.UsernameInput();
+                        passphrase = InputOutputControlClass.PassphraseInput();
                         if (CheckUsernameAndPasswordMatchInDatabase(username, passphrase))
                         {
                             StoreCurrentLoginCredentialsToDatabase(username, passphrase);
