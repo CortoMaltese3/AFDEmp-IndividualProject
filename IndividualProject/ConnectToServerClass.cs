@@ -29,9 +29,11 @@ namespace IndividualProject
                         Console.WriteLine($"Invalid Username or Passphrase. Try again.");
                         username = InputOutputControlClass.UsernameInput();
                         passphrase = InputOutputControlClass.PassphraseInput();
+                        ConsoleOutputAndAnimations.AttemptingConnectionToServer();
                         if (CheckUsernameAndPasswordMatchInDatabase(username, passphrase))
                         {
                             StoreCurrentLoginCredentialsToDatabase(username, passphrase);
+                            //TestConnectionToSqlServer(connectionString);
                             Console.WriteLine($"Connection Established! Welcome back {username}!");
                             return true;
                         }
@@ -43,9 +45,7 @@ namespace IndividualProject
 
         public static bool TestConnectionToSqlServer(this SqlConnection connectionString)
         {
-            Console.WriteLine("Attempting connection to server...");
-            //TODO increase sleap time to 3000, maybe try to find dots blinking
-            System.Threading.Thread.Sleep(1000);
+            ConsoleOutputAndAnimations.AttemptingConnectionToServer();
             try
             {
                 connectionString.Open();
@@ -61,7 +61,6 @@ namespace IndividualProject
 
         public static bool CheckUsernameAndPasswordMatchInDatabase(string usernameCheck, string passphraseCheck)
         {
-            //TODO : Check if this is a vulnerability
             string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
             using (SqlConnection dbcon = new SqlConnection(connectionString))
             {

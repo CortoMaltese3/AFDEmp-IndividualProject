@@ -87,11 +87,28 @@ namespace IndividualProject
 
     static class ConsoleOutputAndAnimations
     {
-        public static void LoadingDots()
+        public static void AttemptingConnectionToServer()
         {
-            Console.WriteLine("Attempting connection to server...");
-            //TODO increase sleap time to 3000, maybe try to find dots blinking
-            System.Threading.Thread.Sleep(1000);
+            Console.Write("Attempting connection to server");
+            DotsBlinking();
+        }
+
+        public static void DotsBlinking()
+        {
+            for (int blink = 0; blink < 5; blink++)
+            {
+                switch (blink)
+                {
+                    case 0: Console.Write("."); break;
+                    case 1: Console.Write("."); break;
+                    case 2: Console.Write("."); break;
+                    case 3: Console.Write("."); break;
+                    case 4: Console.Write("."); break;
+                }
+                System.Threading.Thread.Sleep(500);
+                Console.SetCursorPosition(Console.CursorLeft +0 , Console.CursorTop + 0);
+            }
+            Console.WriteLine();
         }
     }
 }
