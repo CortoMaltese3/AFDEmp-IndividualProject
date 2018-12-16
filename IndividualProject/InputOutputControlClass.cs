@@ -10,7 +10,6 @@ namespace IndividualProject
     {
         public static string UsernameInput()
         {
-
             Console.Write("\r\nusername: ");
             string usernameInput = Console.ReadLine();
             while (usernameInput.Length > 20)
@@ -60,8 +59,9 @@ namespace IndividualProject
 
             while (notInRoleList == false)
             {
-                Console.Write("Please choose one of the following user roles : Administrator, Moderator, User");
+                Console.WriteLine("\r\nPlease choose one of the following user roles : Administrator, Moderator, User");
                 pendingRole = Console.ReadLine();
+                notInRoleList = roleList.Any(x => x.Contains(pendingRole));
             }
             return pendingRole;
         }
@@ -83,6 +83,23 @@ namespace IndividualProject
             return loginOrRegisterInput;
         }
 
+        public static string PromptYesOrNo()
+        {
+            Console.Write("Type 'Y' for yes or 'N' for no :");
+            string yesOrNo = Console.ReadLine();
+            while 
+                (
+                    yesOrNo != "Y" && 
+                    yesOrNo != "y" && 
+                    yesOrNo != "N" && 
+                    yesOrNo != "n"
+                )
+            {
+                yesOrNo = Console.ReadLine();
+            }
+            return yesOrNo;
+        }
+
     }
 
     static class ConsoleOutputAndAnimations
@@ -95,7 +112,13 @@ namespace IndividualProject
 
         public static void CreatingNewUserOutput()
         {
-            Console.Write("Creating");
+            Console.Write("Creating new user in progress");
+            DotsBlinking();
+        }
+
+        public static void DeletingExistingUserOutput()
+        {
+            Console.Write("Deleting existing user in progress");
             DotsBlinking();
         }
 
@@ -120,21 +143,37 @@ namespace IndividualProject
         public static ConsoleKey AdminFunctionOptionsOutput()
         {
             Console.WriteLine("\r\nChoose one of the following functions:");
-            Console.WriteLine("1: Create new username/password from requests");
-            Console.WriteLine("2: View the transacted data between users");
-            Console.WriteLine("3: Edit the transacted data between users");
-            Console.WriteLine("4: Delete the transacted data between users");
+            Console.WriteLine("1: Check user notifications");
+            Console.WriteLine("2: Create new username/password from requests");
+            Console.WriteLine("3: Show list of active users");
+            Console.WriteLine("4: Upgrade/Downgrade user's role");
             Console.WriteLine("5: Delete an active username from Database");
-
+            Console.WriteLine("6: View the transacted data between users");
+            Console.WriteLine("7: Edit the transacted data between users");
+            Console.WriteLine("8: Delete the transacted data between users\r\n");
+            
             ConsoleKey function = Console.ReadKey().Key;
-            while(function != ConsoleKey.D1 && function != ConsoleKey.D2 && function != ConsoleKey.D3 && function != ConsoleKey.D4 && function != ConsoleKey.D5)
+            while
+                (
+                    function != ConsoleKey.D1 && 
+                    function != ConsoleKey.D2 && 
+                    function != ConsoleKey.D3 && 
+                    function != ConsoleKey.D4 && 
+                    function != ConsoleKey.D5 && 
+                    function != ConsoleKey.D6 && 
+                    function != ConsoleKey.D7 && 
+                    function != ConsoleKey.D8
+                )
             {
-                Console.WriteLine("\r\nYour input was not in range of available options. Please choose one of the following functions:");
-                Console.WriteLine("1: Create new username/password from requests");
-                Console.WriteLine("2: View the transacted data between users");
-                Console.WriteLine("3: Edit the transacted data between users");
-                Console.WriteLine("4: Delete the transacted data between users");
+                Console.WriteLine("\r\nChoose one of the following functions:");
+                Console.WriteLine("1: Check user notifications");
+                Console.WriteLine("2: Create new username/password from requests");
+                Console.WriteLine("3: Show list of active users");
+                Console.WriteLine("4: Upgrade/Downgrade user's role");
                 Console.WriteLine("5: Delete an active username from Database");
+                Console.WriteLine("6: View the transacted data between users");
+                Console.WriteLine("7: Edit the transacted data between users");
+                Console.WriteLine("8: Delete the transacted data between users\r\n");
 
                 function = Console.ReadKey().Key;
             }

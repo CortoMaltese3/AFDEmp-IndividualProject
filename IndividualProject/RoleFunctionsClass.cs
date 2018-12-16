@@ -17,7 +17,7 @@ namespace IndividualProject
             string pendingUsername = File.ReadLines(path).First();
             if (pendingUsername == " ")
             {
-                Console.WriteLine("There are no pending requests");
+                Console.WriteLine("\r\nThere are no pending requests");
                 InputOutputControlClass.ClearScreen();
                 ApplicationMenuClass.LoginScreen();
             }
@@ -28,7 +28,7 @@ namespace IndividualProject
                 string pendingPassphrase = File.ReadLines(path).Skip(1).Take(1).First();
                 pendingPassphrase = pendingPassphrase.Remove(0, 12);
 
-                Console.WriteLine($"You are about to create a new username-password entry : {pendingUsername} - {pendingPassphrase}");
+                Console.WriteLine($"\r\nYou are about to create a new username-password entry : {pendingUsername} - {pendingPassphrase}");
                 string pendingRole = InputOutputControlClass.SelectUserRole();
 
                 using (SqlConnection dbcon = new SqlConnection(connectionString))
@@ -76,6 +76,7 @@ namespace IndividualProject
                 SqlCommand deleteUsername = new SqlCommand($"RemoveUsernameFromDatabase @username = '{username}'", dbcon);
                 deleteUsername.ExecuteNonQuery();
             }
+            ConsoleOutputAndAnimations.DeletingExistingUserOutput();
             Console.WriteLine($"Username {username} has been successfully deleted from database");
             InputOutputControlClass.ClearScreen();
             ApplicationMenuClass.LoginScreen();
@@ -100,6 +101,29 @@ namespace IndividualProject
                     return AvailableUsernamesDictionary;
                 }
             } 
+        }
+
+        public static void CheckUserNotifications()
+        {
+            
+        }
+
+        public static void CheckAdminNotifications()
+        {
+            string pendingUsernameCheck = File.ReadLines(path).First();
+
+            if (pendingUsernameCheck == " ")
+            {
+                Console.WriteLine("\r\nThere are no pending User registrations");
+                InputOutputControlClass.ClearScreen();
+                ApplicationMenuClass.LoginScreen();
+            }
+            else
+            {
+                Console.WriteLine("\r\nYou have 1 pending User registration request. Would you like to create new user?");
+                InputOutputControlClass.PromptYesOrNo();
+                CreateNewUserFromRequestFunction();
+            }
         }
     }
 }
