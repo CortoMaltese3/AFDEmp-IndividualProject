@@ -87,9 +87,15 @@ namespace IndividualProject
 
     static class ConsoleOutputAndAnimations
     {
-        public static void AttemptingConnectionToServer()
+        public static void AttemptingConnectionToServerOutput()
         {
             Console.Write("Attempting connection to server");
+            DotsBlinking();
+        }
+
+        public static void CreatingNewUserOutput()
+        {
+            Console.Write("Creating");
             DotsBlinking();
         }
 
@@ -106,9 +112,33 @@ namespace IndividualProject
                     case 4: Console.Write("."); break;
                 }
                 System.Threading.Thread.Sleep(500);
-                Console.SetCursorPosition(Console.CursorLeft +0 , Console.CursorTop + 0);
+                Console.SetCursorPosition(Console.CursorLeft + 0, Console.CursorTop + 0);
             }
             Console.WriteLine();
+        }
+
+        public static ConsoleKey AdminFunctionOptionsOutput()
+        {
+            Console.WriteLine("\r\nChoose one of the following functions:");
+            Console.WriteLine("1: Create new username/password from requests");
+            Console.WriteLine("2: View the transacted data between users");
+            Console.WriteLine("3: Edit the transacted data between users");
+            Console.WriteLine("4: Delete the transacted data between users");
+            Console.WriteLine("5: Delete an active username from Database");
+
+            ConsoleKey function = Console.ReadKey().Key;
+            while(function != ConsoleKey.D1 && function != ConsoleKey.D2 && function != ConsoleKey.D3 && function != ConsoleKey.D4 && function != ConsoleKey.D5)
+            {
+                Console.WriteLine("\r\nYour input was not in range of available options. Please choose one of the following functions:");
+                Console.WriteLine("1: Create new username/password from requests");
+                Console.WriteLine("2: View the transacted data between users");
+                Console.WriteLine("3: Edit the transacted data between users");
+                Console.WriteLine("4: Delete the transacted data between users");
+                Console.WriteLine("5: Delete an active username from Database");
+
+                function = Console.ReadKey().Key;
+            }
+            return function;
         }
     }
 }

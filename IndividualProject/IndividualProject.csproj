@@ -47,7 +47,6 @@
     <Compile Include="ApplicationMenuClass.cs" />
     <Compile Include="ConnectToServerClass.cs" />
     <Compile Include="CreateNewAccountClass.cs" />
-    <Compile Include="IDeleteUser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoleFunctionsClass.cs" />

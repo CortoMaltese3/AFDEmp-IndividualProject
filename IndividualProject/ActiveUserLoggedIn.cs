@@ -19,13 +19,7 @@ namespace IndividualProject
                 switch (currentUsernameRole)
                 {
                     case "super_admin":
-                        Console.WriteLine("\r\nChoose one of the followin functions:");
-                        Console.WriteLine("1: Create new username/password from requests");
-                        Console.WriteLine("2: View the transacted data between users");
-                        Console.WriteLine("3: Edit the transacted data between users");
-                        Console.WriteLine("4: Delete the transacted data between users");
-                        Console.WriteLine("5: Delete an active username from Database");
-                        ConsoleKey function = Console.ReadKey().Key; 
+                        ConsoleKey function = ConsoleOutputAndAnimations.AdminFunctionOptionsOutput();
                         switch (function)
                         {
                             case ConsoleKey.D1:
@@ -45,7 +39,7 @@ namespace IndividualProject
                                 break;
 
                             case ConsoleKey.D5:
-
+                                RoleFunctionsClass.DeleteUserFromDatabase();
                                 break;
 
 
