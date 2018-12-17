@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IndividualProject
 {
@@ -50,19 +48,24 @@ namespace IndividualProject
                             case ConsoleKey.D5:
                                 RoleFunctionsClass.DeleteUserFromDatabase();
                                 break;
-                            
-                            //view transacted data                                
+
+                            //create new customer ticket                               
                             case ConsoleKey.D6:
-                                
+                                TransactedDataClass.OpenNewCustomerTicket();
                                 break;
-                            
-                            //edit transacted data
+
+                            //view transacted data                                
                             case ConsoleKey.D7:
                                 
                                 break;
                             
-                            //delete transcted data
+                            //edit transacted data
                             case ConsoleKey.D8:
+                                
+                                break;
+                            
+                            //delete transcted data
+                            case ConsoleKey.D9:
                                 
                                 break;
 

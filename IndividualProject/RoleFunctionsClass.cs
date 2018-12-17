@@ -9,12 +9,12 @@ namespace IndividualProject
     class RoleFunctionsClass
     {
         static readonly string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
-        static readonly string path = @"C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\NewUserRequest.txt";
+        static readonly string newUserRequestPath = @"C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\CRMTickets\NewUserRequests\NewUserRequest.txt";
 
         public static void CreateNewUserFromRequestFunction()
         {
             
-            string pendingUsername = File.ReadLines(path).First();
+            string pendingUsername = File.ReadLines(newUserRequestPath).First();
             if (pendingUsername == " ")
             {
                 Console.WriteLine("\r\nThere are no pending requests");
@@ -25,7 +25,7 @@ namespace IndividualProject
             {
                 pendingUsername = pendingUsername.Remove(0, 10);
 
-                string pendingPassphrase = File.ReadLines(path).Skip(1).Take(1).First();
+                string pendingPassphrase = File.ReadLines(newUserRequestPath).Skip(1).Take(1).First();
                 pendingPassphrase = pendingPassphrase.Remove(0, 12);
 
                 Console.WriteLine($"\r\nYou are about to create a new username-password entry : {pendingUsername} - {pendingPassphrase}");
@@ -42,7 +42,7 @@ namespace IndividualProject
                 }
                 ConsoleOutputAndAnimations.CreatingNewUserOutput();
                 Console.WriteLine($"User {pendingUsername} has been created successfully. Status : {pendingRole}");
-                File.WriteAllLines(path, new string[] { " " });
+                File.WriteAllLines(newUserRequestPath, new string[] { " " });
                 InputOutputControlClass.ClearScreen();
                 ApplicationMenuClass.LoginScreen();
             }
@@ -110,7 +110,7 @@ namespace IndividualProject
 
         public static void CheckAdminNotifications()
         {
-            string pendingUsernameCheck = File.ReadLines(path).First();
+            string pendingUsernameCheck = File.ReadLines(newUserRequestPath).First();
 
             if (pendingUsernameCheck == " ")
             {

@@ -9,7 +9,6 @@ namespace IndividualProject
     {
         internal static void CreateNewAccountRequest()
         {
-            //string path = @"C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\NewUserRequest.txt";
             try
             {
                 Console.WriteLine("\r\nChoose your username and password. Both must be limited to 20 characters");
@@ -49,8 +48,8 @@ namespace IndividualProject
 
         public static void CheckUsernameAvailabilityInPendingList(string usernameCheck, string passphraseCheck)
         {
-            var path = @"C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\NewUserRequest.txt";
-            string pendingUsernameCheck = File.ReadLines(path).First();
+            var newUserRequestPath = @"C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\CRMTickets\NewUserRequests\NewUserRequest.txt";
+            string pendingUsernameCheck = File.ReadLines(newUserRequestPath).First();
 
             if (pendingUsernameCheck == $"username: {usernameCheck}")
             {
@@ -68,10 +67,10 @@ namespace IndividualProject
 
         public static void NewUsernameRequestToList(string usernameAdd, string passphraseAdd)
         {
-            var path = @"C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\NewUserRequest.txt";
+            var newUserRequestPath = @"C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\CRMTickets\NewUserRequests\NewUserRequest.txt";
             {
                 //creates a file and writes collection of string (array) and closes the File - //check why catch fails, it creates a new file if it doesnt exist
-                File.WriteAllLines(path, new string[] { $"username: {usernameAdd}", $"passphrase: {passphraseAdd}" });
+                File.WriteAllLines(newUserRequestPath, new string[] { $"username: {usernameAdd}", $"passphrase: {passphraseAdd}" });
                 Console.WriteLine("New account request is registered. Please wait for the administrator to grant you access.");
             }
         }

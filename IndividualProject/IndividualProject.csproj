@@ -51,6 +51,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoleFunctionsClass.cs" />
     <Compile Include="InputOutputControlClass.cs" />
+    <Compile Include="TransactedDataClass.cs" />
     <Compile Include="UserAssignmentClass.cs" />
   </ItemGroup>
   <ItemGroup>

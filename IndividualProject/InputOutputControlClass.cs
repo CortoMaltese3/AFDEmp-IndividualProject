@@ -30,6 +30,18 @@ namespace IndividualProject
             return passphraseInput;
         }
 
+        public static string TicketComment()
+        {
+            Console.Write("Compile a summary of the Customer's issue (limit 500 characters): ");
+            string ticketComment = Console.ReadLine();
+            while (ticketComment.Length > 500)
+            {
+                Console.Write("Summary cannot be longer than 500 characters. Compile a summary of the Customer's issue (limit 500 characters): ");
+                ticketComment = Console.ReadLine();
+            }
+            return ticketComment;
+        }
+
         public static ConsoleKey TerminateProgramCommand()
         {
             //Console.WriteLine("Press any key to continue or escape to terminate the program");
@@ -81,6 +93,19 @@ namespace IndividualProject
             return loginOrRegisterInput;
         }
 
+        public static ConsoleKey ChooseTechnicalOrComplaintTicket()
+        {
+            Console.WriteLine("\r\nPress '1' to create a new Technical Issue Ticket or '2' to create a new Complaint Ticket");
+            ConsoleKey option = Console.ReadKey().Key;
+            while (option != ConsoleKey.D1 && option != ConsoleKey.D2)
+            {
+                Console.WriteLine("\r\nPress '1' to create a new Technical Issue Ticket or '2' to create a new Complaint Ticket");
+                option = Console.ReadKey().Key;
+            }
+            return option;
+        }
+
+
         public static string PromptYesOrNo()
         {
             Console.Write("Type 'Y' for yes or 'N' for no :");
@@ -125,6 +150,12 @@ namespace IndividualProject
             DotsBlinking();
         }
 
+        public static void FilingNewCustomerTicketOutput()
+        {
+            Console.Write("Filing new customer ticket in progress");
+            DotsBlinking();
+        }
+
         public static void DotsBlinking()
         {
             for (int blink = 0; blink < 5; blink++)
@@ -151,9 +182,10 @@ namespace IndividualProject
             Console.WriteLine("3: Show list of active users");
             Console.WriteLine("4: Upgrade/Downgrade user's role");
             Console.WriteLine("5: Delete an active username from Database");
-            Console.WriteLine("6: View the transacted data between users");
-            Console.WriteLine("7: Edit the transacted data between users");
-            Console.WriteLine("8: Delete the transacted data between users\r\n");
+            Console.WriteLine("6: Create new Customer Ticket");
+            Console.WriteLine("7: View the transacted data between users");
+            Console.WriteLine("8: Edit the transacted data between users");
+            Console.WriteLine("9: Delete the transacted data between users\r\n");
             
             ConsoleKey function = Console.ReadKey().Key;
             while
@@ -165,7 +197,8 @@ namespace IndividualProject
                     function != ConsoleKey.D5 && 
                     function != ConsoleKey.D6 && 
                     function != ConsoleKey.D7 && 
-                    function != ConsoleKey.D8
+                    function != ConsoleKey.D8 && 
+                    function != ConsoleKey.D9
                 )
             {
                 Console.WriteLine("\r\nChoose one of the following functions:");
@@ -174,9 +207,10 @@ namespace IndividualProject
                 Console.WriteLine("3: Show list of active users");
                 Console.WriteLine("4: Upgrade/Downgrade user's role");
                 Console.WriteLine("5: Delete an active username from Database");
-                Console.WriteLine("6: View the transacted data between users");
-                Console.WriteLine("7: Edit the transacted data between users");
-                Console.WriteLine("8: Delete the transacted data between users\r\n");
+                Console.WriteLine("6: Create new Customer Ticket");
+                Console.WriteLine("7: View the transacted data between users");
+                Console.WriteLine("8: Edit the transacted data between users");
+                Console.WriteLine("9: Delete the transacted data between users\r\n");
 
                 function = Console.ReadKey().Key;
             }
