@@ -42,7 +42,8 @@ namespace IndividualProject
                             
                             //upgrade-downgrade user                            
                             case ConsoleKey.D4:
-
+                                Console.WriteLine();
+                                RoleFunctionsClass.AlterUserRoleStatus();
                                 break;
                             
                             //delete username from db

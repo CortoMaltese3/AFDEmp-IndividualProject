@@ -125,5 +125,41 @@ namespace IndividualProject
                 CreateNewUserFromRequestFunction();
             }
         }
+
+        public static void AlterUserRoleStatus()
+        {
+            Console.WriteLine("\r\nChoose a User from the list and proceed to upgrade/downgrade Role Status");
+            Dictionary<string, string> AvailableUsernamesDictionary = ShowAvailableUsersFromDatabase();
+
+            string username = InputOutputControlClass.UsernameInput();
+
+            while (AvailableUsernamesDictionary.ContainsKey(username) == false || username == "admin")
+            {
+                if (AvailableUsernamesDictionary.ContainsKey(username) == false)
+                {
+                    Console.WriteLine($"Database does not contain a User {username}");
+                    username = InputOutputControlClass.UsernameInput();
+                }
+                else
+                {
+                    Console.WriteLine("Cannot alter super_admin's Status! Please choose a different user");
+                    username = InputOutputControlClass.UsernameInput();
+                }
+            }
+            string userRole = InputOutputControlClass.SelectUserRole();
+
+            using (SqlConnection dbcon = new SqlConnection(connectionString))
+            {
+                dbcon.Open();
+                SqlCommand alterUserRole = new SqlCommand($"UPDATE UserLevelAccess SET userRole = '{userRole}' WHERE username = '{username}'", dbcon);
+                SqlCommand selectUserRole = new SqlCommand($"SELECT userRole FROM UserLevelAccess WHERE username = '{username}'", dbcon);
+                alterUserRole.ExecuteScalar();
+                string newUserRole = (string)selectUserRole.ExecuteScalar();
+                ConsoleOutputAndAnimations.ModifyingExistingUserRoleOutput();
+                Console.WriteLine($"Username {username} has been successfully modified as {newUserRole}");
+            }
+            InputOutputControlClass.ClearScreen();
+            ApplicationMenuClass.LoginScreen();
+        }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IndividualProject
 {
@@ -99,7 +97,6 @@ namespace IndividualProject
             }
             return yesOrNo;
         }
-
     }
 
     static class ConsoleOutputAndAnimations
@@ -119,6 +116,12 @@ namespace IndividualProject
         public static void DeletingExistingUserOutput()
         {
             Console.Write("Deleting existing user in progress");
+            DotsBlinking();
+        }
+
+        public static void ModifyingExistingUserRoleOutput()
+        {
+            Console.Write("Modifying User's role status in progress");
             DotsBlinking();
         }
 
