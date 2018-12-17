@@ -17,7 +17,7 @@ namespace IndividualProject
                 switch (loginOrRegisterInput)
                 {
                     case ConsoleKey.D1:
-                        ActiveUserLoggedIn.ActiveUserProcedures();
+                        ActiveUserFunctionsClass.ActiveUserProcedures();
 
                         break;
 

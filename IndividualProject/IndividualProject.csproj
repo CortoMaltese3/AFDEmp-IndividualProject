@@ -43,7 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActiveUserLoggedIn.cs" />
+    <Compile Include="ActiveUserFunctionsClass.cs" />
     <Compile Include="ApplicationMenuClass.cs" />
     <Compile Include="ConnectToServerClass.cs" />
     <Compile Include="CreateNewAccountClass.cs" />
@@ -52,7 +52,6 @@
     <Compile Include="RoleFunctionsClass.cs" />
     <Compile Include="InputOutputControlClass.cs" />
     <Compile Include="TransactedDataClass.cs" />
-    <Compile Include="UserAssignmentClass.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

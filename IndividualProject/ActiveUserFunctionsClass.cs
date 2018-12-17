@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace IndividualProject
 {
-    class ActiveUserLoggedIn
+    class ActiveUserFunctionsClass
     {
         public static void ActiveUserProcedures()
         {
@@ -61,7 +61,7 @@ namespace IndividualProject
                             
                             //edit transacted data
                             case ConsoleKey.D8:
-                                
+                                TransactedDataClass.CloseCustomerTicket();
                                 break;
                             
                             //delete transcted data

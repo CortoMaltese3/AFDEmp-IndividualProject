@@ -42,6 +42,23 @@ namespace IndividualProject
             return ticketComment;
         }
 
+        public static int SelectTicketID()
+        {
+            Console.Write("Select the TicketID of the ticket you want to mark as Closed: ");
+            while (true)
+            {
+                try
+                {
+                    return int.Parse(Console.ReadLine());
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Input needs to be a real number greater than 0");
+                }
+            }
+        }
+
+
         public static ConsoleKey TerminateProgramCommand()
         {
             //Console.WriteLine("Press any key to continue or escape to terminate the program");
@@ -93,19 +110,6 @@ namespace IndividualProject
             return loginOrRegisterInput;
         }
 
-        public static ConsoleKey ChooseTechnicalOrComplaintTicket()
-        {
-            Console.WriteLine("\r\nPress '1' to create a new Technical Issue Ticket or '2' to create a new Complaint Ticket");
-            ConsoleKey option = Console.ReadKey().Key;
-            while (option != ConsoleKey.D1 && option != ConsoleKey.D2)
-            {
-                Console.WriteLine("\r\nPress '1' to create a new Technical Issue Ticket or '2' to create a new Complaint Ticket");
-                option = Console.ReadKey().Key;
-            }
-            return option;
-        }
-
-
         public static string PromptYesOrNo()
         {
             Console.Write("Type 'Y' for yes or 'N' for no :");
@@ -153,6 +157,12 @@ namespace IndividualProject
         public static void FilingNewCustomerTicketOutput()
         {
             Console.Write("Filing new customer ticket in progress");
+            DotsBlinking();
+        }
+
+        public static void ProcessingOutput()
+        {
+            Console.Write("Action in progress");
             DotsBlinking();
         }
 
