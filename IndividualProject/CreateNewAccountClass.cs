@@ -52,6 +52,7 @@ namespace IndividualProject
 
             if (pendingUsernameCheck == $"username: {usernameCheck}")
             {
+                InputOutputAnimationControlClass.UniversalLoadingOuput("Action in progress");
                 Console.WriteLine("Your Account Request is Pending. Please wait for the administrator to grant you access.");
                 InputOutputAnimationControlClass.ClearScreen();
                 ApplicationMenuClass.LoginScreen();
@@ -70,6 +71,7 @@ namespace IndividualProject
             {
                 //creates a file and writes collection of string (array) and closes the File - //check why catch fails, it creates a new file if it doesnt exist
                 File.WriteAllLines(newUserRequestPath, new string[] { $"username: {usernameAdd}", $"passphrase: {passphraseAdd}" });
+                InputOutputAnimationControlClass.UniversalLoadingOuput("Action in progress");
                 Console.WriteLine("New account request is registered. Please wait for the administrator to grant you access.");
             }
         }

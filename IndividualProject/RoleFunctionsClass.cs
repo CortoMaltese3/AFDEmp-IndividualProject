@@ -10,6 +10,7 @@ namespace IndividualProject
     {
         static readonly string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
         static readonly string newUserRequestPath = @"C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\CRMTickets\NewUserRequests\NewUserRequest.txt";
+        static string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
 
         public static void CreateNewUserFromRequestFunction()
         {
@@ -21,7 +22,7 @@ namespace IndividualProject
                 InputOutputAnimationControlClass.UniversalLoadingOuput("Action in progress");
                 Console.Write("There are no pending requests");
                 System.Threading.Thread.Sleep(1500);
-                InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+                //InputOutputAnimationControlClass.QuasarScreen(currentUsername);
                 ActiveUserFunctionsClass.ActiveUserProcedures();
             }
             else
@@ -46,6 +47,7 @@ namespace IndividualProject
                 InputOutputAnimationControlClass.UniversalLoadingOuput("Creating new user in progress");
                 Console.WriteLine($"User {pendingUsername} has been created successfully. Status : {pendingRole}");
                 System.Threading.Thread.Sleep(1500);
+                File.WriteAllLines(newUserRequestPath, new string[] {" "});
                 InputOutputAnimationControlClass.QuasarScreen(currentUsername);
                 ActiveUserFunctionsClass.ActiveUserProcedures();
             }
@@ -88,6 +90,8 @@ namespace IndividualProject
 
         public static Dictionary<string, string> ShowAvailableUsersFromDatabase()
         {
+            InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+            InputOutputAnimationControlClass.UniversalLoadingOuput("Action in progress");
             using (SqlConnection dbcon = new SqlConnection(connectionString))
             {
                 dbcon.Open();
@@ -102,9 +106,10 @@ namespace IndividualProject
                         AvailableUsernamesDictionary.Add((string)username, (string)status);
                         Console.WriteLine($"username: {username} - status: {status}");
                     }
+                    Console.WriteLine();
                     return AvailableUsernamesDictionary;
                 }
-            } 
+            }
         }
 
         public static void CheckUserNotifications()

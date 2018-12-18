@@ -8,6 +8,7 @@ namespace IndividualProject
     static class ConnectToServerClass
     {
         //static readonly string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
+        //static readonly string newUserRequestPath = @"C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\CRMTickets\NewUserRequests\NewUserRequest.txt";
 
         public static bool UserLoginCredentials()
         {

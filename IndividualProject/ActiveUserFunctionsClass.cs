@@ -20,6 +20,7 @@ namespace IndividualProject
                 {
                     case "super_admin":
                         ConsoleKey function = InputOutputAnimationControlClass.AdminFunctionOptionsOutput();
+
                         switch (function)
                         {
                             //Check Inbox
@@ -36,8 +37,10 @@ namespace IndividualProject
                             case ConsoleKey.D3:
                                 Console.WriteLine();
                                 RoleFunctionsClass.ShowAvailableUsersFromDatabase();
-                                InputOutputAnimationControlClass.ClearScreen();
-                                ApplicationMenuClass.LoginScreen();
+                                //InputOutputAnimationControlClass.ClearScreen();
+                                //ApplicationMenuClass.LoginScreen();
+                                InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+                                ActiveUserProcedures();
                                 break;
 
                             //upgrade-downgrade user                            

@@ -81,10 +81,12 @@ namespace IndividualProject
         {
             Console.Write("Please choose one of the following user roles : Administrator, Moderator, User  ->  ");
             string pendingRole = Console.ReadLine();
-            List<string> roleList = new List<string>();
-            roleList.Add("Administrator");
-            roleList.Add("Moderator");
-            roleList.Add("User");
+            List<string> roleList = new List<string>
+            {
+                "Administrator",
+                "Moderator",
+                "User"
+            };
 
             bool notInRoleList = roleList.Any(x => x.Contains(pendingRole));
 
@@ -170,7 +172,9 @@ namespace IndividualProject
 
         public static ConsoleKey AdminFunctionOptionsOutput()
         {
-            Console.WriteLine("\r\nChoose one of the following functions:");
+            string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
+
+            Console.WriteLine("\r\nChoose one of the following functions or press Esc to return:");
             Console.WriteLine("1: Check user notifications");
             Console.WriteLine("2: Create new username/password from requests");
             Console.WriteLine("3: Show list of active users");
@@ -183,6 +187,7 @@ namespace IndividualProject
             Console.Write("\r\nFunction: ");
             System.Threading.Thread.Sleep(500);
             ConsoleKey function = Console.ReadKey().Key;
+            CheckWhetherInputIsEscape(function, currentUsername);
             while
                 (
                     function != ConsoleKey.D1 &&
@@ -196,7 +201,13 @@ namespace IndividualProject
                     function != ConsoleKey.D9
                 )
             {
-                Console.WriteLine("\r\nChoose one of the following functions:");
+                //AdminFunctionOptionsOutput();
+                //System.Threading.Thread.Sleep(500);
+                //function = Console.ReadKey().Key;
+                //CheckWhetherInputIsEscape(function, currentUsername);
+
+                QuasarScreen(currentUsername);
+                Console.WriteLine("\r\nChoose one of the following functions or press Esc to return:");
                 Console.WriteLine("1: Check user notifications");
                 Console.WriteLine("2: Create new username/password from requests");
                 Console.WriteLine("3: Show list of active users");
@@ -209,6 +220,7 @@ namespace IndividualProject
                 Console.Write("\r\nFunction: ");
                 System.Threading.Thread.Sleep(500);
                 function = Console.ReadKey().Key;
+                CheckWhetherInputIsEscape(function, currentUsername);
             }
             return function;
         }
@@ -225,6 +237,20 @@ namespace IndividualProject
             CenterText("Welcome to Quasar CRM Program");
             CenterText("-IT Crowd-");
             CenterText($"[{currentUser}]");
+        }
+
+        public static void CheckWhetherInputIsEscape(ConsoleKey consoloKey, string currentUsername)
+        {
+            if (consoloKey == ConsoleKey.Escape)
+            {
+                Console.WriteLine("\r\nWould you like to exit to main menu?");
+                string option = PromptYesOrNo();
+                if (option == "y" || option == "Y")
+                {
+                    QuasarScreen(currentUsername);
+                    ActiveUserFunctionsClass.ActiveUserProcedures();
+                }
+            }
         }
     }
 }
