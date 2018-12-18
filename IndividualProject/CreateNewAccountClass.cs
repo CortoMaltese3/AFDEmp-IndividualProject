@@ -30,7 +30,6 @@ namespace IndividualProject
 
         public static bool CheckUsernameAvailabilityInDatabase(string usernameCheck)
         {
-            //TODO : Check if this is a vulnerability
             string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
             using (SqlConnection dbcon = new SqlConnection(connectionString))
             {

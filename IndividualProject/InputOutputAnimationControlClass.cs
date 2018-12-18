@@ -99,7 +99,7 @@ namespace IndividualProject
 
         public static ConsoleKey LoginScreenOptions()
         {
-            QuasarScreen();
+            QuasarScreen("Not registered");
             UniversalLoadingOuput("Loading");
 
             Console.Write("Press '1' to login with your credentials or '2' to create a new account: ");
@@ -111,7 +111,7 @@ namespace IndividualProject
             while (loginOrRegisterInput != ConsoleKey.D1 && loginOrRegisterInput != ConsoleKey.D2)
             {
                 
-                QuasarScreen();
+                QuasarScreen("Not registered");
                 Console.Write("\r\nPress '1' to login with your credentials or '2' to create a new account: ");
                 loginOrRegisterInput = Console.ReadKey().Key;
                 if (loginOrRegisterInput == ConsoleKey.Escape)
@@ -134,6 +134,7 @@ namespace IndividualProject
                     yesOrNo != "n"
                 )
             {
+                Console.Write("Type 'Y' for yes or 'N' for no : ");
                 yesOrNo = Console.ReadLine();
             }
             return yesOrNo;
@@ -180,7 +181,7 @@ namespace IndividualProject
             Console.WriteLine("8: Edit the transacted data between users");
             Console.WriteLine("9: Delete the transacted data between users");
             Console.Write("\r\nFunction: ");
-
+            System.Threading.Thread.Sleep(500);
             ConsoleKey function = Console.ReadKey().Key;
             while
                 (
@@ -206,7 +207,7 @@ namespace IndividualProject
                 Console.WriteLine("8: Edit the transacted data between users");
                 Console.WriteLine("9: Delete the transacted data between users");
                 Console.Write("\r\nFunction: ");
-
+                System.Threading.Thread.Sleep(500);
                 function = Console.ReadKey().Key;
             }
             return function;
@@ -217,12 +218,13 @@ namespace IndividualProject
             Console.WriteLine(string.Format("{0," + (Console.WindowWidth + text.Length) / 2 + "}", text));
         }
 
-        public static void QuasarScreen()
+        public static void QuasarScreen(string currentUser)
         {
             System.Threading.Thread.Sleep(500);
             Console.Clear();
             CenterText("Welcome to Quasar CRM Program");
             CenterText("-IT Crowd-");
+            CenterText($"[{currentUser}]");
         }
     }
 }

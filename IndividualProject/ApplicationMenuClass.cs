@@ -24,9 +24,7 @@ namespace IndividualProject
                 }
                 loginOrRegisterInput = InputOutputAnimationControlClass.LoginScreenOptions();
             }
-            Console.WriteLine();
-            Console.WriteLine("Wait for Quasar to shut down");
-            InputOutputAnimationControlClass.UniversalLoadingOuput("Terminating");
+            ConnectToServerClass.TerminateQuasar();
         }
 
 

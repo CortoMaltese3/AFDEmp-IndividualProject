@@ -7,12 +7,14 @@ namespace IndividualProject
 {
     static class ConnectToServerClass
     {
+        //static readonly string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
+
         public static bool UserLoginCredentials()
         {
             string username = InputOutputAnimationControlClass.UsernameInput();
             string passphrase = InputOutputAnimationControlClass.PassphraseInput();
             
-            var connectionString = new SqlConnection("Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin");
+           var connectionString = new SqlConnection("Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin");
             
             while (TestConnectionToSqlServer(connectionString))
             {
@@ -27,7 +29,7 @@ namespace IndividualProject
                 {
                     while (true)
                     {
-                        InputOutputAnimationControlClass.QuasarScreen();
+                        InputOutputAnimationControlClass.QuasarScreen("Not registered");
                         Console.WriteLine();
                         Console.Write($"Invalid Username or Passphrase. Try again.");
                         username = InputOutputAnimationControlClass.UsernameInput();
@@ -79,13 +81,13 @@ namespace IndividualProject
             }
         }
 
-        static void StoreCurrentLoginCredentialsToDatabase(string currentUsername, string currentPassphrase)
+        public static void StoreCurrentLoginCredentialsToDatabase(string currentUsername, string currentPassphrase)
         {
             string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
             using (SqlConnection dbcon = new SqlConnection(connectionString))
             {
                 dbcon.Open();
-                SqlCommand StoreLoginCredentials = new SqlCommand($"UPDATE CurrentLoginCredentials SET username = '{currentUsername}', passphrase = '{currentPassphrase}'", dbcon);
+                SqlCommand StoreLoginCredentials = new SqlCommand($"UPDATE CurrentLoginCredentials SET username = '{currentUsername}', passphrase = '{currentPassphrase}', currentStatus = 'active'", dbcon);
                 StoreLoginCredentials.ExecuteScalar();
             }
         }
@@ -112,6 +114,32 @@ namespace IndividualProject
                 string currentRole = (string)RetrieveCurrentUsernameRole.ExecuteScalar();
                 return currentRole;
             }
+        }
+
+        public static string RetrieveCurrentUserStatusFromDatabase()
+        {
+            string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
+            using (SqlConnection dbcon = new SqlConnection(connectionString))
+            {
+                dbcon.Open();
+                SqlCommand RetrieveCurrentUserStatus = new SqlCommand($"SELECT currentStatus FROM CurrentLoginCredentials", dbcon);
+                string currentUserStatus = (string)RetrieveCurrentUserStatus.ExecuteScalar();
+                return currentUserStatus;
+            }
+        }
+
+        public static void TerminateQuasar()
+        {
+            string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
+            using (SqlConnection dbcon = new SqlConnection(connectionString))
+            {
+                dbcon.Open();
+                SqlCommand SetStatusToInnactive = new SqlCommand($"UPDATE CurrentLoginCredentials SET username = 'Not Registered', currentStatus = 'inactive'", dbcon);
+                SetStatusToInnactive.ExecuteScalar();
+            }
+            Console.WriteLine();
+            Console.WriteLine("Wait for Quasar to shut down");
+            InputOutputAnimationControlClass.UniversalLoadingOuput("Terminating");
         }
     }
 }
