@@ -9,8 +9,8 @@ namespace IndividualProject
     {
         public static bool UserLoginCredentials()
         {
-            string username = InputOutputControlClass.UsernameInput();
-            string passphrase = InputOutputControlClass.PassphraseInput();
+            string username = InputOutputAnimationControlClass.UsernameInput();
+            string passphrase = InputOutputAnimationControlClass.PassphraseInput();
             
             var connectionString = new SqlConnection("Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin");
             
@@ -20,20 +20,22 @@ namespace IndividualProject
                 {
                     StoreCurrentLoginCredentialsToDatabase(username, passphrase);
                     Console.WriteLine($"Connection Established! Welcome back {username}!");
+                    System.Threading.Thread.Sleep(1000);
                     return true;
                 }
                 else
                 {
                     while (true)
                     {
-                        Console.WriteLine($"Invalid Username or Passphrase. Try again.");
-                        username = InputOutputControlClass.UsernameInput();
-                        passphrase = InputOutputControlClass.PassphraseInput();
-                        ConsoleOutputAndAnimations.UniversalLoadingOuput("Attempting connection to server");
+                        InputOutputAnimationControlClass.QuasarScreen();
+                        Console.WriteLine();
+                        Console.Write($"Invalid Username or Passphrase. Try again.");
+                        username = InputOutputAnimationControlClass.UsernameInput();
+                        passphrase = InputOutputAnimationControlClass.PassphraseInput();
+                        InputOutputAnimationControlClass.UniversalLoadingOuput("Attempting connection to server");
                         if (CheckUsernameAndPasswordMatchInDatabase(username, passphrase))
                         {
                             StoreCurrentLoginCredentialsToDatabase(username, passphrase);
-                            //TestConnectionToSqlServer(connectionString);
                             Console.WriteLine($"Connection Established! Welcome back {username}!");
                             return true;
                         }
@@ -45,7 +47,7 @@ namespace IndividualProject
 
         public static bool TestConnectionToSqlServer(this SqlConnection connectionString)
         {
-            ConsoleOutputAndAnimations.UniversalLoadingOuput("Attempting connection to server");
+            InputOutputAnimationControlClass.UniversalLoadingOuput("Attempting connection to server");
             try
             {
                 connectionString.Open();

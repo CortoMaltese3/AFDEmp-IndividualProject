@@ -14,8 +14,8 @@ namespace IndividualProject
         {
             string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
             Console.WriteLine("\r\nFILE NEW TECHNICAL TICKET");
-            InputOutputControlClass.ClearScreen();
-            string comment = InputOutputControlClass.TicketComment();
+            InputOutputAnimationControlClass.ClearScreen();
+            string comment = InputOutputAnimationControlClass.TicketComment();
             using (SqlConnection dbcon = new SqlConnection(connectionString))
             {
                 dbcon.Open();
@@ -23,7 +23,7 @@ namespace IndividualProject
                 openNewTechnicalTicket.ExecuteScalar();
                 SqlCommand fetchNewTicketID = new SqlCommand($"SELECT ticketID FROM CustomerTickets WHERE comments = '{comment}'", dbcon);
                 int ticketID = (int)fetchNewTicketID.ExecuteScalar();
-                ConsoleOutputAndAnimations.UniversalLoadingOuput("Filing new customer ticket in progress");
+                InputOutputAnimationControlClass.UniversalLoadingOuput("Filing new customer ticket in progress");
                 Console.WriteLine($"New Customer Ticket with ID: {ticketID} has been successfully created. Status: Open");
             }
         }
@@ -31,9 +31,9 @@ namespace IndividualProject
         public static void CloseCustomerTicket()
         {
             Console.WriteLine("\r\nCLOSE AN EXISTING TECHNICAL TICKET");
-            InputOutputControlClass.ClearScreen();
+            InputOutputAnimationControlClass.ClearScreen();
             Console.WriteLine("Would you like to open the list of Opened Tickets?");
-            string option = InputOutputControlClass.PromptYesOrNo();
+            string option = InputOutputAnimationControlClass.PromptYesOrNo();
             using (SqlConnection dbcon = new SqlConnection(connectionString))
             {
                 if (option == "Y" || option == "y")
@@ -66,15 +66,15 @@ namespace IndividualProject
                 }
                 else
                 {
-                    int ticketID = InputOutputControlClass.SelectTicketID();
+                    int ticketID = InputOutputAnimationControlClass.SelectTicketID();
                     Console.WriteLine($"Are you sure you want to mark ticket {ticketID} as closed?");
-                    string option2 = InputOutputControlClass.PromptYesOrNo();
+                    string option2 = InputOutputAnimationControlClass.PromptYesOrNo();
                     if (option2 == "Y" || option2 == "y")
                     {
                         dbcon.Open();
                         SqlCommand closeCustomerTicket = new SqlCommand($"UPDATE CustomerTickets SET ticketStatus = 'closed' WHERE ticketID = {ticketID} ", dbcon);
                         closeCustomerTicket.ExecuteScalar();
-                        ConsoleOutputAndAnimations.UniversalLoadingOuput("Action in progress");
+                        InputOutputAnimationControlClass.UniversalLoadingOuput("Action in progress");
                         Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully marked as closed");
                     }
                     else
@@ -83,7 +83,7 @@ namespace IndividualProject
                     }
                 }
             }
-            InputOutputControlClass.ClearScreen();
+            InputOutputAnimationControlClass.ClearScreen();
             ApplicationMenuClass.LoginScreen();
         }
     }

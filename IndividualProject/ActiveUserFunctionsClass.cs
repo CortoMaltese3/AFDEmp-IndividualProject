@@ -12,12 +12,13 @@ namespace IndividualProject
         {
             if (ConnectToServerClass.UserLoginCredentials())
             {
+                InputOutputAnimationControlClass.QuasarScreen();
                 string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
                 string currentUsernameRole = ConnectToServerClass.RetrieveCurrentUsernameRoleFromDatabase();
                 switch (currentUsernameRole)
                 {
                     case "super_admin":
-                        ConsoleKey function = ConsoleOutputAndAnimations.AdminFunctionOptionsOutput();
+                        ConsoleKey function = InputOutputAnimationControlClass.AdminFunctionOptionsOutput();
                         switch (function)
                         {
                             //Check Inbox
@@ -34,7 +35,7 @@ namespace IndividualProject
                             case ConsoleKey.D3:
                                 Console.WriteLine();
                                 RoleFunctionsClass.ShowAvailableUsersFromDatabase();
-                                InputOutputControlClass.ClearScreen();
+                                InputOutputAnimationControlClass.ClearScreen();
                                 ApplicationMenuClass.LoginScreen();
                                 break;
                             

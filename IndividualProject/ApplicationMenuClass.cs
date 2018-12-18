@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 
 namespace IndividualProject
@@ -11,7 +8,7 @@ namespace IndividualProject
     {
         public static void LoginScreen()
         {
-            ConsoleKey loginOrRegisterInput = InputOutputControlClass.LoginScreenOptions();
+            ConsoleKey loginOrRegisterInput = InputOutputAnimationControlClass.LoginScreenOptions();
             while (loginOrRegisterInput != ConsoleKey.Escape)
             {
                 switch (loginOrRegisterInput)
@@ -25,9 +22,11 @@ namespace IndividualProject
                         CreateNewAccountClass.CreateNewAccountRequest();
                         break;
                 }
-                loginOrRegisterInput = InputOutputControlClass.LoginScreenOptions();
+                loginOrRegisterInput = InputOutputAnimationControlClass.LoginScreenOptions();
             }
-            Console.WriteLine("end");
+            Console.WriteLine();
+            Console.WriteLine("Wait for Quasar to shut down");
+            InputOutputAnimationControlClass.UniversalLoadingOuput("Terminating");
         }
 
 

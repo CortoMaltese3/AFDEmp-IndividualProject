@@ -13,13 +13,14 @@ namespace IndividualProject
 
         public static void CreateNewUserFromRequestFunction()
         {
-            
             string pendingUsername = File.ReadLines(newUserRequestPath).First();
             if (pendingUsername == " ")
             {
-                Console.WriteLine("\r\nThere are no pending requests");
-                InputOutputControlClass.ClearScreen();
-                ApplicationMenuClass.LoginScreen();
+                InputOutputAnimationControlClass.QuasarScreen();
+                InputOutputAnimationControlClass.UniversalLoadingOuput("Action in progress");
+                Console.Write("There are no pending requests");
+                ActiveUserFunctionsClass.ActiveUserProcedures();
+                //ApplicationMenuClass.LoginScreen();
             }
             else
             {
@@ -27,9 +28,9 @@ namespace IndividualProject
 
                 string pendingPassphrase = File.ReadLines(newUserRequestPath).Skip(1).Take(1).First();
                 pendingPassphrase = pendingPassphrase.Remove(0, 12);
-
+                InputOutputAnimationControlClass.QuasarScreen();
                 Console.WriteLine($"\r\nYou are about to create a new username-password entry : {pendingUsername} - {pendingPassphrase}");
-                string pendingRole = InputOutputControlClass.SelectUserRole();
+                string pendingRole = InputOutputAnimationControlClass.SelectUserRole();
 
                 using (SqlConnection dbcon = new SqlConnection(connectionString))
                 {
@@ -40,10 +41,10 @@ namespace IndividualProject
                     appendUserRoleToDatabase.ExecuteScalar();
 
                 }
-                ConsoleOutputAndAnimations.UniversalLoadingOuput("Creating new user in progress");
+                InputOutputAnimationControlClass.UniversalLoadingOuput("Creating new user in progress");
                 Console.WriteLine($"User {pendingUsername} has been created successfully. Status : {pendingRole}");
                 File.WriteAllLines(newUserRequestPath, new string[] { " " });
-                InputOutputControlClass.ClearScreen();
+                InputOutputAnimationControlClass.ClearScreen();
                 ApplicationMenuClass.LoginScreen();
             }
         }
@@ -53,19 +54,19 @@ namespace IndividualProject
             Console.WriteLine("\r\nChoose a User from the list and proceed to delete");
             Dictionary<string, string> AvailableUsernamesDictionary = ShowAvailableUsersFromDatabase();
             
-            string username = InputOutputControlClass.UsernameInput();
+            string username = InputOutputAnimationControlClass.UsernameInput();
 
             while (AvailableUsernamesDictionary.ContainsKey(username) == false || username == "admin")
             {
                 if (AvailableUsernamesDictionary.ContainsKey(username) == false)
                 {
                     Console.WriteLine($"Database does not contain a User {username}");
-                    username = InputOutputControlClass.UsernameInput();
+                    username = InputOutputAnimationControlClass.UsernameInput();
                 }
                 else
                 {
                     Console.WriteLine("Cannot delete super_admin! Please choose a different user");
-                    username = InputOutputControlClass.UsernameInput();
+                    username = InputOutputAnimationControlClass.UsernameInput();
                 }
             }
 
@@ -75,9 +76,9 @@ namespace IndividualProject
                 SqlCommand deleteUsername = new SqlCommand($"RemoveUsernameFromDatabase @username = '{username}'", dbcon);
                 deleteUsername.ExecuteNonQuery();
             }
-            ConsoleOutputAndAnimations.UniversalLoadingOuput("Deleting existing user in progress");
+            InputOutputAnimationControlClass.UniversalLoadingOuput("Deleting existing user in progress");
             Console.WriteLine($"Username {username} has been successfully deleted from database");
-            InputOutputControlClass.ClearScreen();
+            InputOutputAnimationControlClass.ClearScreen();
             ApplicationMenuClass.LoginScreen();
         }
 
@@ -113,14 +114,19 @@ namespace IndividualProject
 
             if (pendingUsernameCheck == " ")
             {
-                Console.WriteLine("\r\nThere are no pending User registrations");
-                InputOutputControlClass.ClearScreen();
-                ApplicationMenuClass.LoginScreen();
+                InputOutputAnimationControlClass.QuasarScreen();
+                InputOutputAnimationControlClass.UniversalLoadingOuput("Action in progress");
+                Console.WriteLine("There are no pending User registrations");
+                InputOutputAnimationControlClass.QuasarScreen();
+                ActiveUserFunctionsClass.ActiveUserProcedures();
+                //ApplicationMenuClass.LoginScreen();
             }
             else
             {
-                Console.WriteLine("\r\nYou have 1 pending User registration request. Would you like to create new user?");
-                InputOutputControlClass.PromptYesOrNo();
+                InputOutputAnimationControlClass.QuasarScreen();
+                InputOutputAnimationControlClass.UniversalLoadingOuput("Action in progress");
+                Console.WriteLine("You have 1 pending User registration request. Would you like to create new user?");
+                InputOutputAnimationControlClass.PromptYesOrNo();
                 CreateNewUserFromRequestFunction();
             }
         }
@@ -130,22 +136,22 @@ namespace IndividualProject
             Console.WriteLine("\r\nChoose a User from the list and proceed to upgrade/downgrade Role Status");
             Dictionary<string, string> AvailableUsernamesDictionary = ShowAvailableUsersFromDatabase();
 
-            string username = InputOutputControlClass.UsernameInput();
+            string username = InputOutputAnimationControlClass.UsernameInput();
 
             while (AvailableUsernamesDictionary.ContainsKey(username) == false || username == "admin")
             {
                 if (AvailableUsernamesDictionary.ContainsKey(username) == false)
                 {
                     Console.WriteLine($"Database does not contain a User {username}");
-                    username = InputOutputControlClass.UsernameInput();
+                    username = InputOutputAnimationControlClass.UsernameInput();
                 }
                 else
                 {
                     Console.WriteLine("Cannot alter super_admin's Status! Please choose a different user");
-                    username = InputOutputControlClass.UsernameInput();
+                    username = InputOutputAnimationControlClass.UsernameInput();
                 }
             }
-            string userRole = InputOutputControlClass.SelectUserRole();
+            string userRole = InputOutputAnimationControlClass.SelectUserRole();
 
             using (SqlConnection dbcon = new SqlConnection(connectionString))
             {
@@ -154,10 +160,10 @@ namespace IndividualProject
                 SqlCommand selectUserRole = new SqlCommand($"SELECT userRole FROM UserLevelAccess WHERE username = '{username}'", dbcon);
                 alterUserRole.ExecuteScalar();
                 string newUserRole = (string)selectUserRole.ExecuteScalar();
-                ConsoleOutputAndAnimations.UniversalLoadingOuput("Modifying User's role status in progress");
+                InputOutputAnimationControlClass.UniversalLoadingOuput("Modifying User's role status in progress");
                 Console.WriteLine($"Username {username} has been successfully modified as {newUserRole}");
             }
-            InputOutputControlClass.ClearScreen();
+            InputOutputAnimationControlClass.ClearScreen();
             ApplicationMenuClass.LoginScreen();
         }
     }

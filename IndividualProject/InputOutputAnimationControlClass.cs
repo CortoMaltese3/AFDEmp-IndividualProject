@@ -4,8 +4,11 @@ using System.Linq;
 
 namespace IndividualProject
 {
-    static class InputOutputControlClass
+    static class InputOutputAnimationControlClass
     {
+        static int origRow;
+        static int origCol;
+
         public static string UsernameInput()
         {
             Console.Write("\r\nusername: ");
@@ -58,7 +61,6 @@ namespace IndividualProject
             }
         }
 
-
         public static bool TerminateProgramCommand(ConsoleKey escape)
         {
             while (escape != ConsoleKey.Escape)
@@ -77,7 +79,7 @@ namespace IndividualProject
 
         public static string SelectUserRole()
         {
-            Console.WriteLine("Please choose one of the following user roles : Administrator, Moderator, User");
+            Console.Write("Please choose one of the following user roles : Administrator, Moderator, User  ->  ");
             string pendingRole = Console.ReadLine();
             List<string> roleList = new List<string>();
             roleList.Add("Administrator");
@@ -97,9 +99,8 @@ namespace IndividualProject
 
         public static ConsoleKey LoginScreenOptions()
         {
-            ConsoleOutputAndAnimations.CenterText("Welcome to Quasar CRM Program");
-            ConsoleOutputAndAnimations.CenterText("-IT Crowd-");
-            ConsoleOutputAndAnimations.UniversalLoadingOuput("Loading");
+            QuasarScreen();
+            UniversalLoadingOuput("Loading");
 
             Console.Write("Press '1' to login with your credentials or '2' to create a new account: ");
             ConsoleKey loginOrRegisterInput = Console.ReadKey().Key;
@@ -109,6 +110,8 @@ namespace IndividualProject
             }
             while (loginOrRegisterInput != ConsoleKey.D1 && loginOrRegisterInput != ConsoleKey.D2)
             {
+                
+                QuasarScreen();
                 Console.Write("\r\nPress '1' to login with your credentials or '2' to create a new account: ");
                 loginOrRegisterInput = Console.ReadKey().Key;
                 if (loginOrRegisterInput == ConsoleKey.Escape)
@@ -135,57 +138,16 @@ namespace IndividualProject
             }
             return yesOrNo;
         }
-    }
-
-    static class ConsoleOutputAndAnimations
-    {
-        //public static void AttemptingConnectionToServerOutput()
-        //{
-        //    Console.Write("Attempting connection to server");
-        //    DotsBlinking();
-        //}
-
-        //public static void CreatingNewUserOutput()
-        //{
-        //    Console.Write("Creating new user in progress");
-        //    DotsBlinking();
-        //}
-
-        //public static void DeletingExistingUserOutput()
-        //{
-        //    Console.Write("Deleting existing user in progress");
-        //    DotsBlinking();
-        //}
-
-        //public static void ModifyingExistingUserRoleOutput()
-        //{
-        //    Console.Write("Modifying User's role status in progress");
-        //    DotsBlinking();
-        //}
-
-        //public static void FilingNewCustomerTicketOutput()
-        //{
-        //    Console.Write("Filing new customer ticket in progress");
-        //    DotsBlinking();
-        //}
-
-        //public static void ProcessingOutput()
-        //{
-        //    Console.Write("Action in progress");
-        //    DotsBlinking();
-        //}
-
-        //public static void LoadingOutput()
-        //{
-        //    Console.Write("loading");
-        //    DotsBlinking();
-        //}
-
         public static void UniversalLoadingOuput(string message)
         {
             Console.Write(message);
             DotsBlinking();
             Console.Write("\r" + new string(' ', Console.WindowWidth) + "\r");
+        }
+
+        public static void WriteAt(int x, int y)
+        {   
+            Console.SetCursorPosition(origCol + x, origRow + y);
         }
 
         public static void DotsBlinking()
@@ -200,10 +162,9 @@ namespace IndividualProject
                     case 3: Console.Write("."); break;
                     case 4: Console.Write("."); break;
                 }
-                System.Threading.Thread.Sleep(500);
+                System.Threading.Thread.Sleep(400);
                 Console.SetCursorPosition(Console.CursorLeft + 0, Console.CursorTop + 0);
             }
-            //Console.WriteLine();
         }
 
         public static ConsoleKey AdminFunctionOptionsOutput()
@@ -217,7 +178,8 @@ namespace IndividualProject
             Console.WriteLine("6: Manage Customer Trouble Tickets");
             Console.WriteLine("7: View the transacted data between users");
             Console.WriteLine("8: Edit the transacted data between users");
-            Console.WriteLine("9: Delete the transacted data between users\r\n");
+            Console.WriteLine("9: Delete the transacted data between users");
+            Console.Write("\r\nFunction: ");
 
             ConsoleKey function = Console.ReadKey().Key;
             while
@@ -242,7 +204,8 @@ namespace IndividualProject
                 Console.WriteLine("6: Manage Customer Trouble Tickets");
                 Console.WriteLine("7: View the transacted data between users");
                 Console.WriteLine("8: Edit the transacted data between users");
-                Console.WriteLine("9: Delete the transacted data between users\r\n");
+                Console.WriteLine("9: Delete the transacted data between users");
+                Console.Write("\r\nFunction: ");
 
                 function = Console.ReadKey().Key;
             }
@@ -251,8 +214,15 @@ namespace IndividualProject
 
         public static void CenterText(string text)
         {
-            //Console.WriteLine(new string(' ', (Console.WindowWidth - text.Length) / 2));
             Console.WriteLine(string.Format("{0," + (Console.WindowWidth + text.Length) / 2 + "}", text));
+        }
+
+        public static void QuasarScreen()
+        {
+            System.Threading.Thread.Sleep(500);
+            Console.Clear();
+            CenterText("Welcome to Quasar CRM Program");
+            CenterText("-IT Crowd-");
         }
     }
 }
