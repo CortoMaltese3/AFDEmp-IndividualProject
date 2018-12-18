@@ -23,7 +23,7 @@ namespace IndividualProject
                 openNewTechnicalTicket.ExecuteScalar();
                 SqlCommand fetchNewTicketID = new SqlCommand($"SELECT ticketID FROM CustomerTickets WHERE comments = '{comment}'", dbcon);
                 int ticketID = (int)fetchNewTicketID.ExecuteScalar();
-                ConsoleOutputAndAnimations.FilingNewCustomerTicketOutput();
+                ConsoleOutputAndAnimations.UniversalLoadingOuput("Filing new customer ticket in progress");
                 Console.WriteLine($"New Customer Ticket with ID: {ticketID} has been successfully created. Status: Open");
             }
         }
@@ -74,7 +74,7 @@ namespace IndividualProject
                         dbcon.Open();
                         SqlCommand closeCustomerTicket = new SqlCommand($"UPDATE CustomerTickets SET ticketStatus = 'closed' WHERE ticketID = {ticketID} ", dbcon);
                         closeCustomerTicket.ExecuteScalar();
-                        ConsoleOutputAndAnimations.ProcessingOutput();
+                        ConsoleOutputAndAnimations.UniversalLoadingOuput("Action in progress");
                         Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully marked as closed");
                     }
                     else

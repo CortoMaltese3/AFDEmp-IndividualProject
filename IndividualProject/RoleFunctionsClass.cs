@@ -40,13 +40,12 @@ namespace IndividualProject
                     appendUserRoleToDatabase.ExecuteScalar();
 
                 }
-                ConsoleOutputAndAnimations.CreatingNewUserOutput();
+                ConsoleOutputAndAnimations.UniversalLoadingOuput("Creating new user in progress");
                 Console.WriteLine($"User {pendingUsername} has been created successfully. Status : {pendingRole}");
                 File.WriteAllLines(newUserRequestPath, new string[] { " " });
                 InputOutputControlClass.ClearScreen();
                 ApplicationMenuClass.LoginScreen();
             }
-            
         }
 
         public static void DeleteUserFromDatabase()
@@ -76,7 +75,7 @@ namespace IndividualProject
                 SqlCommand deleteUsername = new SqlCommand($"RemoveUsernameFromDatabase @username = '{username}'", dbcon);
                 deleteUsername.ExecuteNonQuery();
             }
-            ConsoleOutputAndAnimations.DeletingExistingUserOutput();
+            ConsoleOutputAndAnimations.UniversalLoadingOuput("Deleting existing user in progress");
             Console.WriteLine($"Username {username} has been successfully deleted from database");
             InputOutputControlClass.ClearScreen();
             ApplicationMenuClass.LoginScreen();
@@ -155,7 +154,7 @@ namespace IndividualProject
                 SqlCommand selectUserRole = new SqlCommand($"SELECT userRole FROM UserLevelAccess WHERE username = '{username}'", dbcon);
                 alterUserRole.ExecuteScalar();
                 string newUserRole = (string)selectUserRole.ExecuteScalar();
-                ConsoleOutputAndAnimations.ModifyingExistingUserRoleOutput();
+                ConsoleOutputAndAnimations.UniversalLoadingOuput("Modifying User's role status in progress");
                 Console.WriteLine($"Username {username} has been successfully modified as {newUserRole}");
             }
             InputOutputControlClass.ClearScreen();

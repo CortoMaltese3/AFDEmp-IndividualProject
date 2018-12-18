@@ -29,7 +29,7 @@ namespace IndividualProject
                         Console.WriteLine($"Invalid Username or Passphrase. Try again.");
                         username = InputOutputControlClass.UsernameInput();
                         passphrase = InputOutputControlClass.PassphraseInput();
-                        ConsoleOutputAndAnimations.AttemptingConnectionToServerOutput();
+                        ConsoleOutputAndAnimations.UniversalLoadingOuput("Attempting connection to server");
                         if (CheckUsernameAndPasswordMatchInDatabase(username, passphrase))
                         {
                             StoreCurrentLoginCredentialsToDatabase(username, passphrase);
@@ -45,7 +45,7 @@ namespace IndividualProject
 
         public static bool TestConnectionToSqlServer(this SqlConnection connectionString)
         {
-            ConsoleOutputAndAnimations.AttemptingConnectionToServerOutput();
+            ConsoleOutputAndAnimations.UniversalLoadingOuput("Attempting connection to server");
             try
             {
                 connectionString.Open();

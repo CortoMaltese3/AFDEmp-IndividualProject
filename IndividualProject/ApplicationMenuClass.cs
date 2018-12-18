@@ -25,10 +25,11 @@ namespace IndividualProject
                         CreateNewAccountClass.CreateNewAccountRequest();
                         break;
                 }
-                loginOrRegisterInput = InputOutputControlClass.TerminateProgramCommand();
+                loginOrRegisterInput = InputOutputControlClass.LoginScreenOptions();
             }
-
+            Console.WriteLine("end");
         }
+
 
     }
 }

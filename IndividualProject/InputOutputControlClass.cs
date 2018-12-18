@@ -59,11 +59,13 @@ namespace IndividualProject
         }
 
 
-        public static ConsoleKey TerminateProgramCommand()
+        public static bool TerminateProgramCommand(ConsoleKey escape)
         {
-            //Console.WriteLine("Press any key to continue or escape to terminate the program");
-            ConsoleKey escape = Console.ReadKey().Key;
-            return escape;
+            while (escape != ConsoleKey.Escape)
+            {
+                return true;
+            }
+            return false;
         }
 
         public static void ClearScreen()
@@ -95,8 +97,11 @@ namespace IndividualProject
 
         public static ConsoleKey LoginScreenOptions()
         {
-            Console.WriteLine("Welcome to ITCrowd CRM Program");
-            Console.Write("\r\nPress '1' to login with your credentials or '2' to create a new account: ");
+            ConsoleOutputAndAnimations.CenterText("Welcome to Quasar CRM Program");
+            ConsoleOutputAndAnimations.CenterText("-IT Crowd-");
+            ConsoleOutputAndAnimations.UniversalLoadingOuput("Loading");
+
+            Console.Write("Press '1' to login with your credentials or '2' to create a new account: ");
             ConsoleKey loginOrRegisterInput = Console.ReadKey().Key;
             if (loginOrRegisterInput == ConsoleKey.Escape)
             {
@@ -106,19 +111,23 @@ namespace IndividualProject
             {
                 Console.Write("\r\nPress '1' to login with your credentials or '2' to create a new account: ");
                 loginOrRegisterInput = Console.ReadKey().Key;
+                if (loginOrRegisterInput == ConsoleKey.Escape)
+                {
+                    return loginOrRegisterInput;
+                }
             }
             return loginOrRegisterInput;
         }
 
         public static string PromptYesOrNo()
         {
-            Console.Write("Type 'Y' for yes or 'N' for no :");
+            Console.Write("Type 'Y' for yes or 'N' for no : ");
             string yesOrNo = Console.ReadLine();
-            while 
+            while
                 (
-                    yesOrNo != "Y" && 
-                    yesOrNo != "y" && 
-                    yesOrNo != "N" && 
+                    yesOrNo != "Y" &&
+                    yesOrNo != "y" &&
+                    yesOrNo != "N" &&
                     yesOrNo != "n"
                 )
             {
@@ -130,40 +139,53 @@ namespace IndividualProject
 
     static class ConsoleOutputAndAnimations
     {
-        public static void AttemptingConnectionToServerOutput()
-        {
-            Console.Write("Attempting connection to server");
-            DotsBlinking();
-        }
+        //public static void AttemptingConnectionToServerOutput()
+        //{
+        //    Console.Write("Attempting connection to server");
+        //    DotsBlinking();
+        //}
 
-        public static void CreatingNewUserOutput()
-        {
-            Console.Write("Creating new user in progress");
-            DotsBlinking();
-        }
+        //public static void CreatingNewUserOutput()
+        //{
+        //    Console.Write("Creating new user in progress");
+        //    DotsBlinking();
+        //}
 
-        public static void DeletingExistingUserOutput()
-        {
-            Console.Write("Deleting existing user in progress");
-            DotsBlinking();
-        }
+        //public static void DeletingExistingUserOutput()
+        //{
+        //    Console.Write("Deleting existing user in progress");
+        //    DotsBlinking();
+        //}
 
-        public static void ModifyingExistingUserRoleOutput()
-        {
-            Console.Write("Modifying User's role status in progress");
-            DotsBlinking();
-        }
+        //public static void ModifyingExistingUserRoleOutput()
+        //{
+        //    Console.Write("Modifying User's role status in progress");
+        //    DotsBlinking();
+        //}
 
-        public static void FilingNewCustomerTicketOutput()
-        {
-            Console.Write("Filing new customer ticket in progress");
-            DotsBlinking();
-        }
+        //public static void FilingNewCustomerTicketOutput()
+        //{
+        //    Console.Write("Filing new customer ticket in progress");
+        //    DotsBlinking();
+        //}
 
-        public static void ProcessingOutput()
+        //public static void ProcessingOutput()
+        //{
+        //    Console.Write("Action in progress");
+        //    DotsBlinking();
+        //}
+
+        //public static void LoadingOutput()
+        //{
+        //    Console.Write("loading");
+        //    DotsBlinking();
+        //}
+
+        public static void UniversalLoadingOuput(string message)
         {
-            Console.Write("Action in progress");
+            Console.Write(message);
             DotsBlinking();
+            Console.Write("\r" + new string(' ', Console.WindowWidth) + "\r");
         }
 
         public static void DotsBlinking()
@@ -181,7 +203,7 @@ namespace IndividualProject
                 System.Threading.Thread.Sleep(500);
                 Console.SetCursorPosition(Console.CursorLeft + 0, Console.CursorTop + 0);
             }
-            Console.WriteLine();
+            //Console.WriteLine();
         }
 
         public static ConsoleKey AdminFunctionOptionsOutput()
@@ -192,22 +214,22 @@ namespace IndividualProject
             Console.WriteLine("3: Show list of active users");
             Console.WriteLine("4: Upgrade/Downgrade user's role");
             Console.WriteLine("5: Delete an active username from Database");
-            Console.WriteLine("6: Create new Customer Ticket");
+            Console.WriteLine("6: Manage Customer Trouble Tickets");
             Console.WriteLine("7: View the transacted data between users");
             Console.WriteLine("8: Edit the transacted data between users");
             Console.WriteLine("9: Delete the transacted data between users\r\n");
-            
+
             ConsoleKey function = Console.ReadKey().Key;
             while
                 (
-                    function != ConsoleKey.D1 && 
-                    function != ConsoleKey.D2 && 
-                    function != ConsoleKey.D3 && 
-                    function != ConsoleKey.D4 && 
-                    function != ConsoleKey.D5 && 
-                    function != ConsoleKey.D6 && 
-                    function != ConsoleKey.D7 && 
-                    function != ConsoleKey.D8 && 
+                    function != ConsoleKey.D1 &&
+                    function != ConsoleKey.D2 &&
+                    function != ConsoleKey.D3 &&
+                    function != ConsoleKey.D4 &&
+                    function != ConsoleKey.D5 &&
+                    function != ConsoleKey.D6 &&
+                    function != ConsoleKey.D7 &&
+                    function != ConsoleKey.D8 &&
                     function != ConsoleKey.D9
                 )
             {
@@ -217,7 +239,7 @@ namespace IndividualProject
                 Console.WriteLine("3: Show list of active users");
                 Console.WriteLine("4: Upgrade/Downgrade user's role");
                 Console.WriteLine("5: Delete an active username from Database");
-                Console.WriteLine("6: Create new Customer Ticket");
+                Console.WriteLine("6: Manage Customer Trouble Tickets");
                 Console.WriteLine("7: View the transacted data between users");
                 Console.WriteLine("8: Edit the transacted data between users");
                 Console.WriteLine("9: Delete the transacted data between users\r\n");
@@ -225,6 +247,12 @@ namespace IndividualProject
                 function = Console.ReadKey().Key;
             }
             return function;
+        }
+
+        public static void CenterText(string text)
+        {
+            //Console.WriteLine(new string(' ', (Console.WindowWidth - text.Length) / 2));
+            Console.WriteLine(string.Format("{0," + (Console.WindowWidth + text.Length) / 2 + "}", text));
         }
     }
 }

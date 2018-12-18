@@ -12,8 +12,6 @@ namespace IndividualProject
         static void Main(string[] args)
         {
             ApplicationMenuClass.LoginScreen();
-
-            Console.ReadKey();
         }
     }
 
