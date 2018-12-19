@@ -4,10 +4,11 @@ using System.Linq;
 
 namespace IndividualProject
 {
-    static class InputOutputAnimationControlClass
+    class InputOutputAnimationControlClass
     {
         static int origRow;
         static int origCol;
+        static readonly string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
 
         public static string UsernameInput()
         {
@@ -61,15 +62,6 @@ namespace IndividualProject
             }
         }
 
-        public static bool TerminateProgramCommand(ConsoleKey escape)
-        {
-            while (escape != ConsoleKey.Escape)
-            {
-                return true;
-            }
-            return false;
-        }
-
         public static void ClearScreen()
         {
             Console.WriteLine("press any key to continue");
@@ -112,8 +104,8 @@ namespace IndividualProject
             }
             while (loginOrRegisterInput != ConsoleKey.D1 && loginOrRegisterInput != ConsoleKey.D2)
             {
-                
                 QuasarScreen("Not registered");
+                System.Threading.Thread.Sleep(500);
                 Console.Write("\r\nPress '1' to login with your credentials or '2' to create a new account: ");
                 loginOrRegisterInput = Console.ReadKey().Key;
                 if (loginOrRegisterInput == ConsoleKey.Escape)
@@ -149,7 +141,7 @@ namespace IndividualProject
         }
 
         public static void WriteAt(int x, int y)
-        {   
+        {
             Console.SetCursorPosition(origCol + x, origRow + y);
         }
 
@@ -172,8 +164,6 @@ namespace IndividualProject
 
         public static ConsoleKey AdminFunctionOptionsOutput()
         {
-            string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
-
             Console.WriteLine("\r\nChoose one of the following functions or press Esc to return:");
             Console.WriteLine("1: Check user notifications");
             Console.WriteLine("2: Create new username/password from requests");
@@ -187,7 +177,7 @@ namespace IndividualProject
             Console.Write("\r\nFunction: ");
             System.Threading.Thread.Sleep(500);
             ConsoleKey function = Console.ReadKey().Key;
-            CheckWhetherInputIsEscape(function, currentUsername);
+            CheckWhetherInputIsEscapeToGoBack(function, currentUsername);
             while
                 (
                     function != ConsoleKey.D1 &&
@@ -201,26 +191,8 @@ namespace IndividualProject
                     function != ConsoleKey.D9
                 )
             {
-                //AdminFunctionOptionsOutput();
-                //System.Threading.Thread.Sleep(500);
-                //function = Console.ReadKey().Key;
-                //CheckWhetherInputIsEscape(function, currentUsername);
-
                 QuasarScreen(currentUsername);
-                Console.WriteLine("\r\nChoose one of the following functions or press Esc to return:");
-                Console.WriteLine("1: Check user notifications");
-                Console.WriteLine("2: Create new username/password from requests");
-                Console.WriteLine("3: Show list of active users");
-                Console.WriteLine("4: Upgrade/Downgrade user's role");
-                Console.WriteLine("5: Delete an active username from Database");
-                Console.WriteLine("6: Manage Customer Trouble Tickets");
-                Console.WriteLine("7: View the transacted data between users");
-                Console.WriteLine("8: Edit the transacted data between users");
-                Console.WriteLine("9: Delete the transacted data between users");
-                Console.Write("\r\nFunction: ");
-                System.Threading.Thread.Sleep(500);
-                function = Console.ReadKey().Key;
-                CheckWhetherInputIsEscape(function, currentUsername);
+                AdminFunctionOptionsOutput();
             }
             return function;
         }
@@ -239,17 +211,37 @@ namespace IndividualProject
             CenterText($"[{currentUser}]");
         }
 
-        public static void CheckWhetherInputIsEscape(ConsoleKey consoloKey, string currentUsername)
+        public static void CheckWhetherInputIsEscapeToGoBack(ConsoleKey consoloKey, string currentUsername)
         {
             if (consoloKey == ConsoleKey.Escape)
             {
-                Console.WriteLine("\r\nWould you like to exit to main menu?");
+                QuasarScreen(currentUsername);
+                Console.WriteLine("\r\nWould you like to go back? ");
                 string option = PromptYesOrNo();
                 if (option == "y" || option == "Y")
+                {
+                    ApplicationMenuClass.LoginScreen();
+                }
+                else
                 {
                     QuasarScreen(currentUsername);
                     ActiveUserFunctionsClass.ActiveUserProcedures();
                 }
+            }
+        }
+
+        public static void CheckWhetherInputIsEscapeToGoTerminate()
+        {
+            Console.WriteLine("\r\nWould you like to exit? ");
+            string option = PromptYesOrNo();
+            if (option == "y" || option == "Y")
+            {
+                QuasarScreen(currentUsername);
+                ConnectToServerClass.TerminateQuasar();
+            }
+            else
+            {
+                ApplicationMenuClass.LoginScreen();
             }
         }
     }

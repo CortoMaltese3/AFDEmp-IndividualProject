@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using System.IO;
 
 namespace IndividualProject
 {
@@ -9,8 +7,6 @@ namespace IndividualProject
         public static void LoginScreen()
         {
             ConsoleKey loginOrRegisterInput = InputOutputAnimationControlClass.LoginScreenOptions();
-            while (loginOrRegisterInput != ConsoleKey.Escape)
-            {
                 switch (loginOrRegisterInput)
                 {
                     case ConsoleKey.D1:
@@ -21,12 +17,11 @@ namespace IndividualProject
                     case ConsoleKey.D2:
                         CreateNewAccountClass.CreateNewAccountRequest();
                         break;
-                }
-                loginOrRegisterInput = InputOutputAnimationControlClass.LoginScreenOptions();
+
+                    case ConsoleKey.Escape:
+                    InputOutputAnimationControlClass.CheckWhetherInputIsEscapeToGoTerminate();
+                    break;                     
             }
-            ConnectToServerClass.TerminateQuasar();
         }
-
-
     }
 }

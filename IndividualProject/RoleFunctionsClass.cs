@@ -22,7 +22,6 @@ namespace IndividualProject
                 InputOutputAnimationControlClass.UniversalLoadingOuput("Action in progress");
                 Console.Write("There are no pending requests");
                 System.Threading.Thread.Sleep(1500);
-                //InputOutputAnimationControlClass.QuasarScreen(currentUsername);
                 ActiveUserFunctionsClass.ActiveUserProcedures();
             }
             else
@@ -110,6 +109,7 @@ namespace IndividualProject
                     return AvailableUsernamesDictionary;
                 }
             }
+            
         }
 
         public static void CheckUserNotifications()

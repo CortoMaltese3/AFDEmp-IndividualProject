@@ -37,8 +37,6 @@ namespace IndividualProject
                             case ConsoleKey.D3:
                                 Console.WriteLine();
                                 RoleFunctionsClass.ShowAvailableUsersFromDatabase();
-                                //InputOutputAnimationControlClass.ClearScreen();
-                                //ApplicationMenuClass.LoginScreen();
                                 InputOutputAnimationControlClass.QuasarScreen(currentUsername);
                                 ActiveUserProcedures();
                                 break;
@@ -88,7 +86,6 @@ namespace IndividualProject
 
                         break;
                 }
-
             }
             else
             {
@@ -115,8 +112,8 @@ namespace IndividualProject
                             case ConsoleKey.D3:
                                 Console.WriteLine();
                                 RoleFunctionsClass.ShowAvailableUsersFromDatabase();
-                                InputOutputAnimationControlClass.ClearScreen();
-                                ApplicationMenuClass.LoginScreen();
+                                InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+                                ActiveUserProcedures();
                                 break;
 
                             //upgrade-downgrade user                            
