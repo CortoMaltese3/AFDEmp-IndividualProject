@@ -108,8 +108,7 @@ namespace IndividualProject
                     Console.WriteLine();
                     return AvailableUsernamesDictionary;
                 }
-            }
-            
+            }         
         }
 
         public static void CheckUserNotifications()
@@ -153,34 +152,59 @@ namespace IndividualProject
 
         public static void AlterUserRoleStatus()
         {
-            string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
-            Console.WriteLine("\r\nChoose a User from the list and proceed to upgrade/downgrade Role Status");
+            InputOutputAnimationControlClass.QuasarScreen(currentUsername);
             Dictionary<string, string> AvailableUsernamesDictionary = ShowAvailableUsersFromDatabase();
+            Console.WriteLine("\r\nChoose a User from the list and proceed to upgrade/downgrade Role Status");
 
             string username = InputOutputAnimationControlClass.UsernameInput();
-
+            
             while (AvailableUsernamesDictionary.ContainsKey(username) == false || username == "admin")
             {
                 if (AvailableUsernamesDictionary.ContainsKey(username) == false)
                 {
                     Console.WriteLine($"Database does not contain a User {username}");
+                    System.Threading.Thread.Sleep(3000);
+                    AvailableUsernamesDictionary = ShowAvailableUsersFromDatabase();
+                    Console.WriteLine("\r\nChoose a User from the list and proceed to upgrade/downgrade Role Status");
                     username = InputOutputAnimationControlClass.UsernameInput();
                 }
                 else
                 {
                     Console.WriteLine("Cannot alter super_admin's Status! Please choose a different user");
+                    System.Threading.Thread.Sleep(3000);
+                    AvailableUsernamesDictionary = ShowAvailableUsersFromDatabase();
+                    Console.WriteLine("\r\nChoose a User from the list and proceed to upgrade/downgrade Role Status");
                     username = InputOutputAnimationControlClass.UsernameInput();
                 }
             }
+            InputOutputAnimationControlClass.QuasarScreen(currentUsername);
             string userRole = InputOutputAnimationControlClass.SelectUserRole();
+
+            InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+            //InputOutputAnimationControlClass.UniversalLoadingOuput("Action in progress");
 
             using (SqlConnection dbcon = new SqlConnection(connectionString))
             {
                 dbcon.Open();
+                SqlCommand selectPreviousUserRole = new SqlCommand($"SELECT userRole FROM UserLevelAccess WHERE username = '{username}'", dbcon);
+                string previousUserRole = (string)selectPreviousUserRole.ExecuteScalar();
+                while (previousUserRole == userRole)
+                {
+                    InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+                    Console.WriteLine();
+                    Console.WriteLine($"User '{username}' already is {userRole}. Please proceed to choose a different Role Status");
+                    System.Threading.Thread.Sleep(3000);
+                    InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+                    userRole = InputOutputAnimationControlClass.SelectUserRole();
+                    selectPreviousUserRole = new SqlCommand($"SELECT userRole FROM UserLevelAccess WHERE username = '{username}'", dbcon);
+                    previousUserRole = (string)selectPreviousUserRole.ExecuteScalar();
+                }
+
                 SqlCommand alterUserRole = new SqlCommand($"UPDATE UserLevelAccess SET userRole = '{userRole}' WHERE username = '{username}'", dbcon);
                 SqlCommand selectUserRole = new SqlCommand($"SELECT userRole FROM UserLevelAccess WHERE username = '{username}'", dbcon);
                 alterUserRole.ExecuteScalar();
                 string newUserRole = (string)selectUserRole.ExecuteScalar();
+                InputOutputAnimationControlClass.QuasarScreen(currentUsername);
                 InputOutputAnimationControlClass.UniversalLoadingOuput("Modifying User's role status in progress");
                 Console.WriteLine($"Username {username} has been successfully modified as {newUserRole}");
             }

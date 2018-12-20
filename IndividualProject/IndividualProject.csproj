@@ -44,7 +44,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActiveUserFunctionsClass.cs" />
-    <Compile Include="ApplicationMenuClass.cs" />
     <Compile Include="ConnectToServerClass.cs" />
     <Compile Include="CreateNewAccountClass.cs" />
     <Compile Include="Program.cs" />

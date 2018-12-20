@@ -7,30 +7,30 @@ namespace IndividualProject
 {
     static class ConnectToServerClass
     {
-        //static readonly string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
-        //static readonly string newUserRequestPath = @"C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\CRMTickets\NewUserRequests\NewUserRequest.txt";
+        static readonly string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
+        static readonly string newUserRequestPath = @"C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\CRMTickets\NewUserRequests\NewUserRequest.txt";
 
-        public static bool UserLoginCredentials()
+        public static void UserLoginCredentials()
         {
             string username = InputOutputAnimationControlClass.UsernameInput();
             string passphrase = InputOutputAnimationControlClass.PassphraseInput();
-            
-           var connectionString = new SqlConnection("Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin");
-            
-            while (TestConnectionToSqlServer(connectionString))
+            string currentUsername = RetrieveCurrentLoginCredentialsFromDatabase();
+            var dbcon = new SqlConnection(connectionString);
+
+            while (TestConnectionToSqlServer(dbcon))
             {
                 if (CheckUsernameAndPasswordMatchInDatabase(username, passphrase))
                 {
                     StoreCurrentLoginCredentialsToDatabase(username, passphrase);
                     Console.WriteLine($"Connection Established! Welcome back {username}!");
-                    System.Threading.Thread.Sleep(1000);
-                    return true;
+                    System.Threading.Thread.Sleep(2000);
+                    return;
                 }
                 else
                 {
                     while (true)
                     {
-                        InputOutputAnimationControlClass.QuasarScreen("Not registered");
+                        InputOutputAnimationControlClass.QuasarScreen(currentUsername);
                         Console.WriteLine();
                         Console.Write($"Invalid Username or Passphrase. Try again.");
                         username = InputOutputAnimationControlClass.UsernameInput();
@@ -40,12 +40,12 @@ namespace IndividualProject
                         {
                             StoreCurrentLoginCredentialsToDatabase(username, passphrase);
                             Console.WriteLine($"Connection Established! Welcome back {username}!");
-                            return true;
+                            return;
                         }
                     }
                 }
             }
-            return false;
+            return;
         }
 
         public static bool TestConnectionToSqlServer(this SqlConnection connectionString)
@@ -66,7 +66,6 @@ namespace IndividualProject
 
         public static bool CheckUsernameAndPasswordMatchInDatabase(string usernameCheck, string passphraseCheck)
         {
-            string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
             using (SqlConnection dbcon = new SqlConnection(connectionString))
             {
                 dbcon.Open();
@@ -84,7 +83,6 @@ namespace IndividualProject
 
         public static void StoreCurrentLoginCredentialsToDatabase(string currentUsername, string currentPassphrase)
         {
-            string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
             using (SqlConnection dbcon = new SqlConnection(connectionString))
             {
                 dbcon.Open();
@@ -95,7 +93,6 @@ namespace IndividualProject
 
         public static string RetrieveCurrentLoginCredentialsFromDatabase()
         {
-            string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
             using (SqlConnection dbcon = new SqlConnection(connectionString))
             {
                 dbcon.Open();
@@ -107,7 +104,6 @@ namespace IndividualProject
 
         public static string RetrieveCurrentUsernameRoleFromDatabase()
         {
-            string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
             using (SqlConnection dbcon = new SqlConnection(connectionString))
             {
                 dbcon.Open();
@@ -119,7 +115,6 @@ namespace IndividualProject
 
         public static string RetrieveCurrentUserStatusFromDatabase()
         {
-            string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
             using (SqlConnection dbcon = new SqlConnection(connectionString))
             {
                 dbcon.Open();
@@ -129,18 +124,53 @@ namespace IndividualProject
             }
         }
 
-        public static void TerminateQuasar()
+        public static void ChangeCurrentUserStatusToInactive()
         {
-            string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
             using (SqlConnection dbcon = new SqlConnection(connectionString))
             {
                 dbcon.Open();
                 SqlCommand SetStatusToInnactive = new SqlCommand($"UPDATE CurrentLoginCredentials SET username = 'Not Registered', currentStatus = 'inactive'", dbcon);
                 SetStatusToInnactive.ExecuteScalar();
             }
-            Console.WriteLine();
-            Console.WriteLine("Wait for Quasar to shut down");
-            InputOutputAnimationControlClass.UniversalLoadingOuput("Terminating");
+        }
+
+        public static void TerminateQuasar()
+        {
+            string currentUsername = RetrieveCurrentLoginCredentialsFromDatabase();
+            InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+            Console.WriteLine("\r\nWould you like to exit Quasar? ");
+            string option = InputOutputAnimationControlClass.PromptYesOrNo();
+            if (option == "y" || option == "Y")
+            {
+                InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+                ChangeCurrentUserStatusToInactive();
+                InputOutputAnimationControlClass.UniversalLoadingOuput("Wait for Quasar to shut down");
+            }
+            else
+            {
+                InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+                ApplicationMenuClass.LoginScreen();
+            }
+        }
+
+        public static void LoggingOffQuasar()
+        {
+            string currentUsername = RetrieveCurrentLoginCredentialsFromDatabase();
+            InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+            Console.WriteLine("\r\nWould you like to log out? ");
+            string option = InputOutputAnimationControlClass.PromptYesOrNo();
+            if (option == "y" || option == "Y")
+            {
+                ChangeCurrentUserStatusToInactive();
+                InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+                InputOutputAnimationControlClass.UniversalLoadingOuput("Logging out");
+                ApplicationMenuClass.LoginScreen();
+            }
+            else
+            {
+                InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+                ActiveUserFunctionsClass.ActiveUserProcedures();
+            }
         }
     }
 }

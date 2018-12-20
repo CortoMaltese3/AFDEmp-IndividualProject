@@ -7,6 +7,7 @@ namespace IndividualProject
 {
     class TransactedDataClass
     {
+        static readonly string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
         static readonly string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
         static readonly string newTechnicalIssuePath = @"C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\CRMTickets\TechnicalIssues";
 
@@ -14,7 +15,7 @@ namespace IndividualProject
         {
             string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
             Console.WriteLine("\r\nFILE NEW TECHNICAL TICKET");
-            InputOutputAnimationControlClass.ClearScreen();
+            InputOutputAnimationControlClass.QuasarScreen(currentUsername);
             string comment = InputOutputAnimationControlClass.TicketComment();
             using (SqlConnection dbcon = new SqlConnection(connectionString))
             {
@@ -31,7 +32,7 @@ namespace IndividualProject
         public static void CloseCustomerTicket()
         {
             Console.WriteLine("\r\nCLOSE AN EXISTING TECHNICAL TICKET");
-            InputOutputAnimationControlClass.ClearScreen();
+            InputOutputAnimationControlClass.QuasarScreen(currentUsername);
             Console.WriteLine("Would you like to open the list of Opened Tickets?");
             string option = InputOutputAnimationControlClass.PromptYesOrNo();
             using (SqlConnection dbcon = new SqlConnection(connectionString))
@@ -83,7 +84,7 @@ namespace IndividualProject
                     }
                 }
             }
-            InputOutputAnimationControlClass.ClearScreen();
+            InputOutputAnimationControlClass.QuasarScreen(currentUsername);
             ApplicationMenuClass.LoginScreen();
         }
     }

@@ -7,6 +7,8 @@ namespace IndividualProject
 {
     class CreateNewAccountClass
     {
+        static readonly string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
+
         internal static void CreateNewAccountRequest()
         {
             try
@@ -54,13 +56,13 @@ namespace IndividualProject
             {
                 InputOutputAnimationControlClass.UniversalLoadingOuput("Action in progress");
                 Console.WriteLine("Your Account Request is Pending. Please wait for the administrator to grant you access.");
-                InputOutputAnimationControlClass.ClearScreen();
+                InputOutputAnimationControlClass.QuasarScreen(currentUsername);
                 ApplicationMenuClass.LoginScreen();
             }
             else
             {
                 NewUsernameRequestToList(usernameCheck, passphraseCheck);
-                InputOutputAnimationControlClass.ClearScreen();
+                InputOutputAnimationControlClass.QuasarScreen(currentUsername);
                 ApplicationMenuClass.LoginScreen();
             }
         }

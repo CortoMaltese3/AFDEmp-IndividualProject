@@ -8,7 +8,32 @@ namespace IndividualProject
     {
         static int origRow;
         static int origCol;
-        static readonly string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
+        //static readonly string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
+
+        public static ConsoleKey LoginScreenOptions()
+        {
+            string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
+            QuasarScreen(currentUsername);
+            UniversalLoadingOuput("Loading");
+            Console.Write("Press '1' to login with your credentials or '2' to create a new account: ");
+            ConsoleKey loginOrRegisterInput = Console.ReadKey().Key;
+            if (loginOrRegisterInput == ConsoleKey.Escape)
+            {
+                return loginOrRegisterInput;
+            }
+            while (loginOrRegisterInput != ConsoleKey.D1 && loginOrRegisterInput != ConsoleKey.D2)
+            {
+                QuasarScreen(currentUsername);
+                System.Threading.Thread.Sleep(500);
+                Console.Write("\r\nPress '1' to login with your credentials or '2' to create a new account: ");
+                loginOrRegisterInput = Console.ReadKey().Key;
+                if (loginOrRegisterInput == ConsoleKey.Escape)
+                {
+                    return loginOrRegisterInput;
+                }
+            }
+            return loginOrRegisterInput;
+        }
 
         public static string UsernameInput()
         {
@@ -32,6 +57,64 @@ namespace IndividualProject
                 passphraseInput = Console.ReadLine();
             }
             return passphraseInput;
+        }
+
+        public static ConsoleKey AdminFunctionOptionsOutput()
+        {
+            string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
+
+            Console.WriteLine("\r\nChoose one of the following functions or press Esc to return:");
+            Console.WriteLine("1: Check user notifications");
+            Console.WriteLine("2: Create new username/password from requests");
+            Console.WriteLine("3: Show list of active users");
+            Console.WriteLine("4: Upgrade/Downgrade user's role");
+            Console.WriteLine("5: Delete an active username from Database");
+            Console.WriteLine("6: Manage Customer Trouble Tickets");
+            Console.WriteLine("7: View the transacted data between users");
+            Console.WriteLine("8: Edit the transacted data between users");
+            Console.WriteLine("9: Delete the transacted data between users");
+            Console.Write("\r\nFunction: ");
+            System.Threading.Thread.Sleep(500);
+            ConsoleKey function = Console.ReadKey().Key;
+            if (function == ConsoleKey.Escape)
+            {
+                return function;
+            }
+            //CheckWhetherInputIsEscapeToGoBack(function, currentUsername);
+            while
+                (
+                    function != ConsoleKey.D1 &&
+                    function != ConsoleKey.D2 &&
+                    function != ConsoleKey.D3 &&
+                    function != ConsoleKey.D4 &&
+                    function != ConsoleKey.D5 &&
+                    function != ConsoleKey.D6 &&
+                    function != ConsoleKey.D7 &&
+                    function != ConsoleKey.D8 &&
+                    function != ConsoleKey.D9
+                )
+            {
+                QuasarScreen(currentUsername);
+                Console.WriteLine("\r\nChoose one of the following functions or press Esc to return:");
+                Console.WriteLine("1: Check user notifications");
+                Console.WriteLine("2: Create new username/password from requests");
+                Console.WriteLine("3: Show list of active users");
+                Console.WriteLine("4: Upgrade/Downgrade user's role");
+                Console.WriteLine("5: Delete an active username from Database");
+                Console.WriteLine("6: Manage Customer Trouble Tickets");
+                Console.WriteLine("7: View the transacted data between users");
+                Console.WriteLine("8: Edit the transacted data between users");
+                Console.WriteLine("9: Delete the transacted data between users");
+                Console.Write("\r\nFunction: ");
+                System.Threading.Thread.Sleep(500);
+                function = Console.ReadKey().Key;
+                if (function == ConsoleKey.Escape)
+                {
+                    return function;
+                }
+                //CheckWhetherInputIsEscapeToGoBack(function, currentUsername);
+            }
+            return function;
         }
 
         public static string TicketComment()
@@ -62,16 +145,18 @@ namespace IndividualProject
             }
         }
 
-        public static void ClearScreen()
-        {
-            Console.WriteLine("press any key to continue");
-            Console.ReadKey();
-            Console.Clear();
-        }
+        //public static void ClearScreen()
+        //{
+        //    Console.WriteLine("press any key to continue");
+        //    Console.ReadKey();
+        //    Console.Clear();
+        //}
 
         public static string SelectUserRole()
         {
-            Console.Write("Please choose one of the following user roles : Administrator, Moderator, User  ->  ");
+            string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
+
+            Console.Write("\r\nPlease choose one of the following user roles : Administrator, Moderator, User  ->  ");
             string pendingRole = Console.ReadLine();
             List<string> roleList = new List<string>
             {
@@ -82,39 +167,17 @@ namespace IndividualProject
 
             bool notInRoleList = roleList.Any(x => x.Contains(pendingRole));
 
-            while (notInRoleList == false)
+            while (notInRoleList == false || pendingRole == "")
             {
-                Console.WriteLine("\r\nPlease choose one of the following user roles : Administrator, Moderator, User");
+                QuasarScreen(currentUsername);
+                Console.Write("\r\nPlease choose one of the following user roles : Administrator, Moderator, User  ->  ");
                 pendingRole = Console.ReadLine();
                 notInRoleList = roleList.Any(x => x.Contains(pendingRole));
             }
             return pendingRole;
         }
 
-        public static ConsoleKey LoginScreenOptions()
-        {
-            QuasarScreen("Not registered");
-            UniversalLoadingOuput("Loading");
 
-            Console.Write("Press '1' to login with your credentials or '2' to create a new account: ");
-            ConsoleKey loginOrRegisterInput = Console.ReadKey().Key;
-            if (loginOrRegisterInput == ConsoleKey.Escape)
-            {
-                return loginOrRegisterInput;
-            }
-            while (loginOrRegisterInput != ConsoleKey.D1 && loginOrRegisterInput != ConsoleKey.D2)
-            {
-                QuasarScreen("Not registered");
-                System.Threading.Thread.Sleep(500);
-                Console.Write("\r\nPress '1' to login with your credentials or '2' to create a new account: ");
-                loginOrRegisterInput = Console.ReadKey().Key;
-                if (loginOrRegisterInput == ConsoleKey.Escape)
-                {
-                    return loginOrRegisterInput;
-                }
-            }
-            return loginOrRegisterInput;
-        }
 
         public static string PromptYesOrNo()
         {
@@ -162,40 +225,7 @@ namespace IndividualProject
             }
         }
 
-        public static ConsoleKey AdminFunctionOptionsOutput()
-        {
-            Console.WriteLine("\r\nChoose one of the following functions or press Esc to return:");
-            Console.WriteLine("1: Check user notifications");
-            Console.WriteLine("2: Create new username/password from requests");
-            Console.WriteLine("3: Show list of active users");
-            Console.WriteLine("4: Upgrade/Downgrade user's role");
-            Console.WriteLine("5: Delete an active username from Database");
-            Console.WriteLine("6: Manage Customer Trouble Tickets");
-            Console.WriteLine("7: View the transacted data between users");
-            Console.WriteLine("8: Edit the transacted data between users");
-            Console.WriteLine("9: Delete the transacted data between users");
-            Console.Write("\r\nFunction: ");
-            System.Threading.Thread.Sleep(500);
-            ConsoleKey function = Console.ReadKey().Key;
-            CheckWhetherInputIsEscapeToGoBack(function, currentUsername);
-            while
-                (
-                    function != ConsoleKey.D1 &&
-                    function != ConsoleKey.D2 &&
-                    function != ConsoleKey.D3 &&
-                    function != ConsoleKey.D4 &&
-                    function != ConsoleKey.D5 &&
-                    function != ConsoleKey.D6 &&
-                    function != ConsoleKey.D7 &&
-                    function != ConsoleKey.D8 &&
-                    function != ConsoleKey.D9
-                )
-            {
-                QuasarScreen(currentUsername);
-                AdminFunctionOptionsOutput();
-            }
-            return function;
-        }
+
 
         public static void CenterText(string text)
         {
@@ -220,6 +250,8 @@ namespace IndividualProject
                 string option = PromptYesOrNo();
                 if (option == "y" || option == "Y")
                 {
+                    QuasarScreen(currentUsername);
+                    ConnectToServerClass.ChangeCurrentUserStatusToInactive();
                     ApplicationMenuClass.LoginScreen();
                 }
                 else
@@ -228,21 +260,7 @@ namespace IndividualProject
                     ActiveUserFunctionsClass.ActiveUserProcedures();
                 }
             }
-        }
-
-        public static void CheckWhetherInputIsEscapeToGoTerminate()
-        {
-            Console.WriteLine("\r\nWould you like to exit? ");
-            string option = PromptYesOrNo();
-            if (option == "y" || option == "Y")
-            {
-                QuasarScreen(currentUsername);
-                ConnectToServerClass.TerminateQuasar();
-            }
-            else
-            {
-                ApplicationMenuClass.LoginScreen();
-            }
+            return;
         }
     }
 }
