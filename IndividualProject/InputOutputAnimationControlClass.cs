@@ -7,16 +7,12 @@ namespace IndividualProject
 {
     class InputOutputAnimationControlClass
     {
-        static int origRow;
-        static int origCol;
-        //static readonly string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
-
         public static ConsoleKey LoginScreenOptions()
         {
             string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
             QuasarScreen(currentUsername);
             UniversalLoadingOuput("Loading");
-            Console.Write("Press '1' to login with your credentials or '2' to create a new account: ");
+            Console.Write("Press '1' to login with your credentials, '2' to create a new account or 'Esc' to exit: ");
             ConsoleKey loginOrRegisterInput = Console.ReadKey().Key;
             if (loginOrRegisterInput == ConsoleKey.Escape)
             {
@@ -26,7 +22,7 @@ namespace IndividualProject
             {
                 QuasarScreen(currentUsername);
                 System.Threading.Thread.Sleep(500);
-                Console.Write("\r\nPress '1' to login with your credentials or '2' to create a new account: ");
+                Console.Write("\r\nPress '1' to login with your credentials, '2' to create a new account or 'Esc' to exit: ");
                 loginOrRegisterInput = Console.ReadKey().Key;
                 if (loginOrRegisterInput == ConsoleKey.Escape)
                 {
@@ -35,6 +31,32 @@ namespace IndividualProject
             }
             return loginOrRegisterInput;
         }
+
+        public static ConsoleKey ManageTicketOptionsSreen()
+        {
+            string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
+            QuasarScreen(currentUsername);
+            UniversalLoadingOuput("Loading");
+            Console.Write("\r\nPress '1' to Open a new ticket, '2' to Close an existing one or 'Esc' to go back to Main Menu: ");
+            ConsoleKey openOrCloseTicketInput = Console.ReadKey().Key;
+            if (openOrCloseTicketInput == ConsoleKey.Escape)
+            {
+                return openOrCloseTicketInput;
+            }
+            while (openOrCloseTicketInput != ConsoleKey.D1 && openOrCloseTicketInput != ConsoleKey.D2)
+            {
+                QuasarScreen(currentUsername);
+                System.Threading.Thread.Sleep(500);
+                Console.Write("\r\nPress '1' to Open a new ticket, '2' to Close an existing one or 'Esc' to go back to Main Menu: ");
+                openOrCloseTicketInput = Console.ReadKey().Key;
+                if (openOrCloseTicketInput == ConsoleKey.Escape)
+                {
+                    return openOrCloseTicketInput;
+                }
+            }
+            return openOrCloseTicketInput;
+        }
+
 
         public static string UsernameInput()
         {
@@ -71,9 +93,9 @@ namespace IndividualProject
             Console.WriteLine("4: Upgrade/Downgrade user's role");
             Console.WriteLine("5: Delete an active username from Database");
             Console.WriteLine("6: Manage Customer Trouble Tickets");
-            Console.WriteLine("7: View the transacted data between users");
-            Console.WriteLine("8: Edit the transacted data between users");
-            Console.WriteLine("9: Delete the transacted data between users");
+            Console.WriteLine("7: View Trouble Tickets");
+            Console.WriteLine("8: Edit Trouble Tickets");
+            Console.WriteLine("9: Delete Trouble Tickets");
             Console.Write("\r\nFunction: ");
             System.Threading.Thread.Sleep(500);
             ConsoleKey function = Console.ReadKey().Key;
@@ -102,9 +124,9 @@ namespace IndividualProject
                 Console.WriteLine("4: Upgrade/Downgrade user's role");
                 Console.WriteLine("5: Delete an active username from Database");
                 Console.WriteLine("6: Manage Customer Trouble Tickets");
-                Console.WriteLine("7: View the transacted data between users");
-                Console.WriteLine("8: Edit the transacted data between users");
-                Console.WriteLine("9: Delete the transacted data between users");
+                Console.WriteLine("7: View Trouble Tickets");
+                Console.WriteLine("8: Edit Trouble Tickets");
+                Console.WriteLine("9: Delete Trouble Tickets");
                 Console.Write("\r\nFunction: ");
                 System.Threading.Thread.Sleep(500);
                 function = Console.ReadKey().Key;
@@ -118,13 +140,20 @@ namespace IndividualProject
 
         public static string TicketComment()
         {
-            Console.Write("Compile a summary of the Customer's issue (limit 500 characters): ");
+            string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
+            QuasarScreen(currentUsername);
+            UniversalLoadingOuput("Loading");
+            Console.Write("FILE NEW TECHNICAL TICKET");
+            Console.Write("\r\nCompile a summary of the Customer's issue (limit 500 characters): ");
             string ticketComment = Console.ReadLine();
             while (ticketComment.Length > 500)
             {
-                Console.Write("Summary cannot be longer than 500 characters. Compile a summary of the Customer's issue (limit 500 characters): ");
+                QuasarScreen(currentUsername);
+                Console.WriteLine("FILE NEW TECHNICAL TICKET");
+                Console.Write("\r\nSummary cannot be longer than 500 characters. Compile a summary of the Customer's issue (limit 500 characters): ");
                 ticketComment = Console.ReadLine();
             }
+            System.Threading.Thread.Sleep(500);
             return ticketComment;
         }
 
@@ -171,7 +200,6 @@ namespace IndividualProject
 
         public static string PromptYesOrNo()
         {
-            string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
             Console.Write("Type 'Y' for yes or 'N' for no : ");
             string yesOrNo = Console.ReadLine();
             while
@@ -189,13 +217,16 @@ namespace IndividualProject
         }
         public static void UniversalLoadingOuput(string message)
         {
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.Write(message);
             DotsBlinking();
             Console.Write("\r" + new string(' ', Console.WindowWidth) + "\r");
+            Console.ResetColor();
         }
 
         public static void DotsBlinking()
         {
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
             for (int blink = 0; blink < 5; blink++)
             {
                 switch (blink)
@@ -208,7 +239,9 @@ namespace IndividualProject
                 }
                 System.Threading.Thread.Sleep(400);
                 Console.SetCursorPosition(Console.CursorLeft + 0, Console.CursorTop + 0);
+                
             }
+            Console.ResetColor();
         }
 
         public static void WriteBottomLine(string text)
@@ -233,10 +266,12 @@ namespace IndividualProject
         {
             System.Threading.Thread.Sleep(500);
             Console.Clear();
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
             CenterText("Welcome to Quasar CRM Program");
             CenterText("-IT Crowd-");
             CenterText($"[{currentUser}]");
             WriteBottomLine("~CB6 Individual Project~");
+            Console.ResetColor();
             WriteAt(0, 3);
         }
 

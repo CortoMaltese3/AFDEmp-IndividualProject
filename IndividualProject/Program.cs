@@ -8,7 +8,7 @@ namespace IndividualProject
     {
         static void Main(string[] args)
         {
-            InputOutputAnimationControlClass.BackGroundMusic();
+            //InputOutputAnimationControlClass.BackGroundMusic();
             ApplicationMenuClass.LoginScreen();
         }
     }

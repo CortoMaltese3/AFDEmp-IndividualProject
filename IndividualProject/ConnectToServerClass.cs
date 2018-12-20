@@ -18,8 +18,11 @@ namespace IndividualProject
             {
                 if (CheckUsernameAndPasswordMatchInDatabase(username, passphrase))
                 {
+                    InputOutputAnimationControlClass.QuasarScreen(currentUsername);
                     StoreCurrentLoginCredentialsToDatabase(username, passphrase);
+                    Console.ForegroundColor = ConsoleColor.DarkCyan;
                     Console.WriteLine($"Connection Established! Welcome back {username}!");
+                    Console.ResetColor();
                     System.Threading.Thread.Sleep(1500);
                     return;
                 }
@@ -32,11 +35,14 @@ namespace IndividualProject
                         Console.Write($"Invalid Username or Passphrase. Try again.");
                         username = InputOutputAnimationControlClass.UsernameInput();
                         passphrase = InputOutputAnimationControlClass.PassphraseInput();
+                        InputOutputAnimationControlClass.QuasarScreen(currentUsername);
                         InputOutputAnimationControlClass.UniversalLoadingOuput("Attempting connection to server");
                         if (CheckUsernameAndPasswordMatchInDatabase(username, passphrase))
                         {
                             StoreCurrentLoginCredentialsToDatabase(username, passphrase);
+                            Console.ForegroundColor = ConsoleColor.DarkCyan;
                             Console.WriteLine($"Connection Established! Welcome back {username}!");
+                            Console.ResetColor();
                             return;
                         }
                     }
@@ -47,6 +53,8 @@ namespace IndividualProject
 
         public static bool TestConnectionToSqlServer(this SqlConnection connectionString)
         {
+            string currentUsername = RetrieveCurrentLoginCredentialsFromDatabase();
+            InputOutputAnimationControlClass.QuasarScreen(currentUsername);
             InputOutputAnimationControlClass.UniversalLoadingOuput("Attempting connection to server");
             try
             {
@@ -141,9 +149,24 @@ namespace IndividualProject
             {
                 InputOutputAnimationControlClass.QuasarScreen(currentUsername);
                 ChangeCurrentUserStatusToInactive();
-                InputOutputAnimationControlClass.UniversalLoadingOuput("\r\nWait for Quasar to shut down");
-                InputOutputAnimationControlClass.WriteBottomLine("~~~~~Dedicated to Afro~~~~~");
-                System.Threading.Thread.Sleep(1500);
+                InputOutputAnimationControlClass.UniversalLoadingOuput("Wait for Quasar to shut down");
+
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                for (int blink = 0; blink < 8; blink++)
+                {
+                    if (blink % 2 == 0)
+                    {
+                        InputOutputAnimationControlClass.WriteBottomLine("~~~~~Dedicated to Afro~~~~~");
+                        Console.ForegroundColor = ConsoleColor.DarkCyan;
+                        System.Threading.Thread.Sleep(500);
+                    }
+                    else
+                    {
+                        InputOutputAnimationControlClass.WriteBottomLine("~~~~~Dedicated to Afro~~~~~");
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        System.Threading.Thread.Sleep(500);
+                    }
+                }
             }
             else
             {
@@ -151,6 +174,7 @@ namespace IndividualProject
                 ApplicationMenuClass.LoginScreen();
             }
         }
+
 
         public static void LoggingOffQuasar()
         {
