@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
 
 namespace IndividualProject
 {
     static class ConnectToServerClass
     {
         static readonly string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
-        static readonly string newUserRequestPath = @"C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\CRMTickets\NewUserRequests\NewUserRequest.txt";
 
         public static void UserLoginCredentials()
         {
@@ -23,7 +20,7 @@ namespace IndividualProject
                 {
                     StoreCurrentLoginCredentialsToDatabase(username, passphrase);
                     Console.WriteLine($"Connection Established! Welcome back {username}!");
-                    System.Threading.Thread.Sleep(2000);
+                    System.Threading.Thread.Sleep(1500);
                     return;
                 }
                 else
@@ -144,7 +141,9 @@ namespace IndividualProject
             {
                 InputOutputAnimationControlClass.QuasarScreen(currentUsername);
                 ChangeCurrentUserStatusToInactive();
-                InputOutputAnimationControlClass.UniversalLoadingOuput("Wait for Quasar to shut down");
+                InputOutputAnimationControlClass.UniversalLoadingOuput("\r\nWait for Quasar to shut down");
+                InputOutputAnimationControlClass.WriteBottomLine("~~~~~Dedicated to Afro~~~~~");
+                System.Threading.Thread.Sleep(1500);
             }
             else
             {

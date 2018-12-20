@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Media;
 
 namespace IndividualProject
 {
@@ -6,6 +8,7 @@ namespace IndividualProject
     {
         static void Main(string[] args)
         {
+            InputOutputAnimationControlClass.BackGroundMusic();
             ApplicationMenuClass.LoginScreen();
         }
     }

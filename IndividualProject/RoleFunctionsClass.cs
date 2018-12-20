@@ -22,6 +22,7 @@ namespace IndividualProject
                 InputOutputAnimationControlClass.UniversalLoadingOuput("Action in progress");
                 Console.Write("There are no pending requests");
                 System.Threading.Thread.Sleep(1500);
+                InputOutputAnimationControlClass.QuasarScreen(currentUsername);
                 ActiveUserFunctionsClass.ActiveUserProcedures();
             }
             else
@@ -31,30 +32,42 @@ namespace IndividualProject
                 string pendingPassphrase = File.ReadLines(newUserRequestPath).Skip(1).Take(1).First();
                 pendingPassphrase = pendingPassphrase.Remove(0, 12);
                 InputOutputAnimationControlClass.QuasarScreen(currentUsername);
-                Console.WriteLine($"\r\nYou are about to create a new username-password entry : {pendingUsername} - {pendingPassphrase}");
-                string pendingRole = InputOutputAnimationControlClass.SelectUserRole();
-
-                using (SqlConnection dbcon = new SqlConnection(connectionString))
+                Console.WriteLine($"\r\nYou are about to create a new username-password entry : {pendingUsername} - {pendingPassphrase}\r\nWould you like to proceed?");
+                string option = InputOutputAnimationControlClass.PromptYesOrNo();
+                if(option == "y" || option == "Y")
                 {
-                    dbcon.Open();
-                    SqlCommand appendUserToDatabase = new SqlCommand($"INSERT INTO LoginCredentials VALUES ('{pendingUsername}', '{pendingPassphrase}')", dbcon);
-                    SqlCommand appendUserRoleToDatabase = new SqlCommand($"INSERT INTO UserLevelAccess VALUES ('{pendingUsername}', '{pendingRole}')", dbcon);
-                    appendUserToDatabase.ExecuteScalar();
-                    appendUserRoleToDatabase.ExecuteScalar();
+                    InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+                    string pendingRole = InputOutputAnimationControlClass.SelectUserRole();
 
+                    using (SqlConnection dbcon = new SqlConnection(connectionString))
+                    {
+                        dbcon.Open();
+                        SqlCommand appendUserToDatabase = new SqlCommand($"INSERT INTO LoginCredentials VALUES ('{pendingUsername}', '{pendingPassphrase}')", dbcon);
+                        SqlCommand appendUserRoleToDatabase = new SqlCommand($"INSERT INTO UserLevelAccess VALUES ('{pendingUsername}', '{pendingRole}')", dbcon);
+                        appendUserToDatabase.ExecuteScalar();
+                        appendUserRoleToDatabase.ExecuteScalar();
+
+                    }
+                    InputOutputAnimationControlClass.UniversalLoadingOuput("Creating new user in progress");
+                    Console.WriteLine($"User {pendingUsername} has been created successfully. Status : {pendingRole}");
+                    System.Threading.Thread.Sleep(1500);
+                    File.WriteAllLines(newUserRequestPath, new string[] { " " });
+                    InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+                    ActiveUserFunctionsClass.ActiveUserProcedures();
                 }
-                InputOutputAnimationControlClass.UniversalLoadingOuput("Creating new user in progress");
-                Console.WriteLine($"User {pendingUsername} has been created successfully. Status : {pendingRole}");
-                System.Threading.Thread.Sleep(1500);
-                File.WriteAllLines(newUserRequestPath, new string[] {" "});
-                InputOutputAnimationControlClass.QuasarScreen(currentUsername);
-                ActiveUserFunctionsClass.ActiveUserProcedures();
+                else
+                {
+                    InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+                    InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
+                    ActiveUserFunctionsClass.ActiveUserProcedures();
+                }  
             }
         }
 
         public static void DeleteUserFromDatabase()
         {
             string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
+            InputOutputAnimationControlClass.QuasarScreen(currentUsername);
             Console.WriteLine("\r\nChoose a User from the list and proceed to delete");
             Dictionary<string, string> AvailableUsernamesDictionary = ShowAvailableUsersFromDatabase();
             
@@ -65,11 +78,17 @@ namespace IndividualProject
                 if (AvailableUsernamesDictionary.ContainsKey(username) == false)
                 {
                     Console.WriteLine($"Database does not contain a User {username}");
+                    InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+                    Console.WriteLine("\r\nChoose a User from the list and proceed to delete");
+                    AvailableUsernamesDictionary = ShowAvailableUsersFromDatabase();
                     username = InputOutputAnimationControlClass.UsernameInput();
                 }
                 else
                 {
                     Console.WriteLine("Cannot delete super_admin! Please choose a different user");
+                    InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+                    Console.WriteLine("\r\nChoose a User from the list and proceed to delete");
+                    AvailableUsernamesDictionary = ShowAvailableUsersFromDatabase();
                     username = InputOutputAnimationControlClass.UsernameInput();
                 }
             }
@@ -80,6 +99,7 @@ namespace IndividualProject
                 SqlCommand deleteUsername = new SqlCommand($"RemoveUsernameFromDatabase @username = '{username}'", dbcon);
                 deleteUsername.ExecuteNonQuery();
             }
+            InputOutputAnimationControlClass.QuasarScreen(currentUsername);
             InputOutputAnimationControlClass.UniversalLoadingOuput("Deleting existing user in progress");
             Console.WriteLine($"Username {username} has been successfully deleted from database");
             System.Threading.Thread.Sleep(1500);
@@ -89,6 +109,7 @@ namespace IndividualProject
 
         public static Dictionary<string, string> ShowAvailableUsersFromDatabase()
         {
+            string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
             InputOutputAnimationControlClass.QuasarScreen(currentUsername);
             InputOutputAnimationControlClass.UniversalLoadingOuput("Action in progress");
             using (SqlConnection dbcon = new SqlConnection(connectionString))
@@ -105,7 +126,6 @@ namespace IndividualProject
                         AvailableUsernamesDictionary.Add((string)username, (string)status);
                         Console.WriteLine($"username: {username} - status: {status}");
                     }
-                    Console.WriteLine();
                     return AvailableUsernamesDictionary;
                 }
             }         
@@ -181,7 +201,6 @@ namespace IndividualProject
             string userRole = InputOutputAnimationControlClass.SelectUserRole();
 
             InputOutputAnimationControlClass.QuasarScreen(currentUsername);
-            //InputOutputAnimationControlClass.UniversalLoadingOuput("Action in progress");
 
             using (SqlConnection dbcon = new SqlConnection(connectionString))
             {

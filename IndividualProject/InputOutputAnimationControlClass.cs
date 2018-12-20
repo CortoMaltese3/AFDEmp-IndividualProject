@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Media;
 
 namespace IndividualProject
 {
@@ -80,7 +81,6 @@ namespace IndividualProject
             {
                 return function;
             }
-            //CheckWhetherInputIsEscapeToGoBack(function, currentUsername);
             while
                 (
                     function != ConsoleKey.D1 &&
@@ -112,7 +112,6 @@ namespace IndividualProject
                 {
                     return function;
                 }
-                //CheckWhetherInputIsEscapeToGoBack(function, currentUsername);
             }
             return function;
         }
@@ -145,13 +144,6 @@ namespace IndividualProject
             }
         }
 
-        //public static void ClearScreen()
-        //{
-        //    Console.WriteLine("press any key to continue");
-        //    Console.ReadKey();
-        //    Console.Clear();
-        //}
-
         public static string SelectUserRole()
         {
             string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
@@ -177,10 +169,9 @@ namespace IndividualProject
             return pendingRole;
         }
 
-
-
         public static string PromptYesOrNo()
         {
+            string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
             Console.Write("Type 'Y' for yes or 'N' for no : ");
             string yesOrNo = Console.ReadLine();
             while
@@ -203,11 +194,6 @@ namespace IndividualProject
             Console.Write("\r" + new string(' ', Console.WindowWidth) + "\r");
         }
 
-        public static void WriteAt(int x, int y)
-        {
-            Console.SetCursorPosition(origCol + x, origRow + y);
-        }
-
         public static void DotsBlinking()
         {
             for (int blink = 0; blink < 5; blink++)
@@ -225,7 +211,18 @@ namespace IndividualProject
             }
         }
 
+        public static void WriteBottomLine(string text)
+        {
+            int x = Console.CursorLeft;
+            int y = Console.CursorTop;
+            Console.CursorTop = Console.WindowTop + Console.WindowHeight -2;
+            CenterText(text);
+        }
 
+        public static void WriteAt(int column, int row)
+        {
+            Console.SetCursorPosition(column, row);
+        }
 
         public static void CenterText(string text)
         {
@@ -239,28 +236,15 @@ namespace IndividualProject
             CenterText("Welcome to Quasar CRM Program");
             CenterText("-IT Crowd-");
             CenterText($"[{currentUser}]");
+            WriteBottomLine("~CB6 Individual Project~");
+            WriteAt(0, 3);
         }
 
-        public static void CheckWhetherInputIsEscapeToGoBack(ConsoleKey consoloKey, string currentUsername)
+        public static void BackGroundMusic()
         {
-            if (consoloKey == ConsoleKey.Escape)
-            {
-                QuasarScreen(currentUsername);
-                Console.WriteLine("\r\nWould you like to go back? ");
-                string option = PromptYesOrNo();
-                if (option == "y" || option == "Y")
-                {
-                    QuasarScreen(currentUsername);
-                    ConnectToServerClass.ChangeCurrentUserStatusToInactive();
-                    ApplicationMenuClass.LoginScreen();
-                }
-                else
-                {
-                    QuasarScreen(currentUsername);
-                    ActiveUserFunctionsClass.ActiveUserProcedures();
-                }
-            }
-            return;
+            SoundPlayer player = new SoundPlayer();
+            player.SoundLocation = AppDomain.CurrentDomain.BaseDirectory + "BG music.wav";
+            player.Play();
         }
     }
 }
