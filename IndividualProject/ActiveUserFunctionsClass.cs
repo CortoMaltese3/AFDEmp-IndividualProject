@@ -66,10 +66,9 @@ namespace IndividualProject
                         case ConsoleKey.D6:
                             TransactedDataClass.ManageCustomerTickets();
                             break;
-
-                        //view transacted data                                
+                            
                         case ConsoleKey.D7:
-                            TransactedDataClass.ViewExistingCustomerTicket();
+                            TransactedDataClass.ViewExistingOpenTicketsFunction();
                             break;
 
                         case ConsoleKey.D8:
@@ -77,7 +76,7 @@ namespace IndividualProject
                             break;
 
                         case ConsoleKey.D9:
-                            TransactedDataClass.DeleteExistingCustomerTicket();
+                            TransactedDataClass.DeleteExistingOpenOrClosedTicketFunction();
                             break;
 
                         case ConsoleKey.Escape:

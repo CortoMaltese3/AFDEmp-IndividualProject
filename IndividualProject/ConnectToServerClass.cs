@@ -169,6 +169,7 @@ namespace IndividualProject
                         System.Threading.Thread.Sleep(500);
                     }
                 }
+                Environment.Exit(0);
             }
             else
             {
@@ -176,7 +177,6 @@ namespace IndividualProject
                 ApplicationMenuClass.LoginScreen();
             }
         }
-
 
         public static void LoggingOffQuasar()
         {

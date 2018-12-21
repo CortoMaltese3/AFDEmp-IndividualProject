@@ -164,11 +164,10 @@ namespace IndividualProject
                 }
                 else
                 {
-                    InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
                     InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+                    InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");                    
                     ActiveUserFunctionsClass.ActiveUserProcedures();
-                }
-                
+                }                
             }
         }
 

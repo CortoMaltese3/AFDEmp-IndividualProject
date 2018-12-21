@@ -237,7 +237,7 @@ namespace IndividualProject
                     case 3: Console.Write("."); break;
                     case 4: Console.Write("."); break;
                 }
-                System.Threading.Thread.Sleep(400);
+                System.Threading.Thread.Sleep(300);
                 Console.SetCursorPosition(Console.CursorLeft + 0, Console.CursorTop + 0);
                 
             }
