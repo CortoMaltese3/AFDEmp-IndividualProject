@@ -37,7 +37,7 @@ namespace IndividualProject
             string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
             QuasarScreen(currentUsername);
             UniversalLoadingOuput("Loading");
-            Console.Write("\r\nPress '1' to Open a new ticket, '2' to Close an existing one or 'Esc' to go back to Main Menu: ");
+            Console.Write("Press '1' to Open a new ticket, '2' to Close an existing one or 'Esc' to go back to Main Menu: ");
             ConsoleKey openOrCloseTicketInput = Console.ReadKey().Key;
             if (openOrCloseTicketInput == ConsoleKey.Escape)
             {
@@ -47,7 +47,7 @@ namespace IndividualProject
             {
                 QuasarScreen(currentUsername);
                 System.Threading.Thread.Sleep(500);
-                Console.Write("\r\nPress '1' to Open a new ticket, '2' to Close an existing one or 'Esc' to go back to Main Menu: ");
+                Console.Write("Press '1' to Open a new ticket, '2' to Close an existing one or 'Esc' to go back to Main Menu: ");
                 openOrCloseTicketInput = Console.ReadKey().Key;
                 if (openOrCloseTicketInput == ConsoleKey.Escape)
                 {
@@ -57,6 +57,55 @@ namespace IndividualProject
             return openOrCloseTicketInput;
         }
 
+        public static ConsoleKey ManageTicketOptionsSreenAsUser()
+        {
+            string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
+            QuasarScreen(currentUsername);
+            UniversalLoadingOuput("Loading");
+            Console.Write("Press '1' to Open a new ticket or 'Esc' to go back to Main Menu: ");
+            ConsoleKey openOrCloseTicketInput = Console.ReadKey().Key;
+            if (openOrCloseTicketInput == ConsoleKey.Escape)
+            {
+                return openOrCloseTicketInput;
+            }
+            while (openOrCloseTicketInput != ConsoleKey.D1)
+            {
+                QuasarScreen(currentUsername);
+                System.Threading.Thread.Sleep(500);
+                Console.Write("Press '1' to Open a new ticket or 'Esc' to go back to Main Menu: ");
+                openOrCloseTicketInput = Console.ReadKey().Key;
+                if (openOrCloseTicketInput == ConsoleKey.Escape)
+                {
+                    return openOrCloseTicketInput;
+                }
+            }
+            return openOrCloseTicketInput;
+        }
+
+        public static ConsoleKey EditTicketScreenOptions()
+        {
+            string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
+            QuasarScreen(currentUsername);
+            UniversalLoadingOuput("Loading");
+            Console.Write("Press '1' to edit the Ticket Comments, '2' assign it to a different User or 'Esc' to exit: ");
+            ConsoleKey editOrChangeAssignment = Console.ReadKey().Key;
+            if (editOrChangeAssignment == ConsoleKey.Escape)
+            {
+                return editOrChangeAssignment;
+            }
+            while (editOrChangeAssignment != ConsoleKey.D1 && editOrChangeAssignment != ConsoleKey.D2)
+            {
+                QuasarScreen(currentUsername);
+                System.Threading.Thread.Sleep(500);
+                Console.Write("Press '1' to edit the Ticket Comments, '2' assign it to a different User or 'Esc' to exit: ");
+                editOrChangeAssignment = Console.ReadKey().Key;
+                if (editOrChangeAssignment == ConsoleKey.Escape)
+                {
+                    return editOrChangeAssignment;
+                }
+            }
+            return editOrChangeAssignment;
+        }
 
         public static string UsernameInput()
         {
@@ -138,13 +187,136 @@ namespace IndividualProject
             return function;
         }
 
+        public static ConsoleKey AdministratorFunctionOptionsOutput()
+        {
+            string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
+
+            Console.WriteLine("\r\nChoose one of the following functions or press Esc to return:");
+            Console.WriteLine("1: Check user notifications");
+            Console.WriteLine("2: Manage Customer Trouble Tickets");
+            Console.WriteLine("3: View Trouble Tickets");
+            Console.WriteLine("4: Edit Trouble Tickets");
+            Console.WriteLine("5: Delete Trouble Tickets");
+            Console.Write("\r\nFunction: ");
+            System.Threading.Thread.Sleep(500);
+            ConsoleKey function = Console.ReadKey().Key;
+            if (function == ConsoleKey.Escape)
+            {
+                return function;
+            }
+            while
+                (
+                    function != ConsoleKey.D1 &&
+                    function != ConsoleKey.D2 &&
+                    function != ConsoleKey.D3 &&
+                    function != ConsoleKey.D4 &&
+                    function != ConsoleKey.D5
+                )
+            {
+                QuasarScreen(currentUsername);
+                Console.WriteLine("\r\nChoose one of the following functions or press Esc to return:");
+                Console.WriteLine("1: Check user notifications");
+                Console.WriteLine("2: Manage Customer Trouble Tickets");
+                Console.WriteLine("3: View Trouble Tickets");
+                Console.WriteLine("4: Edit Trouble Tickets");
+                Console.WriteLine("5: Delete Trouble Tickets");
+                Console.Write("\r\nFunction: ");
+                System.Threading.Thread.Sleep(500);
+                function = Console.ReadKey().Key;
+                if (function == ConsoleKey.Escape)
+                {
+                    return function;
+                }
+            }
+            return function;
+        }
+
+        public static ConsoleKey ModeratorFunctionOptionsOutput()
+        {
+            string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
+
+            Console.WriteLine("\r\nChoose one of the following functions or press Esc to return:");
+            Console.WriteLine("1: Check user notifications");
+            Console.WriteLine("2: Manage Customer Trouble Tickets");
+            Console.WriteLine("3: View Trouble Tickets");
+            Console.WriteLine("4: Edit Trouble Tickets");
+            Console.Write("\r\nFunction: ");
+            System.Threading.Thread.Sleep(500);
+            ConsoleKey function = Console.ReadKey().Key;
+            if (function == ConsoleKey.Escape)
+            {
+                return function;
+            }
+            while
+                (
+                    function != ConsoleKey.D1 &&
+                    function != ConsoleKey.D2 &&
+                    function != ConsoleKey.D3 &&
+                    function != ConsoleKey.D4 
+                )
+            {
+                QuasarScreen(currentUsername);
+                Console.WriteLine("\r\nChoose one of the following functions or press Esc to return:");
+                Console.WriteLine("1: Check user notifications");
+                Console.WriteLine("2: Manage Customer Trouble Tickets");
+                Console.WriteLine("3: View Trouble Tickets");
+                Console.WriteLine("4: Edit Trouble Tickets");
+                Console.Write("\r\nFunction: ");
+                System.Threading.Thread.Sleep(500);
+                function = Console.ReadKey().Key;
+                if (function == ConsoleKey.Escape)
+                {
+                    return function;
+                }
+            }
+            return function;
+        }
+
+        public static ConsoleKey UserFunctionOptionsOutput()
+        {
+            string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
+
+            Console.WriteLine("\r\nChoose one of the following functions or press Esc to return:");
+            Console.WriteLine("1: Check user notifications");
+            Console.WriteLine("2: Manage Customer Trouble Tickets");
+            Console.WriteLine("3: View Trouble Tickets");            
+            Console.Write("\r\nFunction: ");
+            System.Threading.Thread.Sleep(500);
+            ConsoleKey function = Console.ReadKey().Key;
+            if (function == ConsoleKey.Escape)
+            {
+                return function;
+            }
+            while
+                (
+                    function != ConsoleKey.D1 &&
+                    function != ConsoleKey.D2 &&
+                    function != ConsoleKey.D3                    
+                )
+            {
+                QuasarScreen(currentUsername);
+                Console.WriteLine("\r\nChoose one of the following functions or press Esc to return:");
+                Console.WriteLine("1: Check user notifications");
+                Console.WriteLine("2: Manage Customer Trouble Tickets");
+                Console.WriteLine("3: View Trouble Tickets");                
+                Console.Write("\r\nFunction: ");
+                System.Threading.Thread.Sleep(500);
+                function = Console.ReadKey().Key;
+                if (function == ConsoleKey.Escape)
+                {
+                    return function;
+                }
+            }
+            return function;
+        }
+
         public static string TicketComment()
         {
             string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
             QuasarScreen(currentUsername);
             UniversalLoadingOuput("Loading");
-            Console.Write("FILE NEW TECHNICAL TICKET");
-            Console.Write("\r\nCompile a summary of the Customer's issue (limit 500 characters): ");
+            Console.Write("EDIT TECHNICAL TICKET");
+            Console.WriteLine("\r\nCompile a summary of the Customer's issue (limit 500 characters): ");
             string ticketComment = Console.ReadLine();
             while (ticketComment.Length > 500)
             {
@@ -177,7 +349,7 @@ namespace IndividualProject
         {
             string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
 
-            Console.Write("\r\nPlease choose one of the following user roles : Administrator, Moderator, User  ->  ");
+            Console.Write("Please choose one of the following user roles : Administrator, Moderator, User  ->  ");
             string pendingRole = Console.ReadLine();
             List<string> roleList = new List<string>
             {

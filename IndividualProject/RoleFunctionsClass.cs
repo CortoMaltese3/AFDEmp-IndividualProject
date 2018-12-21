@@ -31,14 +31,14 @@ namespace IndividualProject
 
                 string pendingPassphrase = File.ReadLines(newUserRequestPath).Skip(1).Take(1).First();
                 pendingPassphrase = pendingPassphrase.Remove(0, 12);
-                InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
                 InputOutputAnimationControlClass.QuasarScreen(currentUsername);
-                Console.WriteLine($"\r\nYou are about to create a new username-password entry : {pendingUsername} - {pendingPassphrase}\r\nWould you like to proceed?");
+                InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
+                Console.WriteLine($"You are about to create a new username-password entry : {pendingUsername} - {pendingPassphrase}\r\nWould you like to proceed?");
                 string option = InputOutputAnimationControlClass.PromptYesOrNo();
                 if(option == "y" || option == "Y")
                 {
-                    InputOutputAnimationControlClass.UniversalLoadingOuput("Action in progress");
                     InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+                    InputOutputAnimationControlClass.UniversalLoadingOuput("Action in progress");
                     string pendingRole = InputOutputAnimationControlClass.SelectUserRole();
 
                     using (SqlConnection dbcon = new SqlConnection(connectionString))
@@ -50,6 +50,7 @@ namespace IndividualProject
                         appendUserRoleToDatabase.ExecuteScalar();
 
                     }
+                    InputOutputAnimationControlClass.QuasarScreen(currentUsername);
                     InputOutputAnimationControlClass.UniversalLoadingOuput("Creating new user in progress");
                     Console.WriteLine($"User {pendingUsername} has been created successfully. Status : {pendingRole}");
                     System.Threading.Thread.Sleep(1500);

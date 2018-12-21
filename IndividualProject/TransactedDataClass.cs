@@ -12,23 +12,37 @@ namespace IndividualProject
 
         public static void ManageCustomerTickets()
         {
-            InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+            //InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+            //InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
             ConsoleKey option = InputOutputAnimationControlClass.ManageTicketOptionsSreen();
 
             switch (option)
             {
                 case ConsoleKey.D1:
-                    InputOutputAnimationControlClass.QuasarScreen(currentUsername);
                     OpenNewCustomerTicket();
                     break;
 
                 case ConsoleKey.D2:
-                    InputOutputAnimationControlClass.QuasarScreen(currentUsername);
                     CloseCustomerTicket();
                     break;
 
                 case ConsoleKey.Escape:
-                    InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+                    ActiveUserFunctionsClass.ActiveUserProcedures();
+                    break;
+            }
+        }
+
+        public static void OpenCustomerTickets()
+        {
+            ConsoleKey option = InputOutputAnimationControlClass.ManageTicketOptionsSreenAsUser();
+
+            switch (option)
+            {
+                case ConsoleKey.D1:
+                    OpenNewCustomerTicket();
+                    break;
+
+                case ConsoleKey.Escape:
                     ActiveUserFunctionsClass.ActiveUserProcedures();
                     break;
             }
@@ -36,11 +50,12 @@ namespace IndividualProject
 
         public static string AssignTicketToUser()
         {
-            Console.WriteLine("\r\nWould you like to assign the ticket to another?");
+            Console.WriteLine("\r\nWould you like to assign the ticket to another user?");
             string option = InputOutputAnimationControlClass.PromptYesOrNo();
             if (option == "Y" || option == "y")
             {
                 InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+                InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
 
                 Dictionary<string, string> AvailableUsernamesDictionary = RoleFunctionsClass.ShowAvailableUsersFromDatabase();
                 Console.Write("\r\nPlease select a user and proceed to assign: ");
@@ -190,7 +205,7 @@ namespace IndividualProject
                         Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully deleted");
                         System.Threading.Thread.Sleep(2000);
                     }
-                }                
+                }
             }
             InputOutputAnimationControlClass.QuasarScreen(currentUsername);
             InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
@@ -282,9 +297,9 @@ namespace IndividualProject
                         string ticketStatus = (string)reader[4];
                         string comments = (string)reader[5];
                         var stringLength = comments.Length;
-                        if (stringLength > 40)
+                        if (stringLength > 60)
                         {
-                            comments = comments.Substring(0, 40) + "...";
+                            comments = comments.Substring(0, 60) + "...";
                         }
 
                         ShowtTicketsList.Add(ticketID.ToString());
@@ -336,6 +351,94 @@ namespace IndividualProject
                     }
                 }
             }
+        }
+
+        public static void EditExistingOpenTicketFunction()
+        {
+            InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+            InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
+            Console.WriteLine("EDIT OPEN TECHNICAL TICKETS");
+
+            Console.WriteLine("Would you like to open the list of Opened Tickets?");
+            string option = InputOutputAnimationControlClass.PromptYesOrNo();
+            InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+            InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
+
+            if (option == "Y" || option == "y")
+            {
+                ViewListOfOpenCustomerTickets();
+            }
+
+            int TicketID = InputOutputAnimationControlClass.SelectTicketID();
+            if (CheckIfTicketIDWithStatusOpenExistsInList(TicketID) == false)
+            {
+                Console.WriteLine($"There is no Customer Ticket with [ID = {TicketID}]");
+                System.Threading.Thread.Sleep(1500);
+                ActiveUserFunctionsClass.ActiveUserProcedures();
+            }
+            else
+            {
+                EditTicketOptions(TicketID);
+
+                InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+                Console.WriteLine($"Would you like to view the edited Ticket {TicketID}?");
+                string option2 = InputOutputAnimationControlClass.PromptYesOrNo();
+                if (option2 == "Y" || option2 == "y")
+                {
+                    ViewSingleCustomerTicket(TicketID);
+                }
+                InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+                InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
+                ActiveUserFunctionsClass.ActiveUserProcedures();
+            }
+        }
+
+        private static void EditTicketOptions(int ID)
+        {
+            ConsoleKey option = InputOutputAnimationControlClass.EditTicketScreenOptions();
+
+            switch (option)
+            {
+                case ConsoleKey.D1:
+                    string ticketComment = InputOutputAnimationControlClass.TicketComment();
+                    EditCommentOfOpenTicket(ID, ticketComment);
+                    break;
+
+                case ConsoleKey.D2:
+                    string newUserAssignment = AssignTicketToUser();
+                    ChangeUserAssignmentToOpenTicket(ID, newUserAssignment);
+                    break;
+
+                case ConsoleKey.Escape:
+                    InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+                    InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
+                    ActiveUserFunctionsClass.ActiveUserProcedures();
+                    break;
+            }
+        }
+
+        private static void EditCommentOfOpenTicket(int ID, string ticketComment)
+        {
+            using (SqlConnection dbcon = new SqlConnection(connectionString))
+            {
+                dbcon.Open();
+                SqlCommand EditTicketCommendInDatabase = new SqlCommand($"UPDATE CustomerTickets SET comments = '{ticketComment}' WHERE ticketID = {ID}", dbcon);
+                EditTicketCommendInDatabase.ExecuteScalar();
+            }
+            Console.WriteLine($"The comment section of the Customer Ticket with [ID = {ID}] has been successfully edited");
+            System.Threading.Thread.Sleep(2000);
+        }
+
+        private static void ChangeUserAssignmentToOpenTicket(int ID, string nextOwner)
+        {
+            using (SqlConnection dbcon = new SqlConnection(connectionString))
+            {
+                dbcon.Open();
+                SqlCommand EditTicketUserOwnerInDatabase = new SqlCommand($"UPDATE CustomerTickets SET userAssignedTo = '{nextOwner}' WHERE ticketID = {ID}", dbcon);
+                EditTicketUserOwnerInDatabase.ExecuteScalar();
+            }
+            Console.WriteLine($"The ownership of the Customer Ticket with [ID = {ID}] has been successfully transfered to {nextOwner}");
+            System.Threading.Thread.Sleep(2000);
         }
 
         private static bool CheckIfTicketIDWithStatusOpenExistsInList(int ID)

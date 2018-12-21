@@ -72,7 +72,7 @@ namespace IndividualProject
                             break;
 
                         case ConsoleKey.D8:
-                            //TransactedDataClass.EditExistingCustomerTicket();
+                            TransactedDataClass.EditExistingOpenTicketFunction();
                             break;
 
                         case ConsoleKey.D9:
@@ -85,16 +85,83 @@ namespace IndividualProject
                     }
                     break;
 
-                case "administrator":
+                case "Administrator":
+                    ConsoleKey function_admin = InputOutputAnimationControlClass.AdministratorFunctionOptionsOutput();
 
+                    switch (function_admin)
+                    {
+                        case ConsoleKey.D1:
+                            RoleFunctionsClass.CheckUserNotifications();
+                            break;
+
+                        case ConsoleKey.D2:
+                            TransactedDataClass.ManageCustomerTickets();
+                            break;
+
+                        case ConsoleKey.D3:
+                            TransactedDataClass.ViewExistingOpenTicketsFunction();
+                            break;
+
+                        case ConsoleKey.D4:
+                            TransactedDataClass.EditExistingOpenTicketFunction();
+                            break;
+
+                        case ConsoleKey.D5:
+                            TransactedDataClass.DeleteExistingOpenOrClosedTicketFunction();
+                            break;
+
+                        case ConsoleKey.Escape:
+                            ConnectToServerClass.LoggingOffQuasar();
+                            break;
+                    }
                     break;
 
-                case "moderator":
+                case "Moderator":
+                    function = InputOutputAnimationControlClass.ModeratorFunctionOptionsOutput();
+                    switch (function)
+                    {
+                        case ConsoleKey.D1:
+                            RoleFunctionsClass.CheckUserNotifications();
+                            break;
 
+                        case ConsoleKey.D2:
+                            TransactedDataClass.ManageCustomerTickets();
+                            break;
+
+                        case ConsoleKey.D3:
+                            TransactedDataClass.ViewExistingOpenTicketsFunction();
+                            break;
+
+                        case ConsoleKey.D4:
+                            TransactedDataClass.EditExistingOpenTicketFunction();
+                            break;
+
+                        case ConsoleKey.Escape:
+                            ConnectToServerClass.LoggingOffQuasar();
+                            break;
+                    }
                     break;
 
-                case "user":
+                case "User":
+                    function = InputOutputAnimationControlClass.UserFunctionOptionsOutput();
+                    switch (function)
+                    {
+                        case ConsoleKey.D1:
+                            RoleFunctionsClass.CheckUserNotifications();
+                            break;
 
+                        case ConsoleKey.D2:
+                            TransactedDataClass.OpenCustomerTickets();
+                            break;
+
+                        case ConsoleKey.D3:
+                            TransactedDataClass.ViewExistingOpenTicketsFunction();
+                            break;
+
+                        case ConsoleKey.Escape:
+                            ConnectToServerClass.LoggingOffQuasar();
+                            break;
+                    }
                     break;
             }
         }
