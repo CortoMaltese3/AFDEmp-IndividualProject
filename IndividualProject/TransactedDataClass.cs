@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
 
 namespace IndividualProject
 {
@@ -14,7 +13,7 @@ namespace IndividualProject
         public static void ManageCustomerTickets()
         {
             InputOutputAnimationControlClass.QuasarScreen(currentUsername);
-            
+
             ConsoleKey option = InputOutputAnimationControlClass.ManageTicketOptionsSreen();
             switch (option)
             {
@@ -93,15 +92,15 @@ namespace IndividualProject
             Console.ReadKey();
             InputOutputAnimationControlClass.QuasarScreen(currentUsername);
             InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
-            ActiveUserFunctionsClass.ActiveUserProcedures();
+            ManageCustomerTickets();
         }
 
         public static void CloseCustomerTicket()
         {
             InputOutputAnimationControlClass.QuasarScreen(currentUsername);
             InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
-            Console.WriteLine("CLOSE AN EXISTING TECHNICAL TICKET");
-            
+            Console.WriteLine("CLOSE EXISTING TECHNICAL TICKETS");
+
             Console.WriteLine("Would you like to open the list of Opened Tickets?");
             string option = InputOutputAnimationControlClass.PromptYesOrNo();
             InputOutputAnimationControlClass.QuasarScreen(currentUsername);
@@ -136,12 +135,13 @@ namespace IndividualProject
                             ShowtTicketsList.Add(userAssignedTo);
                             ShowtTicketsList.Add(ticketStatus);
                             ShowtTicketsList.Add(comments);
-                            Console.WriteLine($"TicketID: {ticketID} - Date created: {dateCreated} - Created By: {username} - Assigned To: {userAssignedTo}  \r\nTicket status: {ticketStatus} - Comment preview: {comments}");
+                            Console.Write($"\r\nTicketID: {ticketID} \r\nDate created: {dateCreated} \r\nCreated By: {username} \r\nAssigned To: {userAssignedTo} \r\nTicket status: {ticketStatus} \r\bComment preview: {comments}");
                         }
                     }
-                    Console.WriteLine();
                     Console.WriteLine("Press any key to continue");
                     Console.ReadKey();
+                    InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+                    InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
                     ManageCustomerTickets();
                 }
                 else
@@ -167,7 +167,181 @@ namespace IndividualProject
             }
             InputOutputAnimationControlClass.QuasarScreen(currentUsername);
             InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
-            ActiveUserFunctionsClass.ActiveUserProcedures();
+            ManageCustomerTickets();
+        }
+
+        public static void DeleteExistingCustomerTicket()
+        {
+            InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+            InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
+            Console.WriteLine("DELETE EXISTING TECHNICAL TICKETS");
+
+            Console.WriteLine("Would you like to open the list of Existing Tickets?");
+            string option = InputOutputAnimationControlClass.PromptYesOrNo();
+            InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+            InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
+
+            using (SqlConnection dbcon = new SqlConnection(connectionString))
+            {
+                if (option == "Y" || option == "y")
+                {
+                    dbcon.Open();
+                    SqlCommand ShowTicketsFromDatabase = new SqlCommand("SELECT * FROM CustomerTickets", dbcon);
+                    using (var reader = ShowTicketsFromDatabase.ExecuteReader())
+                    {
+                        List<string> ShowtTicketsList = new List<string>();
+                        while (reader.Read())
+                        {
+                            int ticketID = (int)reader[0];
+                            DateTime dateCreated = (DateTime)reader[1];
+                            string username = (string)reader[2];
+                            string userAssignedTo = (string)reader[3];
+                            string ticketStatus = (string)reader[4];
+                            string comments = (string)reader[5];
+                            var stringLength = comments.Length;
+                            if (stringLength > 40)
+                            {
+                                comments = comments.Substring(0, 40) + "...";
+                            }
+
+                            ShowtTicketsList.Add(ticketID.ToString());
+                            ShowtTicketsList.Add(dateCreated.ToString());
+                            ShowtTicketsList.Add(username);
+                            ShowtTicketsList.Add(userAssignedTo);
+                            ShowtTicketsList.Add(ticketStatus);
+                            ShowtTicketsList.Add(comments);
+                            Console.WriteLine($"TicketID: {ticketID} \r\nDate created: {dateCreated} \r\nCreated By: {username} \r\nAssigned To: {userAssignedTo} \r\nTicket status: {ticketStatus} \r\bComment preview: {comments}");
+                        }
+                    }
+                    Console.WriteLine();
+                    Console.Write("Press any key to continue");
+                    Console.ReadKey();
+                    InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+                    InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
+                    ManageCustomerTickets();
+                }
+                else
+                {
+                    int ticketID = InputOutputAnimationControlClass.SelectTicketID();
+                    Console.WriteLine($"Are you sure you want to delete ticket {ticketID}? Action cannot be undone");
+                    string option2 = InputOutputAnimationControlClass.PromptYesOrNo();
+                    if (option2 == "Y" || option2 == "y")
+                    {
+                        dbcon.Open();
+                        SqlCommand deleteCustomerTicket = new SqlCommand($"DELETE FROM CustomerTickets WHERE ticketID = {ticketID}", dbcon);
+                        deleteCustomerTicket.ExecuteScalar();
+                        InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+                        InputOutputAnimationControlClass.UniversalLoadingOuput("Action in progress");
+                        Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully deleted");
+                        System.Threading.Thread.Sleep(2000);
+                    }
+                    else
+                    {
+                        ManageCustomerTickets();
+                    }
+                }
+            }
+            InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+            InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
+            ManageCustomerTickets();
+        }
+
+        public static void ViewExistingCustomerTicket()
+        {
+            InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+            InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
+            Console.WriteLine("VIEW OPEN TECHNICAL TICKETS");
+
+            Console.WriteLine("Would you like to open the list of Opened Tickets?");
+            string option = InputOutputAnimationControlClass.PromptYesOrNo();
+            InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+            InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
+
+            using (SqlConnection dbcon = new SqlConnection(connectionString))
+            {
+                if (option == "Y" || option == "y")
+                {
+                    dbcon.Open();
+                    SqlCommand ShowTicketsFromDatabase = new SqlCommand("SELECT * FROM CustomerTickets WHERE ticketStatus = 'open'", dbcon);
+                    using (var reader = ShowTicketsFromDatabase.ExecuteReader())
+                    {
+                        List<string> ShowtTicketsList = new List<string>();
+                        while (reader.Read())
+                        {
+                            int ticketID = (int)reader[0];
+                            DateTime dateCreated = (DateTime)reader[1];
+                            string username = (string)reader[2];
+                            string userAssignedTo = (string)reader[3];
+                            string ticketStatus = (string)reader[4];
+                            string comments = (string)reader[5];
+                            var stringLength = comments.Length;
+                            if (stringLength > 40)
+                            {
+                                comments = comments.Substring(0, 40) + "...";
+                            }
+
+                            ShowtTicketsList.Add(ticketID.ToString());
+                            ShowtTicketsList.Add(dateCreated.ToString());
+                            ShowtTicketsList.Add(username);
+                            ShowtTicketsList.Add(userAssignedTo);
+                            ShowtTicketsList.Add(ticketStatus);
+                            ShowtTicketsList.Add(comments);
+                            Console.WriteLine($"TicketID: {ticketID} \r\nDate created: {dateCreated} \r\nCreated By: {username} \r\nAssigned To: {userAssignedTo} \r\nTicket status: {ticketStatus} \r\bComment preview: {comments}");
+                            Console.WriteLine(new string('#', Console.WindowWidth));
+                            Console.WriteLine();
+                        }
+                    }
+                    int TicketID = InputOutputAnimationControlClass.SelectTicketID();
+                    ViewSingleCustomerTicket(TicketID);
+                }
+                else
+                {
+                    int TicketID = InputOutputAnimationControlClass.SelectTicketID();
+                    ViewSingleCustomerTicket(TicketID);
+                }
+            }
+            InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+            InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
+            ManageCustomerTickets();
+        }
+
+        private static void ViewSingleCustomerTicket(int ticketID)
+        {
+            InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+            InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
+            Console.WriteLine($"VIEW TECHNICAL TICKET WITH [ID = {ticketID}]");
+
+            using (SqlConnection dbcon = new SqlConnection(connectionString))
+            {
+                dbcon.Open();
+                SqlCommand ShowTicketsFromDatabase = new SqlCommand($"SELECT * FROM CustomerTickets WHERE ticketID = {ticketID}", dbcon);
+                using (var reader = ShowTicketsFromDatabase.ExecuteReader())
+                {
+                    List<string> ShowtTicketToList = new List<string>();
+                    while (reader.Read())
+                    {
+                        int ID = (int)reader[0];
+                        DateTime dateCreated = (DateTime)reader[1];
+                        string username = (string)reader[2];
+                        string userAssignedTo = (string)reader[3];
+                        string ticketStatus = (string)reader[4];
+                        string comments = (string)reader[5];
+
+                        ShowtTicketToList.Add(ticketID.ToString());
+                        ShowtTicketToList.Add(dateCreated.ToString());
+                        ShowtTicketToList.Add(username);
+                        ShowtTicketToList.Add(userAssignedTo);
+                        ShowtTicketToList.Add(ticketStatus);
+                        ShowtTicketToList.Add(comments);
+                        Console.WriteLine($"TicketID: {ticketID} \r\nDate created: {dateCreated} \r\nCreated By: {username} \r\nAssigned To: {userAssignedTo} \r\nTicket status: {ticketStatus} \r\bComment preview: {comments}");
+                        Console.WriteLine(new string('#', Console.WindowWidth));
+                    }
+                }
+                Console.Write("Press any key to return");
+                Console.ReadKey();
+                InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+                InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
+            }
         }
     }
 }

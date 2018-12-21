@@ -69,17 +69,15 @@ namespace IndividualProject
 
                         //view transacted data                                
                         case ConsoleKey.D7:
-
+                            TransactedDataClass.ViewExistingCustomerTicket();
                             break;
 
-                        //edit transacted data
                         case ConsoleKey.D8:
-                            TransactedDataClass.CloseCustomerTicket();
+                            //TransactedDataClass.EditExistingCustomerTicket();
                             break;
 
-                        //delete transcted data
                         case ConsoleKey.D9:
-
+                            TransactedDataClass.DeleteExistingCustomerTicket();
                             break;
 
                         case ConsoleKey.Escape:

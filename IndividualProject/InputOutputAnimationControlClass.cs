@@ -159,7 +159,7 @@ namespace IndividualProject
 
         public static int SelectTicketID()
         {
-            Console.Write("Select the TicketID of the ticket you want to mark as Closed: ");
+            Console.Write("Select the TicketID of the ticket you want to manage: ");
             while (true)
             {
                 try
