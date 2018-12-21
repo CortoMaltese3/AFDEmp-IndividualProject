@@ -14,7 +14,6 @@ namespace IndividualProject
         public static void ManageCustomerTickets()
         {
             InputOutputAnimationControlClass.QuasarScreen(currentUsername);
-            //InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
             
             ConsoleKey option = InputOutputAnimationControlClass.ManageTicketOptionsSreen();
             switch (option)
@@ -34,9 +33,6 @@ namespace IndividualProject
                     ActiveUserFunctionsClass.ActiveUserProcedures();
                     break;
             }
-
-
-
         }
 
         public static string AssignTicketToUser()
@@ -102,10 +98,15 @@ namespace IndividualProject
 
         public static void CloseCustomerTicket()
         {
-            Console.WriteLine("\r\nCLOSE AN EXISTING TECHNICAL TICKET");
             InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+            InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
+            Console.WriteLine("CLOSE AN EXISTING TECHNICAL TICKET");
+            
             Console.WriteLine("Would you like to open the list of Opened Tickets?");
             string option = InputOutputAnimationControlClass.PromptYesOrNo();
+            InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+            InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
+
             using (SqlConnection dbcon = new SqlConnection(connectionString))
             {
                 if (option == "Y" || option == "y")
@@ -118,9 +119,11 @@ namespace IndividualProject
                         while (reader.Read())
                         {
                             int ticketID = (int)reader[0];
-                            string username = (string)reader[1];
-                            string ticketStatus = (string)reader[2];
-                            string comments = (string)reader[3];
+                            DateTime dateCreated = (DateTime)reader[1];
+                            string username = (string)reader[2];
+                            string userAssignedTo = (string)reader[3];
+                            string ticketStatus = (string)reader[4];
+                            string comments = (string)reader[5];
                             var stringLength = comments.Length;
                             if (stringLength > 40)
                             {
@@ -128,13 +131,18 @@ namespace IndividualProject
                             }
 
                             ShowtTicketsList.Add(ticketID.ToString());
+                            ShowtTicketsList.Add(dateCreated.ToString());
                             ShowtTicketsList.Add(username);
+                            ShowtTicketsList.Add(userAssignedTo);
                             ShowtTicketsList.Add(ticketStatus);
                             ShowtTicketsList.Add(comments);
-                            Console.WriteLine($"ticketID: {ticketID} - username: {username} - ticket status: {ticketStatus} - comment preview: {comments}");
+                            Console.WriteLine($"TicketID: {ticketID} - Date created: {dateCreated} - Created By: {username} - Assigned To: {userAssignedTo}  \r\nTicket status: {ticketStatus} - Comment preview: {comments}");
                         }
                     }
-                    CloseCustomerTicket();
+                    Console.WriteLine();
+                    Console.WriteLine("Press any key to continue");
+                    Console.ReadKey();
+                    ManageCustomerTickets();
                 }
                 else
                 {
@@ -146,17 +154,20 @@ namespace IndividualProject
                         dbcon.Open();
                         SqlCommand closeCustomerTicket = new SqlCommand($"UPDATE CustomerTickets SET ticketStatus = 'closed' WHERE ticketID = {ticketID} ", dbcon);
                         closeCustomerTicket.ExecuteScalar();
+                        InputOutputAnimationControlClass.QuasarScreen(currentUsername);
                         InputOutputAnimationControlClass.UniversalLoadingOuput("Action in progress");
                         Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully marked as closed");
+                        System.Threading.Thread.Sleep(2000);
                     }
                     else
                     {
-                        CloseCustomerTicket();
+                        ManageCustomerTickets();
                     }
                 }
             }
             InputOutputAnimationControlClass.QuasarScreen(currentUsername);
-            ApplicationMenuClass.LoginScreen();
+            InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
+            ActiveUserFunctionsClass.ActiveUserProcedures();
         }
     }
 }

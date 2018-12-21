@@ -31,11 +31,13 @@ namespace IndividualProject
 
                 string pendingPassphrase = File.ReadLines(newUserRequestPath).Skip(1).Take(1).First();
                 pendingPassphrase = pendingPassphrase.Remove(0, 12);
+                InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
                 InputOutputAnimationControlClass.QuasarScreen(currentUsername);
                 Console.WriteLine($"\r\nYou are about to create a new username-password entry : {pendingUsername} - {pendingPassphrase}\r\nWould you like to proceed?");
                 string option = InputOutputAnimationControlClass.PromptYesOrNo();
                 if(option == "y" || option == "Y")
                 {
+                    InputOutputAnimationControlClass.UniversalLoadingOuput("Action in progress");
                     InputOutputAnimationControlClass.QuasarScreen(currentUsername);
                     string pendingRole = InputOutputAnimationControlClass.SelectUserRole();
 
@@ -162,7 +164,7 @@ namespace IndividualProject
                 }
                 else
                 {
-                    System.Threading.Thread.Sleep(500);
+                    InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
                     InputOutputAnimationControlClass.QuasarScreen(currentUsername);
                     ActiveUserFunctionsClass.ActiveUserProcedures();
                 }

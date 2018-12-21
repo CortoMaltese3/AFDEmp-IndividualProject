@@ -22,7 +22,6 @@ namespace IndividualProject
             {
                 currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
                 currentUsernameRole = ConnectToServerClass.RetrieveCurrentUsernameRoleFromDatabase();
-
                 InputOutputAnimationControlClass.QuasarScreen(currentUsername);
                 UserFunctionSwitch(currentUsernameRole);
             }
@@ -65,7 +64,7 @@ namespace IndividualProject
                             break;
                            
                         case ConsoleKey.D6:
-                            TransactedDataClass.OpenNewCustomerTicket();
+                            TransactedDataClass.ManageCustomerTickets();
                             break;
 
                         //view transacted data                                
