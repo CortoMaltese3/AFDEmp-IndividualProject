@@ -23,7 +23,7 @@ namespace IndividualProject
                     Console.ForegroundColor = ConsoleColor.DarkCyan;
                     Console.WriteLine($"Connection Established! Welcome back {username}!");
                     Console.ResetColor();
-                    System.Threading.Thread.Sleep(1500);
+                    System.Threading.Thread.Sleep(1000);
                     return;
                 }
                 else
@@ -44,7 +44,7 @@ namespace IndividualProject
                             Console.ForegroundColor = ConsoleColor.DarkCyan;
                             Console.WriteLine($"Connection Established! Welcome back {username}!");
                             Console.ResetColor();
-                            System.Threading.Thread.Sleep(1500);
+                            System.Threading.Thread.Sleep(1000);
                             return;
                         }
                     }

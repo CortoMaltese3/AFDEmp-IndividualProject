@@ -45,13 +45,8 @@ namespace IndividualProject
                             RoleFunctionsClass.CreateNewUserFromRequestFunction();
                             break;
 
-                        case ConsoleKey.D3:
-                            Console.WriteLine();
-                            RoleFunctionsClass.ShowAvailableUsersFromDatabase();
-                            Console.WriteLine("Press any key to return to Functions menu");
-                            Console.ReadKey();
-                            InputOutputAnimationControlClass.QuasarScreen(currentUsername);
-                            ActiveUserProcedures();
+                        case ConsoleKey.D3:                           
+                            RoleFunctionsClass.ShowAvailableUsersFunction();                            
                             break;
 
                         case ConsoleKey.D4:

@@ -75,7 +75,7 @@ namespace IndividualProject
                     else
                     {
                         Console.WriteLine("Cannot assign ticket to super_admin! Please choose a different user");
-                        System.Threading.Thread.Sleep(2000);
+                        System.Threading.Thread.Sleep(3000);
                         InputOutputAnimationControlClass.QuasarScreen(currentUsername);
                         AvailableUsernamesDictionary = RoleFunctionsClass.ShowAvailableUsersFromDatabase();
                         Console.Write("\r\nPlease select a user and proceed to assign: ");
@@ -138,7 +138,7 @@ namespace IndividualProject
                     if (CheckIfTicketIDWithStatusOpenExistsInList(ticketID) == false)
                     {
                         Console.WriteLine($"There is no Customer Ticket with [ID = {ticketID}]");
-                        System.Threading.Thread.Sleep(1500);
+                        System.Threading.Thread.Sleep(3000);
                         CloseCustomerTicket();
                     }
                     Console.WriteLine($"Are you sure you want to mark ticket {ticketID} as closed?");
@@ -151,7 +151,7 @@ namespace IndividualProject
                         InputOutputAnimationControlClass.QuasarScreen(currentUsername);
                         InputOutputAnimationControlClass.UniversalLoadingOuput("Action in progress");
                         Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully marked as closed");
-                        System.Threading.Thread.Sleep(2000);
+                        System.Threading.Thread.Sleep(3000);
                     }
                     else
                     {
@@ -188,7 +188,7 @@ namespace IndividualProject
                 if (CheckIfTicketIDWithStatusOpenOrClosedExistsInList(ticketID) == false)
                 {
                     Console.WriteLine($"There is no Customer Ticket with [ID = {ticketID}]");
-                    System.Threading.Thread.Sleep(1500);
+                    System.Threading.Thread.Sleep(3000);
                     ActiveUserFunctionsClass.ActiveUserProcedures();
                 }
                 Console.WriteLine($"Are you sure you want to delete ticket {ticketID}? Action cannot be undone");
@@ -203,7 +203,7 @@ namespace IndividualProject
                         InputOutputAnimationControlClass.QuasarScreen(currentUsername);
                         InputOutputAnimationControlClass.UniversalLoadingOuput("Action in progress");
                         Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully deleted");
-                        System.Threading.Thread.Sleep(2000);
+                        System.Threading.Thread.Sleep(3000);
                     }
                 }
             }
@@ -232,7 +232,7 @@ namespace IndividualProject
             if (CheckIfTicketIDWithStatusOpenExistsInList(TicketID) == false)
             {
                 Console.WriteLine($"There is no Customer Ticket with [ID = {TicketID}]");
-                System.Threading.Thread.Sleep(1500);
+                System.Threading.Thread.Sleep(3000);
                 ViewExistingOpenTicketsFunction();
             }
 
@@ -373,7 +373,7 @@ namespace IndividualProject
             if (CheckIfTicketIDWithStatusOpenExistsInList(TicketID) == false)
             {
                 Console.WriteLine($"There is no Customer Ticket with [ID = {TicketID}]");
-                System.Threading.Thread.Sleep(1500);
+                System.Threading.Thread.Sleep(3000);
                 ActiveUserFunctionsClass.ActiveUserProcedures();
             }
             else
@@ -426,7 +426,7 @@ namespace IndividualProject
                 EditTicketCommendInDatabase.ExecuteScalar();
             }
             Console.WriteLine($"The comment section of the Customer Ticket with [ID = {ID}] has been successfully edited");
-            System.Threading.Thread.Sleep(2000);
+            System.Threading.Thread.Sleep(3000);
         }
 
         private static void ChangeUserAssignmentToOpenTicket(int ID, string nextOwner)
@@ -438,7 +438,7 @@ namespace IndividualProject
                 EditTicketUserOwnerInDatabase.ExecuteScalar();
             }
             Console.WriteLine($"The ownership of the Customer Ticket with [ID = {ID}] has been successfully transfered to {nextOwner}");
-            System.Threading.Thread.Sleep(2000);
+            System.Threading.Thread.Sleep(3000);
         }
 
         private static bool CheckIfTicketIDWithStatusOpenExistsInList(int ID)

@@ -134,8 +134,10 @@ namespace IndividualProject
         public static ConsoleKey AdminFunctionOptionsOutput()
         {
             string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
+            QuasarScreen(currentUsername);
+            UniversalLoadingOuput("Loading");
 
-            Console.WriteLine("\r\nChoose one of the following functions or press Esc to return:");
+            Console.WriteLine("Choose one of the following functions or press Esc to return:");
             Console.WriteLine("1: Check user notifications");
             Console.WriteLine("2: Create new username/password from requests");
             Console.WriteLine("3: Show list of active users");
@@ -166,7 +168,8 @@ namespace IndividualProject
                 )
             {
                 QuasarScreen(currentUsername);
-                Console.WriteLine("\r\nChoose one of the following functions or press Esc to return:");
+                UniversalLoadingOuput("Loading");
+                Console.WriteLine("Choose one of the following functions or press Esc to return:");
                 Console.WriteLine("1: Check user notifications");
                 Console.WriteLine("2: Create new username/password from requests");
                 Console.WriteLine("3: Show list of active users");
@@ -396,7 +399,7 @@ namespace IndividualProject
             Console.ResetColor();
         }
 
-        public static void DotsBlinking()
+        protected static void DotsBlinking()
         {
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             for (int blink = 0; blink < 5; blink++)
@@ -424,22 +427,22 @@ namespace IndividualProject
             CenterText(text);
         }
 
-        public static void WriteAt(int column, int row)
+        private static void WriteAt(int column, int row)
         {
             Console.SetCursorPosition(column, row);
         }
 
-        public static void CenterText(string text)
+        private static void CenterText(string text)
         {
             Console.WriteLine(string.Format("{0," + (Console.WindowWidth + text.Length) / 2 + "}", text));
         }
 
         public static void QuasarScreen(string currentUser)
         {
-            System.Threading.Thread.Sleep(500);
+            System.Threading.Thread.Sleep(300);
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.DarkCyan;
-            CenterText("Welcome to Quasar CRM Program");
+            CenterText("Quasar CRM Program");
             CenterText("-IT Crowd-");
             CenterText($"[{currentUser}]");
             WriteBottomLine("~CB6 Individual Project~");
