@@ -351,7 +351,6 @@ namespace IndividualProject
         public static string SelectUserRole()
         {
             string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
-
             Console.Write("Please choose one of the following user roles : Administrator, Moderator, User  ->  ");
             string pendingRole = Console.ReadLine();
             List<string> roleList = new List<string>

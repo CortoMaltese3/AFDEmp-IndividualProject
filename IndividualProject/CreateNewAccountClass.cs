@@ -16,7 +16,8 @@ namespace IndividualProject
             try
             {
                 InputOutputAnimationControlClass.QuasarScreen(currentUsername);
-                Console.Write("\r\nRegistration Form:\r\nChoose your username and password. Both must be limited to 20 characters");
+                InputOutputAnimationControlClass.UniversalLoadingOuput("Please wait");
+                Console.Write("Registration Form:\r\nChoose your username and password. Both must be limited to 20 characters");
                 string username = InputOutputAnimationControlClass.UsernameInput();
                 string passphrase = InputOutputAnimationControlClass.PassphraseInput();
                 InputOutputAnimationControlClass.QuasarScreen(currentUsername);

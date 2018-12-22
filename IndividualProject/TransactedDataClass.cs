@@ -7,13 +7,10 @@ namespace IndividualProject
     class TransactedDataClass
     {
         static readonly string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
-        static readonly string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
-        static readonly string newTechnicalIssuePath = @"C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\CRMTickets\TechnicalIssues";
+        static readonly string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";        
 
         public static void ManageCustomerTickets()
         {
-            //InputOutputAnimationControlClass.QuasarScreen(currentUsername);
-            //InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
             ConsoleKey option = InputOutputAnimationControlClass.ManageTicketOptionsSreen();
 
             switch (option)
@@ -96,7 +93,7 @@ namespace IndividualProject
             {
                 dbcon.Open();
                 SqlCommand openNewTechnicalTicket = new SqlCommand($"INSERT INTO CustomerTickets VALUES (GETDATE(), '{currentUsername}', '{userAssignedTo}', 'open', '{comment}')", dbcon);
-                openNewTechnicalTicket.ExecuteScalar();
+                openNewTechnicalTicket.ExecuteNonQuery();
                 SqlCommand fetchNewTicketID = new SqlCommand($"SELECT TOP 1 ticketID FROM CustomerTickets ORDER BY ticketID DESC", dbcon);
                 int ticketID = (int)fetchNewTicketID.ExecuteScalar();
                 InputOutputAnimationControlClass.QuasarScreen(currentUsername);
@@ -105,8 +102,6 @@ namespace IndividualProject
             }
             Console.WriteLine("\r\nPress any key to return");
             Console.ReadKey();
-            InputOutputAnimationControlClass.QuasarScreen(currentUsername);
-            InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
             ManageCustomerTickets();
         }
 
@@ -126,14 +121,7 @@ namespace IndividualProject
                 if (option == "Y" || option == "y")
                 {
                     ViewListOfOpenCustomerTickets();
-                    Console.WriteLine("Press any key to continue");
-                    Console.ReadKey();
-                    InputOutputAnimationControlClass.QuasarScreen(currentUsername);
-                    InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
-                    ManageCustomerTickets();
-                }
-                else
-                {
+
                     int ticketID = InputOutputAnimationControlClass.SelectTicketID();
                     if (CheckIfTicketIDWithStatusOpenExistsInList(ticketID) == false)
                     {
@@ -158,9 +146,33 @@ namespace IndividualProject
                         ManageCustomerTickets();
                     }
                 }
-            }
-            InputOutputAnimationControlClass.QuasarScreen(currentUsername);
-            InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
+                else
+                {
+                    int ticketID = InputOutputAnimationControlClass.SelectTicketID();
+                    if (CheckIfTicketIDWithStatusOpenExistsInList(ticketID) == false)
+                    {
+                        Console.WriteLine($"There is no Customer Ticket with [ID = {ticketID}]");
+                        System.Threading.Thread.Sleep(3000);
+                        ManageCustomerTickets();
+                    }
+                    Console.WriteLine($"Are you sure you want to mark ticket {ticketID} as closed?");
+                    string option2 = InputOutputAnimationControlClass.PromptYesOrNo();
+                    if (option2 == "Y" || option2 == "y")
+                    {
+                        dbcon.Open();
+                        SqlCommand closeCustomerTicket = new SqlCommand($"UPDATE CustomerTickets SET ticketStatus = 'closed' WHERE ticketID = {ticketID} ", dbcon);
+                        closeCustomerTicket.ExecuteScalar();
+                        InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+                        InputOutputAnimationControlClass.UniversalLoadingOuput("Action in progress");
+                        Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully marked as closed");
+                        System.Threading.Thread.Sleep(3000);
+                    }
+                    else
+                    {
+                        ManageCustomerTickets();
+                    }
+                }
+            }            
             ManageCustomerTickets();
         }
 
@@ -178,12 +190,7 @@ namespace IndividualProject
             if (option == "Y" || option == "y")
             {
                 ViewListOfAllCustomerTickets();
-                Console.Write("Press any key to continue");
-                Console.ReadKey();
-                DeleteExistingOpenOrClosedTicketFunction();
-            }
-            else
-            {
+
                 int ticketID = InputOutputAnimationControlClass.SelectTicketID();
                 if (CheckIfTicketIDWithStatusOpenOrClosedExistsInList(ticketID) == false)
                 {
@@ -207,8 +214,34 @@ namespace IndividualProject
                     }
                 }
             }
-            InputOutputAnimationControlClass.QuasarScreen(currentUsername);
-            InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
+            else
+            {
+                int ticketID = InputOutputAnimationControlClass.SelectTicketID();
+                if (CheckIfTicketIDWithStatusOpenOrClosedExistsInList(ticketID) == false)
+                {
+                    Console.WriteLine($"There is no Customer Ticket with [ID = {ticketID}]");
+                    System.Threading.Thread.Sleep(3000);
+                    ActiveUserFunctionsClass.ActiveUserProcedures();
+                }
+
+                Console.WriteLine($"Are you sure you want to delete ticket {ticketID}? Action cannot be undone");
+                string option2 = InputOutputAnimationControlClass.PromptYesOrNo();
+                if (option2 == "Y" || option2 == "y")
+                {
+                    using (SqlConnection dbcon = new SqlConnection(connectionString))
+                    {
+                        InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+                        Console.WriteLine();
+                        dbcon.Open();
+                        SqlCommand deleteCustomerTicket = new SqlCommand($"DELETE FROM CustomerTickets WHERE ticketID = {ticketID}", dbcon);
+                        deleteCustomerTicket.ExecuteScalar();
+                        InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+                        InputOutputAnimationControlClass.UniversalLoadingOuput("Action in progress");
+                        Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully deleted");
+                        System.Threading.Thread.Sleep(3000);
+                    }
+                }
+            }
             ActiveUserFunctionsClass.ActiveUserProcedures();
         }
 
@@ -233,12 +266,12 @@ namespace IndividualProject
             {
                 Console.WriteLine($"There is no Customer Ticket with [ID = {TicketID}]");
                 System.Threading.Thread.Sleep(3000);
-                ViewExistingOpenTicketsFunction();
+                InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+                InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
+                ActiveUserFunctionsClass.ActiveUserProcedures();
             }
 
             ViewSingleCustomerTicket(TicketID);
-            InputOutputAnimationControlClass.QuasarScreen(currentUsername);
-            InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
             ActiveUserFunctionsClass.ActiveUserProcedures();
         }
 
@@ -379,16 +412,14 @@ namespace IndividualProject
             else
             {
                 EditTicketOptions(TicketID);
-
                 InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+                Console.WriteLine();
                 Console.WriteLine($"Would you like to view the edited Ticket {TicketID}?");
                 string option2 = InputOutputAnimationControlClass.PromptYesOrNo();
                 if (option2 == "Y" || option2 == "y")
                 {
                     ViewSingleCustomerTicket(TicketID);
                 }
-                InputOutputAnimationControlClass.QuasarScreen(currentUsername);
-                InputOutputAnimationControlClass.UniversalLoadingOuput("Loading");
                 ActiveUserFunctionsClass.ActiveUserProcedures();
             }
         }
@@ -437,8 +468,22 @@ namespace IndividualProject
                 SqlCommand EditTicketUserOwnerInDatabase = new SqlCommand($"UPDATE CustomerTickets SET userAssignedTo = '{nextOwner}' WHERE ticketID = {ID}", dbcon);
                 EditTicketUserOwnerInDatabase.ExecuteScalar();
             }
-            Console.WriteLine($"The ownership of the Customer Ticket with [ID = {ID}] has been successfully transfered to {nextOwner}");
-            System.Threading.Thread.Sleep(3000);
+            if(nextOwner == currentUsername)
+            {
+                InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+                InputOutputAnimationControlClass.UniversalLoadingOuput("Action in progress");
+                Console.WriteLine($"The ownership of the Customer Ticket with [ID = {ID}] remains to User: {nextOwner}");
+                System.Threading.Thread.Sleep(3000);
+            }
+            else
+            {
+                InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+                InputOutputAnimationControlClass.UniversalLoadingOuput("Action in progress");
+                Console.WriteLine($"The ownership of the Customer Ticket with [ID = {ID}] has been successfully transfered to User: {nextOwner}");
+                System.Threading.Thread.Sleep(3000);
+            }
+            
+            
         }
 
         private static bool CheckIfTicketIDWithStatusOpenExistsInList(int ID)

@@ -8,6 +8,7 @@ namespace IndividualProject
     {
         static void Main(string[] args)
         {
+            //Console.CancelKeyPress += new ConsoleCancelEventHandler(ActiveUserFunctionsClass.MainMenuScreen);
             //InputOutputAnimationControlClass.BackGroundMusic();
             ApplicationMenuClass.LoginScreen();
         }
@@ -34,4 +35,6 @@ namespace IndividualProject
             }
         }
     }
+
+
 }

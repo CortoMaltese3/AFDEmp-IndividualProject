@@ -27,6 +27,15 @@ namespace IndividualProject
             }
         }
 
+        //public static void MainMenuScreen(object sender, ConsoleCancelEventArgs args)
+        //{
+        //    string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
+        //    InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+        //    InputOutputAnimationControlClass.UniversalLoadingOuput("Force exit to Main Menu Screen");
+        //    ActiveUserProcedures();
+        //    args.Cancel = true;
+        //}
+
         public static void UserFunctionSwitch(string currentUsernameRole)
         {
             string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
@@ -49,8 +58,7 @@ namespace IndividualProject
                             RoleFunctionsClass.ShowAvailableUsersFunction();                            
                             break;
 
-                        case ConsoleKey.D4:
-                            Console.WriteLine();
+                        case ConsoleKey.D4:                            
                             RoleFunctionsClass.AlterUserRoleStatus();
                             break;
 
