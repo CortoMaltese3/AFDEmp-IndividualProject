@@ -7,6 +7,7 @@ namespace IndividualProject
 {
     class InputOutputAnimationControlClass
     {
+        
         public static ConsoleKey LoginScreenOptions()
         {
             string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
@@ -438,12 +439,12 @@ namespace IndividualProject
 
         public static void QuasarScreen(string currentUser)
         {
-            System.Threading.Thread.Sleep(300);
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             CenterText("Quasar CRM Program");
             CenterText("-IT Crowd-");
             CenterText($"[{currentUser}]");
+            //UniversalLoadingOuput("");
             WriteBottomLine("~CB6 Individual Project~");
             Console.ResetColor();
             WriteAt(0, 3);
@@ -455,5 +456,9 @@ namespace IndividualProject
             player.SoundLocation = AppDomain.CurrentDomain.BaseDirectory + "BG music.wav";
             player.Play();
         }
+
+
     }
+
+
 }

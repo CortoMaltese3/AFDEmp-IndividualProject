@@ -19,7 +19,7 @@ namespace IndividualProject
                 if (CheckUsernameAndPasswordMatchInDatabase(username, passphrase))
                 {
                     InputOutputAnimationControlClass.QuasarScreen(currentUsername);
-                    StoreCurrentLoginCredentialsToDatabase(username, passphrase);
+                    //StoreCurrentLoginCredentialsToDatabase(username, passphrase);
                     Console.ForegroundColor = ConsoleColor.DarkCyan;
                     Console.WriteLine($"Connection Established! Welcome back {username}!");
                     Console.ResetColor();
@@ -40,7 +40,7 @@ namespace IndividualProject
                         if (CheckUsernameAndPasswordMatchInDatabase(username, passphrase))
                         {
                             InputOutputAnimationControlClass.QuasarScreen(currentUsername);
-                            StoreCurrentLoginCredentialsToDatabase(username, passphrase);
+                            //StoreCurrentLoginCredentialsToDatabase(username, passphrase);
                             Console.ForegroundColor = ConsoleColor.DarkCyan;
                             Console.WriteLine($"Connection Established! Welcome back {username}!");
                             Console.ResetColor();
@@ -76,7 +76,7 @@ namespace IndividualProject
             using (SqlConnection dbcon = new SqlConnection(connectionString))
             {
                 dbcon.Open();
-                SqlCommand checkUsername = new SqlCommand($"SELECT COUNT(*) FROM LoginCredentials " +
+                SqlCommand checkUsername = new SqlCommand($"SELECT COUNT(*) FROM UserCredentials " +
                     $"                                      WHERE (username = '{usernameCheck}' " +
                     $"                                      AND passphrase = '{passphraseCheck}')", dbcon);
                 int UserCount = (int)checkUsername.ExecuteScalar();
@@ -88,22 +88,22 @@ namespace IndividualProject
             }
         }
 
-        public static void StoreCurrentLoginCredentialsToDatabase(string currentUsername, string currentPassphrase)
-        {
-            using (SqlConnection dbcon = new SqlConnection(connectionString))
-            {
-                dbcon.Open();
-                SqlCommand StoreLoginCredentials = new SqlCommand($"UPDATE CurrentLoginCredentials SET username = '{currentUsername}', passphrase = '{currentPassphrase}', currentStatus = 'active'", dbcon);
-                StoreLoginCredentials.ExecuteScalar();
-            }
-        }
+        //public static void StoreCurrentLoginCredentialsToDatabase(string currentUsername, string currentPassphrase)
+        //{
+        //    using (SqlConnection dbcon = new SqlConnection(connectionString))
+        //    {
+        //        dbcon.Open();
+        //        SqlCommand StoreLoginCredentials = new SqlCommand($"UPDATE CurrentLoginCredentials SET username = '{currentUsername}', passphrase = '{currentPassphrase}', currentStatus = 'active'", dbcon);
+        //        StoreLoginCredentials.ExecuteScalar();
+        //    }
+        //}
 
         public static string RetrieveCurrentLoginCredentialsFromDatabase()
         {
             using (SqlConnection dbcon = new SqlConnection(connectionString))
             {
                 dbcon.Open();
-                SqlCommand RetrieveLoginCredentials = new SqlCommand($"SELECT username FROM CurrentLoginCredentials", dbcon);
+                SqlCommand RetrieveLoginCredentials = new SqlCommand($"EXECUTE SelectCurrentUserFromDatabase", dbcon);
                 string currentUsername = (string)RetrieveLoginCredentials.ExecuteScalar();
                 return currentUsername;
             }
@@ -114,7 +114,7 @@ namespace IndividualProject
             using (SqlConnection dbcon = new SqlConnection(connectionString))
             {
                 dbcon.Open();
-                SqlCommand RetrieveCurrentUsernameRole = new SqlCommand($"SELECT userRole FROM UserLevelAccess u INNER JOIN CurrentLoginCredentials c ON c.username = u.username", dbcon);
+                SqlCommand RetrieveCurrentUsernameRole = new SqlCommand("EXECUTE SelectCurrentUserRoleFromDatabase", dbcon);
                 string currentRole = (string)RetrieveCurrentUsernameRole.ExecuteScalar();
                 return currentRole;
             }
@@ -125,7 +125,7 @@ namespace IndividualProject
             using (SqlConnection dbcon = new SqlConnection(connectionString))
             {
                 dbcon.Open();
-                SqlCommand RetrieveCurrentUserStatus = new SqlCommand($"SELECT currentStatus FROM CurrentLoginCredentials", dbcon);
+                SqlCommand RetrieveCurrentUserStatus = new SqlCommand("EXECUTE SelectCurrentUserStatusFromDatabase", dbcon);
                 string currentUserStatus = (string)RetrieveCurrentUserStatus.ExecuteScalar();
                 return currentUserStatus;
             }
@@ -136,7 +136,7 @@ namespace IndividualProject
             using (SqlConnection dbcon = new SqlConnection(connectionString))
             {
                 dbcon.Open();
-                SqlCommand SetStatusToInnactive = new SqlCommand($"UPDATE CurrentLoginCredentials SET username = 'Not Registered', currentStatus = 'inactive'", dbcon);
+                SqlCommand SetStatusToInnactive = new SqlCommand("EXECUTE UpdateCurrentUserStatusInDatabase", dbcon);
                 SetStatusToInnactive.ExecuteScalar();
             }
         }
@@ -154,19 +154,19 @@ namespace IndividualProject
                 InputOutputAnimationControlClass.UniversalLoadingOuput("Wait for Quasar to shut down");
 
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                for (int blink = 0; blink < 8; blink++)
+                for (int blink = 0; blink < 6; blink++)
                 {
                     if (blink % 2 == 0)
                     {
                         InputOutputAnimationControlClass.WriteBottomLine("~~~~~Dedicated to Afro~~~~~");
                         Console.ForegroundColor = ConsoleColor.DarkCyan;
-                        System.Threading.Thread.Sleep(500);
+                        System.Threading.Thread.Sleep(300);
                     }
                     else
                     {
                         InputOutputAnimationControlClass.WriteBottomLine("~~~~~Dedicated to Afro~~~~~");
                         Console.ForegroundColor = ConsoleColor.Cyan;
-                        System.Threading.Thread.Sleep(500);
+                        System.Threading.Thread.Sleep(300);
                     }
                 }
                 Environment.Exit(0);

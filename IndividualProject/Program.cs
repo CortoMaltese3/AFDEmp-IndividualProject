@@ -1,6 +1,5 @@
 ﻿using System;
-using System.IO;
-using System.Media;
+using System.Collections.Generic;
 
 namespace IndividualProject
 {
@@ -10,6 +9,7 @@ namespace IndividualProject
         {
             //Console.CancelKeyPress += new ConsoleCancelEventHandler(ActiveUserFunctionsClass.MainMenuScreen);
             //InputOutputAnimationControlClass.BackGroundMusic();
+
             ApplicationMenuClass.LoginScreen();
         }
     }
@@ -18,6 +18,30 @@ namespace IndividualProject
     {
         public static void LoginScreen()
         {
+            const string login = "Login with your Credentials", register = "New Account request", quit = "Quit Quasar";
+
+            while (true)
+            {
+                string LoginRegisterQuit = SelectMenu.Menu(new List<string> {login, register, quit}).NameOfChoice;
+
+                if (LoginRegisterQuit == register)
+                {
+                    CreateNewAccountClass.CreateNewAccountRequest();                    
+                }
+                else if (LoginRegisterQuit == login)
+                {
+                    ActiveUserFunctionsClass.ActiveUserProcedures();
+                }
+
+                else if (LoginRegisterQuit == quit)
+                {
+                    ConnectToServerClass.TerminateQuasar();
+                }
+            }
+
+            
+
+
             ConsoleKey loginOrRegisterInput = InputOutputAnimationControlClass.LoginScreenOptions();
             switch (loginOrRegisterInput)
             {

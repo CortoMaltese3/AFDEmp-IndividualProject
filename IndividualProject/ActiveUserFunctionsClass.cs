@@ -11,7 +11,7 @@ namespace IndividualProject
             string currentUserStatus = ConnectToServerClass.RetrieveCurrentUserStatusFromDatabase();
 
             if (currentUserStatus == "inactive")
-            {
+            { 
                 ConnectToServerClass.UserLoginCredentials();
                 currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
                 currentUsernameRole = ConnectToServerClass.RetrieveCurrentUsernameRoleFromDatabase();

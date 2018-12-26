@@ -52,7 +52,7 @@ namespace IndividualProject
                     InputOutputAnimationControlClass.QuasarScreen(currentUsername);
                     InputOutputAnimationControlClass.UniversalLoadingOuput("Creating new user in progress");
                     Console.WriteLine($"User {pendingUsername} has been created successfully. Status : {pendingRole}");
-                    System.Threading.Thread.Sleep(3000);
+                    System.Threading.Thread.Sleep(1000);
                     File.WriteAllLines(newUserRequestPath, new string[] { " " });
                     InputOutputAnimationControlClass.QuasarScreen(currentUsername);
                     ActiveUserFunctionsClass.ActiveUserProcedures();
@@ -102,7 +102,7 @@ namespace IndividualProject
             InputOutputAnimationControlClass.QuasarScreen(currentUsername);
             InputOutputAnimationControlClass.UniversalLoadingOuput("Deleting existing user in progress");
             Console.WriteLine($"Username {username} has been successfully deleted from database");
-            System.Threading.Thread.Sleep(3000);
+            System.Threading.Thread.Sleep(1000);
             InputOutputAnimationControlClass.QuasarScreen(currentUsername);
             ActiveUserFunctionsClass.ActiveUserProcedures();
         }
@@ -222,7 +222,7 @@ namespace IndividualProject
                     InputOutputAnimationControlClass.QuasarScreen(currentUsername);
                     Console.WriteLine();
                     Console.WriteLine($"User '{username}' already is {userRole}. Please proceed to choose a different Role Status");
-                    System.Threading.Thread.Sleep(3000);
+                    System.Threading.Thread.Sleep(1000);
                     InputOutputAnimationControlClass.QuasarScreen(currentUsername);
                     Console.WriteLine();
                     userRole = InputOutputAnimationControlClass.SelectUserRole();
