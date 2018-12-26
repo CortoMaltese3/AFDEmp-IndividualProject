@@ -1,139 +1,168 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace IndividualProject
 {
     class ActiveUserFunctions
-    {   
+    {
         public static void UserFunctionMenuScreen(string currentUsernameRole)
         {
-            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
+            string currentUser = ConnectToServer.RetrieveCurrentUserFromDatabase();
+
+            string notifications = "Check user notifications", requests = "Create new username/password from requests", viewUsers = "Show list of active users", modifyRole = "Upgrade/Downgrade user's role",
+                   deleteUser = "Delete an active username from Database", manageTickets = "Manage Customer Trouble Tickets", viewTickets = "View Trouble Tickets",
+                   editTicket = "Edit Trouble Tickets", deleteTicket = "Delete Trouble Tickets", logOut = "\nLog Out";
+
             switch (currentUsernameRole)
             {
                 case "super_admin":
-                    ConsoleKey function = InputOutputAnimationControl.AdminFunctionOptionsOutput();
-
-                    switch (function)
+                    while (true)
                     {
-                        case ConsoleKey.D1:
+                        string SuperAdminFunctionMenu = SelectMenu.Menu(new List<string> { notifications, requests, viewUsers, modifyRole, deleteUser, manageTickets, viewTickets, editTicket, deleteTicket, logOut }, currentUser).NameOfChoice;
+
+                        if (SuperAdminFunctionMenu == notifications)
+                        {
                             RoleFunctions.CheckAdminNotifications();
-                            break;
+                        }
 
-                        case ConsoleKey.D2:
+                        else if (SuperAdminFunctionMenu == requests)
+                        {
                             RoleFunctions.CreateNewUserFromRequestFunction();
-                            break;
+                        }
 
-                        case ConsoleKey.D3:                           
-                            RoleFunctions.ShowAvailableUsersFunction();                            
-                            break;
+                        else if (SuperAdminFunctionMenu == viewUsers)
+                        {
+                            RoleFunctions.ShowAvailableUsersFunction();
+                        }
 
-                        case ConsoleKey.D4:                            
+                        else if (SuperAdminFunctionMenu == modifyRole)
+                        {
                             RoleFunctions.AlterUserRoleStatus();
-                            break;
+                        }
 
-                        case ConsoleKey.D5:
+                        else if (SuperAdminFunctionMenu == deleteUser)
+                        {
                             RoleFunctions.DeleteUserFromDatabase();
-                            break;
-                           
-                        case ConsoleKey.D6:
+                        }
+
+                        else if (SuperAdminFunctionMenu == manageTickets)
+                        {
                             TransactedData.ManageCustomerTickets();
-                            break;
-                            
-                        case ConsoleKey.D7:
+                        }
+
+                        else if (SuperAdminFunctionMenu == viewTickets)
+                        {
                             TransactedData.ViewExistingOpenTicketsFunction();
-                            break;
+                        }
 
-                        case ConsoleKey.D8:
+                        else if (SuperAdminFunctionMenu == editTicket)
+                        {
                             TransactedData.EditExistingOpenTicketFunction();
-                            break;
+                        }
 
-                        case ConsoleKey.D9:
+                        else if (SuperAdminFunctionMenu == deleteTicket)
+                        {
                             TransactedData.DeleteExistingOpenOrClosedTicketFunction();
-                            break;
+                        }
 
-                        case ConsoleKey.Escape:
+                        else if (SuperAdminFunctionMenu == logOut)
+                        {
                             ConnectToServer.LoggingOffQuasar();
-                            break;
+                        }
                     }
-                    break;
 
                 case "Administrator":
-                    ConsoleKey function_admin = InputOutputAnimationControl.AdministratorFunctionOptionsOutput();
-
-                    switch (function_admin)
+                    while (true)
                     {
-                        case ConsoleKey.D1:
+                        string AdminFunctionMenu = SelectMenu.Menu(new List<string> { notifications, manageTickets, viewTickets, editTicket, deleteTicket, logOut }, currentUser).NameOfChoice;
+
+                        if (AdminFunctionMenu == notifications)
+                        {
                             RoleFunctions.CheckUserNotifications();
-                            break;
+                        }
 
-                        case ConsoleKey.D2:
+                        else if (AdminFunctionMenu == manageTickets)
+                        {
                             TransactedData.ManageCustomerTickets();
-                            break;
+                        }
 
-                        case ConsoleKey.D3:
+                        else if (AdminFunctionMenu == viewTickets)
+                        {
                             TransactedData.ViewExistingOpenTicketsFunction();
-                            break;
+                        }
 
-                        case ConsoleKey.D4:
+                        else if (AdminFunctionMenu == editTicket)
+                        {
                             TransactedData.EditExistingOpenTicketFunction();
-                            break;
+                        }
 
-                        case ConsoleKey.D5:
+                        else if (AdminFunctionMenu == deleteTicket)
+                        {
                             TransactedData.DeleteExistingOpenOrClosedTicketFunction();
-                            break;
+                        }
 
-                        case ConsoleKey.Escape:
+                        else if (AdminFunctionMenu == logOut)
+                        {
                             ConnectToServer.LoggingOffQuasar();
-                            break;
+                        }
                     }
-                    break;
 
                 case "Moderator":
-                    function = InputOutputAnimationControl.ModeratorFunctionOptionsOutput();
-                    switch (function)
+                    while (true)
                     {
-                        case ConsoleKey.D1:
+                        string ModeratorFunctionMenu = SelectMenu.Menu(new List<string> { notifications, manageTickets, viewTickets, editTicket, logOut }, currentUser).NameOfChoice;
+
+                        if (ModeratorFunctionMenu == notifications)
+                        {
                             RoleFunctions.CheckUserNotifications();
-                            break;
+                        }
 
-                        case ConsoleKey.D2:
+                        else if (ModeratorFunctionMenu == manageTickets)
+                        {
                             TransactedData.ManageCustomerTickets();
-                            break;
+                        }
 
-                        case ConsoleKey.D3:
+                        else if (ModeratorFunctionMenu == viewTickets)
+                        {
                             TransactedData.ViewExistingOpenTicketsFunction();
-                            break;
+                        }
 
-                        case ConsoleKey.D4:
+                        else if (ModeratorFunctionMenu == editTicket)
+                        {
                             TransactedData.EditExistingOpenTicketFunction();
-                            break;
+                        }
 
-                        case ConsoleKey.Escape:
+                        else if (ModeratorFunctionMenu == logOut)
+                        {
                             ConnectToServer.LoggingOffQuasar();
-                            break;
+                        }
                     }
-                    break;
 
                 case "User":
-                    function = InputOutputAnimationControl.UserFunctionOptionsOutput();
-                    switch (function)
+                    while (true)
                     {
-                        case ConsoleKey.D1:
+                        string UserFunctionMenu = SelectMenu.Menu(new List<string> { notifications, manageTickets, viewTickets, logOut }, currentUser).NameOfChoice;
+
+                        if (UserFunctionMenu == notifications)
+                        {
                             RoleFunctions.CheckUserNotifications();
-                            break;
+                        }
 
-                        case ConsoleKey.D2:
-                            TransactedData.OpenCustomerTickets();
-                            break;
+                        else if (UserFunctionMenu == manageTickets)
+                        {
+                            TransactedData.ManageCustomerTickets();
+                        }
 
-                        case ConsoleKey.D3:
+                        else if (UserFunctionMenu == viewTickets)
+                        {
                             TransactedData.ViewExistingOpenTicketsFunction();
-                            break;
+                        }
 
-                        case ConsoleKey.Escape:
+                        else if (UserFunctionMenu == logOut)
+                        {
                             ConnectToServer.LoggingOffQuasar();
-                            break;
+                        }
                     }
-                    break;
             }
         }
     }

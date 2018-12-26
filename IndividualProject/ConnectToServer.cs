@@ -18,13 +18,12 @@ namespace IndividualProject
             {
                 if (CheckUsernameAndPasswordMatchInDatabase(username, passphrase))
                 {
-                    SetCurrentUserStatusToActive(username);
-                    string currentUser = RetrieveCurrentUserFromDatabase();
+                    SetCurrentUserStatusToActive(username);                    
                     string currentUsernameRole = RetrieveCurrentUsernameRoleFromDatabase();
-                    InputOutputAnimationControl.QuasarScreen(currentUser);
-                    SetCurrentUserStatusToActive(currentUser);
+                    InputOutputAnimationControl.QuasarScreen(username);
+                    SetCurrentUserStatusToActive(username);
                     Console.ForegroundColor = ConsoleColor.DarkCyan;
-                    Console.WriteLine($"Connection Established! Welcome back {currentUser}!");
+                    Console.WriteLine($"Connection Established! Welcome back {username}!");
                     Console.ResetColor();
                     System.Threading.Thread.Sleep(1000);
                     ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);

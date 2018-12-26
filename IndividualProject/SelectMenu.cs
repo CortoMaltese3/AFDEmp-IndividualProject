@@ -9,14 +9,14 @@ namespace IndividualProject
     class SelectMenu
     {
         static string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
-        public static UserOptionList Menu(List<string> ListOfOptions)
+        public static UserOptionList Menu(List<string> ListOfOptions, string currentUser)
         {
             int currentOption = 0;
             ConsoleKeyInfo currentKeyPressed;
 
             do
             {
-                InputOutputAnimationControl.QuasarScreen("Not Registered");
+                InputOutputAnimationControl.QuasarScreen(currentUser);
                 for (int option = 0; option < ListOfOptions.Count; option++)
                 {
                     Console.ForegroundColor = (option == currentOption) ? ConsoleColor.Green : ConsoleColor.White;
@@ -48,7 +48,7 @@ namespace IndividualProject
                 }
             }
             while (currentKeyPressed.Key != ConsoleKey.Enter);
-            InputOutputAnimationControl.QuasarScreen("Not Registered");
+            InputOutputAnimationControl.QuasarScreen(currentUser);
             Console.ForegroundColor = ConsoleColor.White;
 
             return new UserOptionList()

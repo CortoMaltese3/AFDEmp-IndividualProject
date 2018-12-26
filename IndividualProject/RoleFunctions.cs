@@ -44,11 +44,8 @@ namespace IndividualProject
                     using (SqlConnection dbcon = new SqlConnection(connectionString))
                     {
                         dbcon.Open();
-                        SqlCommand appendUserToDatabase = new SqlCommand($"INSERT INTO LoginCredentials VALUES ('{pendingUsername}', '{pendingPassphrase}')", dbcon);
-                        SqlCommand appendUserRoleToDatabase = new SqlCommand($"INSERT INTO UserLevelAccess VALUES ('{pendingUsername}', '{pendingRole}')", dbcon);
-                        appendUserToDatabase.ExecuteScalar();
-                        appendUserRoleToDatabase.ExecuteScalar();
-
+                        SqlCommand appendUserToDatabase = new SqlCommand($"EXECUTE InsertNewUserIntoDatabase '{pendingUsername}', '{pendingPassphrase}', '{pendingRole}', 'inactive')", dbcon);                        
+                        appendUserToDatabase.ExecuteScalar();                        
                     }
                     InputOutputAnimationControl.QuasarScreen(currentUsername);
                     InputOutputAnimationControl.UniversalLoadingOuput("Creating new user in progress");
