@@ -7,9 +7,6 @@ namespace IndividualProject
     {
         static void Main(string[] args)
         {
-            //Console.CancelKeyPress += new ConsoleCancelEventHandler(ActiveUserFunctionsClass.MainMenuScreen);
-            //InputOutputAnimationControlClass.BackGroundMusic();
-
             ApplicationMenuClass.LoginScreen();
         }
     }
@@ -18,47 +15,27 @@ namespace IndividualProject
     {
         public static void LoginScreen()
         {
-            const string login = "Login with your Credentials", register = "New Account request", quit = "Quit Quasar";
+            string login = "Login with your Credentials"; string register = "New Account request"; string quit = "Quit Quasar";
 
             while (true)
             {
                 string LoginRegisterQuit = SelectMenu.Menu(new List<string> {login, register, quit}).NameOfChoice;
 
-                if (LoginRegisterQuit == register)
+                if (LoginRegisterQuit == login)
                 {
-                    CreateNewAccountClass.CreateNewAccountRequest();                    
+                    ConnectToServer.UserLoginCredentials();
                 }
-                else if (LoginRegisterQuit == login)
+
+                else if (LoginRegisterQuit == register)
                 {
-                    ActiveUserFunctionsClass.ActiveUserProcedures();
+                    CreateNewAccount.CreateNewAccountRequest();                    
                 }
 
                 else if (LoginRegisterQuit == quit)
                 {
-                    ConnectToServerClass.TerminateQuasar();
+                    ConnectToServer.TerminateQuasar();
                 }
-            }
-
-            
-
-
-            ConsoleKey loginOrRegisterInput = InputOutputAnimationControlClass.LoginScreenOptions();
-            switch (loginOrRegisterInput)
-            {
-                case ConsoleKey.D1:
-                    ActiveUserFunctionsClass.ActiveUserProcedures();
-                    break;
-
-                case ConsoleKey.D2:
-                    CreateNewAccountClass.CreateNewAccountRequest();
-                    break;
-
-                case ConsoleKey.Escape:
-                    ConnectToServerClass.TerminateQuasar();
-                    break;
-            }
+            }          
         }
     }
-
-
 }

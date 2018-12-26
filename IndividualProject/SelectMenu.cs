@@ -8,7 +8,7 @@ namespace IndividualProject
 {
     class SelectMenu
     {
-        static string currentUsername = ConnectToServerClass.RetrieveCurrentLoginCredentialsFromDatabase();
+        static string currentUsername = ConnectToServer.RetrieveCurrentLoginCredentialsFromDatabase();
         public static UserOptionList Menu(List<string> ListOfOptions)
         {
             int currentOption = 0;
@@ -16,7 +16,7 @@ namespace IndividualProject
 
             do
             {
-                InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+                InputOutputAnimationControl.QuasarScreen(currentUsername);
                 for (int option = 0; option < ListOfOptions.Count; option++)
                 {
                     Console.ForegroundColor = (option == currentOption) ? ConsoleColor.Green : ConsoleColor.White;
@@ -48,7 +48,7 @@ namespace IndividualProject
                 }
             }
             while (currentKeyPressed.Key != ConsoleKey.Enter);
-            InputOutputAnimationControlClass.QuasarScreen(currentUsername);
+            InputOutputAnimationControl.QuasarScreen(currentUsername);
             Console.ForegroundColor = ConsoleColor.White;
 
             return new UserOptionList()

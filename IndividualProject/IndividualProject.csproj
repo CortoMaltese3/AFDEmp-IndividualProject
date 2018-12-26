@@ -58,23 +58,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActiveUserFunctionsClass.cs" />
-    <Compile Include="ConnectToServerClass.cs" />
-    <Compile Include="CreateNewAccountClass.cs" />
+    <Compile Include="ActiveUserFunctions.cs" />
+    <Compile Include="ConnectToServer.cs" />
+    <Compile Include="CreateNewAccount.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RoleFunctionsClass.cs" />
-    <Compile Include="InputOutputAnimationControlClass.cs" />
+    <Compile Include="RoleFunctions.cs" />
+    <Compile Include="InputOutputAnimationControl.cs" />
     <Compile Include="SelectMenu.cs" />
-    <Compile Include="TransactedDataClass.cs" />
+    <Compile Include="TransactedData.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="BG music.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
