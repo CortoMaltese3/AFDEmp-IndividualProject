@@ -6,7 +6,7 @@ namespace IndividualProject
     {   
         public static void UserFunctionMenuScreen(string currentUsernameRole)
         {
-            string currentUsername = ConnectToServer.RetrieveCurrentLoginCredentialsFromDatabase();
+            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
             switch (currentUsernameRole)
             {
                 case "super_admin":

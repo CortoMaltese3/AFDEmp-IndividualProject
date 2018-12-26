@@ -10,7 +10,7 @@ namespace IndividualProject
     {
         static readonly string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
         static readonly string newUserRequestPath = @"C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\CRMTickets\NewUserRequests\NewUserRequest.txt";
-        static string currentUsername = ConnectToServer.RetrieveCurrentLoginCredentialsFromDatabase();
+        static string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
         static string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
 
         public static void CreateNewUserFromRequestFunction()

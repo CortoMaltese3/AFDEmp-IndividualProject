@@ -7,7 +7,7 @@ namespace IndividualProject
 {
     class CreateNewAccount
     {
-        static readonly string currentUsername = ConnectToServer.RetrieveCurrentLoginCredentialsFromDatabase();
+        static readonly string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
         static readonly string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
         static readonly string newUserRequestPath = @"C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\CRMTickets\NewUserRequests\NewUserRequest.txt";
 

@@ -6,7 +6,7 @@ namespace IndividualProject
 {
     class TransactedData
     {
-        static readonly string currentUsername = ConnectToServer.RetrieveCurrentLoginCredentialsFromDatabase();
+        static readonly string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
         static readonly string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
         static readonly string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
 

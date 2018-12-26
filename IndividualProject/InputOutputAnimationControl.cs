@@ -10,7 +10,7 @@ namespace IndividualProject
 
         public static ConsoleKey ManageTicketOptionsSreen()
         {
-            string currentUsername = ConnectToServer.RetrieveCurrentLoginCredentialsFromDatabase();
+            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
             QuasarScreen(currentUsername);
             UniversalLoadingOuput("Loading");
             Console.Write("Press '1' to Open a new ticket, '2' to Close an existing one or 'Esc' to go back to Main Menu: ");
@@ -35,7 +35,7 @@ namespace IndividualProject
 
         public static ConsoleKey ManageTicketOptionsSreenAsUser()
         {
-            string currentUsername = ConnectToServer.RetrieveCurrentLoginCredentialsFromDatabase();
+            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
             QuasarScreen(currentUsername);
             UniversalLoadingOuput("Loading");
             Console.Write("Press '1' to Open a new ticket or 'Esc' to go back to Main Menu: ");
@@ -60,7 +60,7 @@ namespace IndividualProject
 
         public static ConsoleKey EditTicketScreenOptions()
         {
-            string currentUsername = ConnectToServer.RetrieveCurrentLoginCredentialsFromDatabase();
+            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
             QuasarScreen(currentUsername);
             UniversalLoadingOuput("Loading");
             Console.Write("Press '1' to edit the Ticket Comments, '2' assign it to a different User or 'Esc' to exit: ");
@@ -109,7 +109,7 @@ namespace IndividualProject
 
         public static ConsoleKey AdminFunctionOptionsOutput()
         {
-            string currentUsername = ConnectToServer.RetrieveCurrentLoginCredentialsFromDatabase();
+            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
             QuasarScreen(currentUsername);
             UniversalLoadingOuput("Loading");
 
@@ -168,7 +168,7 @@ namespace IndividualProject
 
         public static ConsoleKey AdministratorFunctionOptionsOutput()
         {
-            string currentUsername = ConnectToServer.RetrieveCurrentLoginCredentialsFromDatabase();
+            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
 
             Console.WriteLine("\r\nChoose one of the following functions or press Esc to return:");
             Console.WriteLine("1: Check user notifications");
@@ -212,7 +212,7 @@ namespace IndividualProject
 
         public static ConsoleKey ModeratorFunctionOptionsOutput()
         {
-            string currentUsername = ConnectToServer.RetrieveCurrentLoginCredentialsFromDatabase();
+            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
 
             Console.WriteLine("\r\nChoose one of the following functions or press Esc to return:");
             Console.WriteLine("1: Check user notifications");
@@ -253,7 +253,7 @@ namespace IndividualProject
 
         public static ConsoleKey UserFunctionOptionsOutput()
         {
-            string currentUsername = ConnectToServer.RetrieveCurrentLoginCredentialsFromDatabase();
+            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
 
             Console.WriteLine("\r\nChoose one of the following functions or press Esc to return:");
             Console.WriteLine("1: Check user notifications");
@@ -291,7 +291,7 @@ namespace IndividualProject
 
         public static string TicketComment()
         {
-            string currentUsername = ConnectToServer.RetrieveCurrentLoginCredentialsFromDatabase();
+            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
             QuasarScreen(currentUsername);
             UniversalLoadingOuput("Loading");
             Console.Write("EDIT TECHNICAL TICKET");
@@ -326,7 +326,7 @@ namespace IndividualProject
 
         public static string SelectUserRole()
         {
-            string currentUsername = ConnectToServer.RetrieveCurrentLoginCredentialsFromDatabase();
+            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
             Console.Write("Please choose one of the following user roles : Administrator, Moderator, User  ->  ");
             string pendingRole = Console.ReadLine();
             List<string> roleList = new List<string>
@@ -416,7 +416,7 @@ namespace IndividualProject
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.DarkCyan;
-            CenterText("Quasar CRM Program");
+            CenterText("Quasar CRM Program - V2.0");
             CenterText("-IT Crowd-");
             CenterText($"[{currentUser}]");
             //UniversalLoadingOuput("");

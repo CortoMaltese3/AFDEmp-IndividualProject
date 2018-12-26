@@ -9,20 +9,22 @@ namespace IndividualProject
 
         public static void UserLoginCredentials()
         {
+            InputOutputAnimationControl.QuasarScreen("Not Registered");
             string username = InputOutputAnimationControl.UsernameInput();
             string passphrase = InputOutputAnimationControl.PassphraseInput();
-            string currentUsername = RetrieveCurrentLoginCredentialsFromDatabase();
             var dbcon = new SqlConnection(connectionString);
 
             while (TestConnectionToSqlServer(dbcon))
             {
                 if (CheckUsernameAndPasswordMatchInDatabase(username, passphrase))
                 {
-                    string currentUsernameRole = RetrieveCurrentUsernameRoleFromDatabase();
-                    InputOutputAnimationControl.QuasarScreen(username);
                     SetCurrentUserStatusToActive(username);
+                    string currentUser = RetrieveCurrentUserFromDatabase();
+                    string currentUsernameRole = RetrieveCurrentUsernameRoleFromDatabase();
+                    InputOutputAnimationControl.QuasarScreen(currentUser);
+                    SetCurrentUserStatusToActive(currentUser);
                     Console.ForegroundColor = ConsoleColor.DarkCyan;
-                    Console.WriteLine($"Connection Established! Welcome back {username}!");
+                    Console.WriteLine($"Connection Established! Welcome back {currentUser}!");
                     Console.ResetColor();
                     System.Threading.Thread.Sleep(1000);
                     ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
@@ -32,12 +34,12 @@ namespace IndividualProject
                     while (true)
                     {
                         string currentUsernameRole = RetrieveCurrentUsernameRoleFromDatabase();
-                        InputOutputAnimationControl.QuasarScreen(username);
+                        InputOutputAnimationControl.QuasarScreen("Not Registered");
                         Console.WriteLine();
                         Console.Write($"Invalid Username or Passphrase. Try again.");
                         username = InputOutputAnimationControl.UsernameInput();
                         passphrase = InputOutputAnimationControl.PassphraseInput();
-                        InputOutputAnimationControl.QuasarScreen(username);
+                        InputOutputAnimationControl.QuasarScreen("Not Registered");
                         InputOutputAnimationControl.UniversalLoadingOuput("Attempting connection to server");
                         if (CheckUsernameAndPasswordMatchInDatabase(username, passphrase))
                         {
@@ -92,7 +94,7 @@ namespace IndividualProject
             using (SqlConnection dbcon = new SqlConnection(connectionString))
             {
                 dbcon.Open();
-                SqlCommand SetStatusToActive = new SqlCommand("EXECUTE SetCurrentUserStatusToActive", dbcon);
+                SqlCommand SetStatusToActive = new SqlCommand($"EXECUTE SetCurrentUserStatusToActive '{currentUsername}'", dbcon);
                 SetStatusToActive.ExecuteScalar();
             }
         }
@@ -107,7 +109,7 @@ namespace IndividualProject
             }
         }
 
-        public static string RetrieveCurrentLoginCredentialsFromDatabase()
+        public static string RetrieveCurrentUserFromDatabase()
         {
             using (SqlConnection dbcon = new SqlConnection(connectionString))
             {
@@ -142,13 +144,13 @@ namespace IndividualProject
 
         public static void TerminateQuasar()
         {
-            string currentUsername = RetrieveCurrentLoginCredentialsFromDatabase();
+            string currentUsername = RetrieveCurrentUserFromDatabase();
             InputOutputAnimationControl.QuasarScreen(currentUsername);
             Console.WriteLine("\r\nWould you like to exit Quasar? ");
             string option = InputOutputAnimationControl.PromptYesOrNo();
             if (option == "y" || option == "Y")
             {
-                InputOutputAnimationControl.QuasarScreen(currentUsername);
+                InputOutputAnimationControl.QuasarScreen("Not Registered");
                 SetCurrentUserStatusToInactive(currentUsername);
                 InputOutputAnimationControl.UniversalLoadingOuput("Wait for Quasar to shut down");
 
@@ -172,7 +174,7 @@ namespace IndividualProject
             }
             else
             {
-                InputOutputAnimationControl.QuasarScreen(currentUsername);
+                InputOutputAnimationControl.QuasarScreen("Not Registered");
                 ApplicationMenuClass.LoginScreen();
             }
         }
@@ -180,14 +182,14 @@ namespace IndividualProject
         public static void LoggingOffQuasar()
         {
             string currentUsernameRole = RetrieveCurrentUsernameRoleFromDatabase();
-            string currentUsername = RetrieveCurrentLoginCredentialsFromDatabase();
+            string currentUsername = RetrieveCurrentUserFromDatabase();
             InputOutputAnimationControl.QuasarScreen(currentUsername);
             Console.WriteLine("\r\nWould you like to log out? ");
             string option = InputOutputAnimationControl.PromptYesOrNo();
             if (option == "y" || option == "Y")
             {
                 SetCurrentUserStatusToInactive(currentUsername);
-                InputOutputAnimationControl.QuasarScreen(currentUsername);
+                InputOutputAnimationControl.QuasarScreen("Not Registered");
                 InputOutputAnimationControl.UniversalLoadingOuput("Logging out");
                 ApplicationMenuClass.LoginScreen();
             }
