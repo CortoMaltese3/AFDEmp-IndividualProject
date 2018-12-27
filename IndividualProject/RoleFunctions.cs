@@ -33,32 +33,26 @@ namespace IndividualProject
                 pendingPassphrase = pendingPassphrase.Remove(0, 12);
                 InputOutputAnimationControl.QuasarScreen(currentUsername);
                 InputOutputAnimationControl.UniversalLoadingOuput("Loading");
-                Console.WriteLine($"You are about to create a new username-password entry : {pendingUsername} - {pendingPassphrase}\r\nWould you like to proceed?");
-                string option = InputOutputAnimationControl.PromptYesOrNo();
-                if(option == "y" || option == "Y")
-                {
-                    InputOutputAnimationControl.QuasarScreen(currentUsername);
-                    InputOutputAnimationControl.UniversalLoadingOuput("Action in progress");
-                    string pendingRole = InputOutputAnimationControl.SelectUserRole();
+                //Console.WriteLine($"You are about to create a new username-password entry : {pendingUsername} - {pendingPassphrase}\r\nWould you like to proceed?");
 
-                    using (SqlConnection dbcon = new SqlConnection(connectionString))
-                    {
-                        dbcon.Open();
-                        SqlCommand appendUserToDatabase = new SqlCommand($"EXECUTE InsertNewUserIntoDatabase '{pendingUsername}', '{pendingPassphrase}', '{pendingRole}', 'inactive')", dbcon);                        
-                        appendUserToDatabase.ExecuteScalar();                        
-                    }
-                    InputOutputAnimationControl.QuasarScreen(currentUsername);
-                    InputOutputAnimationControl.UniversalLoadingOuput("Creating new user in progress");
-                    Console.WriteLine($"User {pendingUsername} has been created successfully. Status : {pendingRole}");
-                    System.Threading.Thread.Sleep(1000);
-                    File.WriteAllLines(newUserRequestPath, new string[] { " " });
-                    InputOutputAnimationControl.QuasarScreen(currentUsername);
-                    ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
-                }
-                else
+                string createUserMsg = $"You are about to create a new username-password entry : {pendingUsername} - {pendingPassphrase}\r\nWould you like to proceed?";
+
+                string yes = "Yes", no = "No";
+                InputOutputAnimationControl.QuasarScreen(currentUsername);
+
+                string yesOrNoSelection = SelectMenu.Menu(new List<string> { yes, no }, currentUsername, createUserMsg).NameOfChoice;
+
+                if (yesOrNoSelection == yes)
                 {
-                    ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
-                }  
+                    CreateNewUserFromRequestFunction();
+
+                }
+
+                else if (yesOrNoSelection == no)
+                {
+                    InputOutputAnimationControl.QuasarScreen(currentUsername);
+                    ActiveUserFunctions.UserFunctionMenuScreen(currentUsername);
+                }
             }
         }
 
@@ -164,15 +158,22 @@ namespace IndividualProject
             else
             {
                 Console.WriteLine("You have 1 pending User registration request. Would you like to create new user?");
-                string option = InputOutputAnimationControl.PromptYesOrNo();
-                if (option == "Y" || option == "y")
+                string yes = "Yes", no = "No";
+
+                string requestMsg = "You have 1 pending User registration request. Would you like to create new user?";
+                string yesOrNoSelection = SelectMenu.Menu(new List<string> { yes, no }, currentUsername, requestMsg).NameOfChoice;
+
+                if (yesOrNoSelection == yes)
                 {
                     CreateNewUserFromRequestFunction();
+
                 }
-                else
+
+                else if (yesOrNoSelection == no)
                 {
-                    ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
-                }                   
+                    InputOutputAnimationControl.QuasarScreen(currentUsername);
+                    ActiveUserFunctions.UserFunctionMenuScreen(currentUsername);
+                }
             }
         }
 

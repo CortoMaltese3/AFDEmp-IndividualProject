@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IndividualProject
 {
     class SelectMenu
     {
         static string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
-        public static UserOptionList Menu(List<string> ListOfOptions, string currentUser)
+
+        public static UserOptionList Menu(List<string> ListOfOptions, string currentUser, string message)
         {
             int currentOption = 0;
             ConsoleKeyInfo currentKeyPressed;
@@ -17,6 +15,7 @@ namespace IndividualProject
             do
             {
                 InputOutputAnimationControl.QuasarScreen(currentUser);
+                Console.WriteLine(message);
                 for (int option = 0; option < ListOfOptions.Count; option++)
                 {
                     Console.ForegroundColor = (option == currentOption) ? ConsoleColor.Green : ConsoleColor.White;
@@ -49,6 +48,7 @@ namespace IndividualProject
             }
             while (currentKeyPressed.Key != ConsoleKey.Enter);
             InputOutputAnimationControl.QuasarScreen(currentUser);
+            
             Console.ForegroundColor = ConsoleColor.White;
 
             return new UserOptionList()
@@ -66,3 +66,4 @@ namespace IndividualProject
         public int IndexOfChoice;
     }
 }
+    

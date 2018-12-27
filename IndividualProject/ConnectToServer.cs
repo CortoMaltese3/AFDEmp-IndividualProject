@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 
 namespace IndividualProject
@@ -18,7 +19,7 @@ namespace IndividualProject
             {
                 if (CheckUsernameAndPasswordMatchInDatabase(username, passphrase))
                 {
-                    SetCurrentUserStatusToActive(username);                    
+                    SetCurrentUserStatusToActive(username);
                     string currentUsernameRole = RetrieveCurrentUsernameRoleFromDatabase();
                     InputOutputAnimationControl.QuasarScreen(username);
                     SetCurrentUserStatusToActive(username);
@@ -57,7 +58,7 @@ namespace IndividualProject
         }
 
         public static bool TestConnectionToSqlServer(this SqlConnection connectionString)
-        {            
+        {
             try
             {
                 connectionString.Open();
@@ -143,14 +144,16 @@ namespace IndividualProject
 
         public static void TerminateQuasar()
         {
-            string currentUsername = RetrieveCurrentUserFromDatabase();
+            string yes = "Yes", no = "No", currentUsername = RetrieveCurrentUserFromDatabase();
             InputOutputAnimationControl.QuasarScreen(currentUsername);
-            Console.WriteLine("\r\nWould you like to exit Quasar? ");
-            string option = InputOutputAnimationControl.PromptYesOrNo();
-            if (option == "y" || option == "Y")
+            //Console.WriteLine("\r\nWould you like to exit Quasar? ");
+            string exitMessage = "Would you like to exit Quasar ?";
+            string yesOrNoSelection = SelectMenu.Menu(new List<string> { yes, no }, currentUsername, exitMessage).NameOfChoice;
+
+            if (yesOrNoSelection == yes)
             {
                 InputOutputAnimationControl.QuasarScreen("Not Registered");
-                SetCurrentUserStatusToInactive(currentUsername);
+                ConnectToServer.SetCurrentUserStatusToInactive(currentUsername);
                 InputOutputAnimationControl.UniversalLoadingOuput("Wait for Quasar to shut down");
 
                 Console.ForegroundColor = ConsoleColor.Cyan;
@@ -171,31 +174,34 @@ namespace IndividualProject
                 }
                 Environment.Exit(0);
             }
-            else
+
+            else if (yesOrNoSelection == no)
             {
-                InputOutputAnimationControl.QuasarScreen("Not Registered");
+                InputOutputAnimationControl.QuasarScreen(currentUsername);
                 ApplicationMenuClass.LoginScreen();
             }
         }
 
         public static void LoggingOffQuasar()
         {
-            string currentUsernameRole = RetrieveCurrentUsernameRoleFromDatabase();
-            string currentUsername = RetrieveCurrentUserFromDatabase();
+            string yes = "Yes", no = "No", currentUsername = RetrieveCurrentUserFromDatabase();
             InputOutputAnimationControl.QuasarScreen(currentUsername);
-            Console.WriteLine("\r\nWould you like to log out? ");
-            string option = InputOutputAnimationControl.PromptYesOrNo();
-            if (option == "y" || option == "Y")
+            //Console.WriteLine("\r\nWould you like to log out? ");
+            string logOffMessage = "Would you like to log out? ";
+            string yesOrNoSelection = SelectMenu.Menu(new List<string> { yes, no }, currentUsername, logOffMessage).NameOfChoice;
+
+            if (yesOrNoSelection == yes)
             {
-                SetCurrentUserStatusToInactive(currentUsername);
                 InputOutputAnimationControl.QuasarScreen("Not Registered");
-                InputOutputAnimationControl.UniversalLoadingOuput("Logging out");
+                SetCurrentUserStatusToInactive(currentUsername);
                 ApplicationMenuClass.LoginScreen();
+
             }
-            else
+
+            else if (yesOrNoSelection == no)
             {
                 InputOutputAnimationControl.QuasarScreen(currentUsername);
-                ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
+                ActiveUserFunctions.UserFunctionMenuScreen(currentUsername);
             }
         }
     }

@@ -6,7 +6,7 @@ using System.Media;
 namespace IndividualProject
 {
     class InputOutputAnimationControl
-    {       
+    {
 
         public static ConsoleKey ManageTicketOptionsSreen()
         {
@@ -107,188 +107,6 @@ namespace IndividualProject
             return passphraseInput;
         }
 
-        public static ConsoleKey AdminFunctionOptionsOutput()
-        {
-            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
-            QuasarScreen(currentUsername);
-            UniversalLoadingOuput("Loading");
-
-            Console.WriteLine("Choose one of the following functions or press Esc to return:");
-            Console.WriteLine("1: Check user notifications");
-            Console.WriteLine("2: Create new username/password from requests");
-            Console.WriteLine("3: Show list of active users");
-            Console.WriteLine("4: Upgrade/Downgrade user's role");
-            Console.WriteLine("5: Delete an active username from Database");
-            Console.WriteLine("6: Manage Customer Trouble Tickets");
-            Console.WriteLine("7: View Trouble Tickets");
-            Console.WriteLine("8: Edit Trouble Tickets");
-            Console.WriteLine("9: Delete Trouble Tickets");
-            Console.Write("\r\nFunction: ");
-            System.Threading.Thread.Sleep(500);
-            ConsoleKey function = Console.ReadKey().Key;
-            if (function == ConsoleKey.Escape)
-            {
-                return function;
-            }
-            while
-                (
-                    function != ConsoleKey.D1 &&
-                    function != ConsoleKey.D2 &&
-                    function != ConsoleKey.D3 &&
-                    function != ConsoleKey.D4 &&
-                    function != ConsoleKey.D5 &&
-                    function != ConsoleKey.D6 &&
-                    function != ConsoleKey.D7 &&
-                    function != ConsoleKey.D8 &&
-                    function != ConsoleKey.D9
-                )
-            {
-                QuasarScreen(currentUsername);
-                UniversalLoadingOuput("Loading");
-                Console.WriteLine("Choose one of the following functions or press Esc to return:");
-                Console.WriteLine("1: Check user notifications");
-                Console.WriteLine("2: Create new username/password from requests");
-                Console.WriteLine("3: Show list of active users");
-                Console.WriteLine("4: Upgrade/Downgrade user's role");
-                Console.WriteLine("5: Delete an active username from Database");
-                Console.WriteLine("6: Manage Customer Trouble Tickets");
-                Console.WriteLine("7: View Trouble Tickets");
-                Console.WriteLine("8: Edit Trouble Tickets");
-                Console.WriteLine("9: Delete Trouble Tickets");
-                Console.Write("\r\nFunction: ");
-                System.Threading.Thread.Sleep(500);
-                function = Console.ReadKey().Key;
-                if (function == ConsoleKey.Escape)
-                {
-                    return function;
-                }
-            }
-            return function;
-        }
-
-        public static ConsoleKey AdministratorFunctionOptionsOutput()
-        {
-            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
-
-            Console.WriteLine("\r\nChoose one of the following functions or press Esc to return:");
-            Console.WriteLine("1: Check user notifications");
-            Console.WriteLine("2: Manage Customer Trouble Tickets");
-            Console.WriteLine("3: View Trouble Tickets");
-            Console.WriteLine("4: Edit Trouble Tickets");
-            Console.WriteLine("5: Delete Trouble Tickets");
-            Console.Write("\r\nFunction: ");
-            System.Threading.Thread.Sleep(500);
-            ConsoleKey function = Console.ReadKey().Key;
-            if (function == ConsoleKey.Escape)
-            {
-                return function;
-            }
-            while
-                (
-                    function != ConsoleKey.D1 &&
-                    function != ConsoleKey.D2 &&
-                    function != ConsoleKey.D3 &&
-                    function != ConsoleKey.D4 &&
-                    function != ConsoleKey.D5
-                )
-            {
-                QuasarScreen(currentUsername);
-                Console.WriteLine("\r\nChoose one of the following functions or press Esc to return:");
-                Console.WriteLine("1: Check user notifications");
-                Console.WriteLine("2: Manage Customer Trouble Tickets");
-                Console.WriteLine("3: View Trouble Tickets");
-                Console.WriteLine("4: Edit Trouble Tickets");
-                Console.WriteLine("5: Delete Trouble Tickets");
-                Console.Write("\r\nFunction: ");
-                System.Threading.Thread.Sleep(500);
-                function = Console.ReadKey().Key;
-                if (function == ConsoleKey.Escape)
-                {
-                    return function;
-                }
-            }
-            return function;
-        }
-
-        public static ConsoleKey ModeratorFunctionOptionsOutput()
-        {
-            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
-
-            Console.WriteLine("\r\nChoose one of the following functions or press Esc to return:");
-            Console.WriteLine("1: Check user notifications");
-            Console.WriteLine("2: Manage Customer Trouble Tickets");
-            Console.WriteLine("3: View Trouble Tickets");
-            Console.WriteLine("4: Edit Trouble Tickets");
-            Console.Write("\r\nFunction: ");
-            System.Threading.Thread.Sleep(500);
-            ConsoleKey function = Console.ReadKey().Key;
-            if (function == ConsoleKey.Escape)
-            {
-                return function;
-            }
-            while
-                (
-                    function != ConsoleKey.D1 &&
-                    function != ConsoleKey.D2 &&
-                    function != ConsoleKey.D3 &&
-                    function != ConsoleKey.D4 
-                )
-            {
-                QuasarScreen(currentUsername);
-                Console.WriteLine("\r\nChoose one of the following functions or press Esc to return:");
-                Console.WriteLine("1: Check user notifications");
-                Console.WriteLine("2: Manage Customer Trouble Tickets");
-                Console.WriteLine("3: View Trouble Tickets");
-                Console.WriteLine("4: Edit Trouble Tickets");
-                Console.Write("\r\nFunction: ");
-                System.Threading.Thread.Sleep(500);
-                function = Console.ReadKey().Key;
-                if (function == ConsoleKey.Escape)
-                {
-                    return function;
-                }
-            }
-            return function;
-        }
-
-        public static ConsoleKey UserFunctionOptionsOutput()
-        {
-            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
-
-            Console.WriteLine("\r\nChoose one of the following functions or press Esc to return:");
-            Console.WriteLine("1: Check user notifications");
-            Console.WriteLine("2: Manage Customer Trouble Tickets");
-            Console.WriteLine("3: View Trouble Tickets");            
-            Console.Write("\r\nFunction: ");
-            System.Threading.Thread.Sleep(500);
-            ConsoleKey function = Console.ReadKey().Key;
-            if (function == ConsoleKey.Escape)
-            {
-                return function;
-            }
-            while
-                (
-                    function != ConsoleKey.D1 &&
-                    function != ConsoleKey.D2 &&
-                    function != ConsoleKey.D3                    
-                )
-            {
-                QuasarScreen(currentUsername);
-                Console.WriteLine("\r\nChoose one of the following functions or press Esc to return:");
-                Console.WriteLine("1: Check user notifications");
-                Console.WriteLine("2: Manage Customer Trouble Tickets");
-                Console.WriteLine("3: View Trouble Tickets");                
-                Console.Write("\r\nFunction: ");
-                System.Threading.Thread.Sleep(500);
-                function = Console.ReadKey().Key;
-                if (function == ConsoleKey.Escape)
-                {
-                    return function;
-                }
-            }
-            return function;
-        }
-
         public static string TicketComment()
         {
             string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
@@ -348,23 +166,66 @@ namespace IndividualProject
             return pendingRole;
         }
 
-        public static string PromptYesOrNo()
+        //public static string PromptYesOrNo()
+        //{
+        //    Console.Write("Type 'Y' for yes or 'N' for no : ");
+        //    string yesOrNo = Console.ReadLine();
+        //    while
+        //        (
+        //            yesOrNo != "Y" &&
+        //            yesOrNo != "y" &&
+        //            yesOrNo != "N" &&
+        //            yesOrNo != "n"
+        //        )
+        //    {
+        //        Console.Write("Type 'Y' for yes or 'N' for no : ");
+        //        yesOrNo = Console.ReadLine();
+        //    }
+        //    return yesOrNo;
+        //}
+
+        public static void PromptYesOrNoSelection()
         {
-            Console.Write("Type 'Y' for yes or 'N' for no : ");
-            string yesOrNo = Console.ReadLine();
-            while
-                (
-                    yesOrNo != "Y" &&
-                    yesOrNo != "y" &&
-                    yesOrNo != "N" &&
-                    yesOrNo != "n"
-                )
+            string yes = "Yes", no = "No", currentUser = ConnectToServer.RetrieveCurrentUserFromDatabase();
+            
+            while (true)
             {
-                Console.Write("Type 'Y' for yes or 'N' for no : ");
-                yesOrNo = Console.ReadLine();
+                string yesOrNoSelection = SelectMenu.Menu(new List<string> { yes, no }, currentUser, "").NameOfChoice;
+
+                if (yesOrNoSelection == yes)
+                {
+                    InputOutputAnimationControl.QuasarScreen("Not Registered");
+                    ConnectToServer.SetCurrentUserStatusToInactive(currentUser);
+                    InputOutputAnimationControl.UniversalLoadingOuput("Wait for Quasar to shut down");
+
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    for (int blink = 0; blink < 6; blink++)
+                    {
+                        if (blink % 2 == 0)
+                        {
+                            InputOutputAnimationControl.WriteBottomLine("~~~~~Dedicated to Afro~~~~~");
+                            Console.ForegroundColor = ConsoleColor.DarkCyan;
+                            System.Threading.Thread.Sleep(300);
+                        }
+                        else
+                        {
+                            InputOutputAnimationControl.WriteBottomLine("~~~~~Dedicated to Afro~~~~~");
+                            Console.ForegroundColor = ConsoleColor.Cyan;
+                            System.Threading.Thread.Sleep(300);
+                        }
+                    }
+                    Environment.Exit(0);
+                }
+
+                else if (yesOrNoSelection == no)
+                {
+                    InputOutputAnimationControl.QuasarScreen(currentUser);
+                    ApplicationMenuClass.LoginScreen();
+                }
             }
-            return yesOrNo;
         }
+
+
         public static void UniversalLoadingOuput(string message)
         {
             Console.ForegroundColor = ConsoleColor.DarkCyan;
@@ -389,7 +250,7 @@ namespace IndividualProject
                 }
                 System.Threading.Thread.Sleep(200);
                 Console.SetCursorPosition(Console.CursorLeft + 0, Console.CursorTop + 0);
-                
+
             }
             Console.ResetColor();
         }
@@ -398,7 +259,7 @@ namespace IndividualProject
         {
             int x = Console.CursorLeft;
             int y = Console.CursorTop;
-            Console.CursorTop = Console.WindowTop + Console.WindowHeight -2;
+            Console.CursorTop = Console.WindowTop + Console.WindowHeight - 2;
             CenterText(text);
         }
 

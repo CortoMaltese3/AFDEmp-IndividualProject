@@ -48,9 +48,13 @@ namespace IndividualProject
 
         public static string AssignTicketToUser()
         {
-            Console.WriteLine("\r\nWould you like to assign the ticket to another user?");
-            string option = InputOutputAnimationControl.PromptYesOrNo();
-            if (option == "Y" || option == "y")
+            //Console.WriteLine("\r\nWould you like to assign the ticket to another user?");
+            string assignTicket = "Would you like to assign the ticket to another user?";
+            string yes = "Yes", no = "No";
+
+            string yesOrNoSelection = SelectMenu.Menu(new List<string> { yes, no }, currentUsername, assignTicket).NameOfChoice;
+
+            if (yesOrNoSelection == yes)
             {
                 InputOutputAnimationControl.QuasarScreen(currentUsername);
                 InputOutputAnimationControl.UniversalLoadingOuput("Loading");
@@ -82,6 +86,11 @@ namespace IndividualProject
                 }
                 return usernameAssignment;
             }
+
+            else if (yesOrNoSelection == no)
+            {
+                return currentUsername;
+            }
             return currentUsername;
         }
 
@@ -112,69 +121,76 @@ namespace IndividualProject
             InputOutputAnimationControl.UniversalLoadingOuput("Loading");
             Console.WriteLine("CLOSE EXISTING TECHNICAL TICKETS");
 
-            Console.WriteLine("Would you like to open the list of Opened Tickets?");
-            string option = InputOutputAnimationControl.PromptYesOrNo();
-            InputOutputAnimationControl.QuasarScreen(currentUsername);
-            InputOutputAnimationControl.UniversalLoadingOuput("Loading");
-
-            using (SqlConnection dbcon = new SqlConnection(connectionString))
+            //Console.WriteLine("Would you like to open the list of Opened Tickets?");
+            string listOfTickets = "Would you like to open the list of Opened Tickets?";
+            string yes = "Yes", no = "No";
+            while (true)
             {
-                if (option == "Y" || option == "y")
+                string optionYesOrNo = SelectMenu.Menu(new List<string> { yes, no }, currentUsername, listOfTickets).NameOfChoice;
+                using (SqlConnection dbcon = new SqlConnection(connectionString))
                 {
-                    ViewListOfOpenCustomerTickets();
+                    if (optionYesOrNo == yes)
+                    {
+                        ViewListOfOpenCustomerTickets();
 
-                    int ticketID = InputOutputAnimationControl.SelectTicketID();
-                    if (CheckIfTicketIDWithStatusOpenExistsInList(ticketID) == false)
-                    {
-                        Console.WriteLine($"There is no Customer Ticket with [ID = {ticketID}]");
-                        System.Threading.Thread.Sleep(1000);
-                        CloseCustomerTicket();
+                        int ticketID = InputOutputAnimationControl.SelectTicketID();
+                        if (CheckIfTicketIDWithStatusOpenExistsInList(ticketID) == false)
+                        {
+                            Console.WriteLine($"There is no Customer Ticket with [ID = {ticketID}]");
+                            System.Threading.Thread.Sleep(1000);
+                            CloseCustomerTicket();
+                        }
+                        //Console.WriteLine($"Are you sure you want to mark ticket {ticketID} as closed?");
+                        string closeTicket = $"Are you sure you want to mark ticket {ticketID} as closed?";
+                        string optionYesOrNo2 = SelectMenu.Menu(new List<string> { yes, no }, currentUsername, closeTicket).NameOfChoice;
+                        if (optionYesOrNo2 == yes)
+                        {
+                            dbcon.Open();
+                            SqlCommand closeCustomerTicket = new SqlCommand($"UPDATE CustomerTickets SET ticketStatus = 'closed' WHERE ticketID = {ticketID} ", dbcon);
+                            closeCustomerTicket.ExecuteScalar();
+                            InputOutputAnimationControl.QuasarScreen(currentUsername);
+                            InputOutputAnimationControl.UniversalLoadingOuput("Action in progress");
+                            Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully marked as closed");
+                            System.Threading.Thread.Sleep(1000);
+                        }
+
+                        else if (optionYesOrNo2 == no)
+                        {
+                            ManageCustomerTickets();
+                        }
                     }
-                    Console.WriteLine($"Are you sure you want to mark ticket {ticketID} as closed?");
-                    string option2 = InputOutputAnimationControl.PromptYesOrNo();
-                    if (option2 == "Y" || option2 == "y")
+
+                    else if (optionYesOrNo == no)
                     {
-                        dbcon.Open();
-                        SqlCommand closeCustomerTicket = new SqlCommand($"UPDATE CustomerTickets SET ticketStatus = 'closed' WHERE ticketID = {ticketID} ", dbcon);
-                        closeCustomerTicket.ExecuteScalar();
-                        InputOutputAnimationControl.QuasarScreen(currentUsername);
-                        InputOutputAnimationControl.UniversalLoadingOuput("Action in progress");
-                        Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully marked as closed");
-                        System.Threading.Thread.Sleep(1000);
-                    }
-                    else
-                    {
-                        ManageCustomerTickets();
+                        int ticketID = InputOutputAnimationControl.SelectTicketID();
+                        if (CheckIfTicketIDWithStatusOpenExistsInList(ticketID) == false)
+                        {
+                            Console.WriteLine($"There is no Customer Ticket with [ID = {ticketID}]");
+                            System.Threading.Thread.Sleep(1000);
+                            ManageCustomerTickets();
+                        }
+                        string closeTicketMsg = $"Are you sure you want to mark ticket {ticketID} as closed?";
+
+                        string optionYesOrNo2 = SelectMenu.Menu(new List<string> { yes, no }, currentUsername, closeTicketMsg).NameOfChoice;
+
+                        if (optionYesOrNo2 == yes)
+                        {
+                            dbcon.Open();
+                            SqlCommand closeCustomerTicket = new SqlCommand($"UPDATE CustomerTickets SET ticketStatus = 'closed' WHERE ticketID = {ticketID} ", dbcon);
+                            closeCustomerTicket.ExecuteScalar();
+                            InputOutputAnimationControl.QuasarScreen(currentUsername);
+                            InputOutputAnimationControl.UniversalLoadingOuput("Action in progress");
+                            Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully marked as closed");
+                            System.Threading.Thread.Sleep(1000);
+                        }
+                        else if (optionYesOrNo2 == no)
+                        {
+                            ManageCustomerTickets();
+                        }
                     }
                 }
-                else
-                {
-                    int ticketID = InputOutputAnimationControl.SelectTicketID();
-                    if (CheckIfTicketIDWithStatusOpenExistsInList(ticketID) == false)
-                    {
-                        Console.WriteLine($"There is no Customer Ticket with [ID = {ticketID}]");
-                        System.Threading.Thread.Sleep(1000);
-                        ManageCustomerTickets();
-                    }
-                    Console.WriteLine($"Are you sure you want to mark ticket {ticketID} as closed?");
-                    string option2 = InputOutputAnimationControl.PromptYesOrNo();
-                    if (option2 == "Y" || option2 == "y")
-                    {
-                        dbcon.Open();
-                        SqlCommand closeCustomerTicket = new SqlCommand($"UPDATE CustomerTickets SET ticketStatus = 'closed' WHERE ticketID = {ticketID} ", dbcon);
-                        closeCustomerTicket.ExecuteScalar();
-                        InputOutputAnimationControl.QuasarScreen(currentUsername);
-                        InputOutputAnimationControl.UniversalLoadingOuput("Action in progress");
-                        Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully marked as closed");
-                        System.Threading.Thread.Sleep(1000);
-                    }
-                    else
-                    {
-                        ManageCustomerTickets();
-                    }
-                }
-            }            
-            ManageCustomerTickets();
+                ManageCustomerTickets();
+            }
         }
 
         public static void DeleteExistingOpenOrClosedTicketFunction()
@@ -183,67 +199,78 @@ namespace IndividualProject
             InputOutputAnimationControl.UniversalLoadingOuput("Loading");
             Console.WriteLine("DELETE EXISTING TECHNICAL TICKETS");
 
-            Console.WriteLine("Would you like to open the list of Existing Tickets?");
-            string option = InputOutputAnimationControl.PromptYesOrNo();
-            InputOutputAnimationControl.QuasarScreen(currentUsername);
-            InputOutputAnimationControl.UniversalLoadingOuput("Loading");
+            //Console.WriteLine("Would you like to open the list of Existing Tickets?");
 
-            if (option == "Y" || option == "y")
+            string listMsg = "Would you like to open the list of Existing Tickets?";
+
+            string yes = "Yes", no = "No";
+            while (true)
             {
-                ViewListOfAllCustomerTickets();
-
-                int ticketID = InputOutputAnimationControl.SelectTicketID();
-                if (CheckIfTicketIDWithStatusOpenOrClosedExistsInList(ticketID) == false)
+                string optionYesOrNo = SelectMenu.Menu(new List<string> { yes, no }, currentUsername, listMsg).NameOfChoice;
+                using (SqlConnection dbcon = new SqlConnection(connectionString))
                 {
-                    Console.WriteLine($"There is no Customer Ticket with [ID = {ticketID}]");
-                    System.Threading.Thread.Sleep(1000);
-                    ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
-                }
-                Console.WriteLine($"Are you sure you want to delete ticket {ticketID}? Action cannot be undone");
-                string option2 = InputOutputAnimationControl.PromptYesOrNo();
-                if (option2 == "Y" || option2 == "y")
-                {
-                    using (SqlConnection dbcon = new SqlConnection(connectionString))
+                    if (optionYesOrNo == yes)
                     {
-                        dbcon.Open();
-                        SqlCommand deleteCustomerTicket = new SqlCommand($"DELETE FROM CustomerTickets WHERE ticketID = {ticketID}", dbcon);
-                        deleteCustomerTicket.ExecuteScalar();
-                        InputOutputAnimationControl.QuasarScreen(currentUsername);
-                        InputOutputAnimationControl.UniversalLoadingOuput("Action in progress");
-                        Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully deleted");
-                        System.Threading.Thread.Sleep(1000);
-                    }
-                }
-            }
-            else
-            {
-                int ticketID = InputOutputAnimationControl.SelectTicketID();
-                if (CheckIfTicketIDWithStatusOpenOrClosedExistsInList(ticketID) == false)
-                {
-                    Console.WriteLine($"There is no Customer Ticket with [ID = {ticketID}]");
-                    System.Threading.Thread.Sleep(1000);
-                    ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
-                }
+                        ViewListOfAllCustomerTickets();
 
-                Console.WriteLine($"Are you sure you want to delete ticket {ticketID}? Action cannot be undone");
-                string option2 = InputOutputAnimationControl.PromptYesOrNo();
-                if (option2 == "Y" || option2 == "y")
-                {
-                    using (SqlConnection dbcon = new SqlConnection(connectionString))
-                    {
-                        InputOutputAnimationControl.QuasarScreen(currentUsername);
-                        Console.WriteLine();
-                        dbcon.Open();
-                        SqlCommand deleteCustomerTicket = new SqlCommand($"DELETE FROM CustomerTickets WHERE ticketID = {ticketID}", dbcon);
-                        deleteCustomerTicket.ExecuteScalar();
-                        InputOutputAnimationControl.QuasarScreen(currentUsername);
-                        InputOutputAnimationControl.UniversalLoadingOuput("Action in progress");
-                        Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully deleted");
-                        System.Threading.Thread.Sleep(1000);
+                        int ticketID = InputOutputAnimationControl.SelectTicketID();
+                        if (CheckIfTicketIDWithStatusOpenOrClosedExistsInList(ticketID) == false)
+                        {
+                            Console.WriteLine($"There is no Customer Ticket with [ID = {ticketID}]");
+                            System.Threading.Thread.Sleep(1000);
+                            ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
+                        }
+                        //Console.WriteLine($"Are you sure you want to delete ticket {ticketID}? Action cannot be undone");
+                        string deleteTicketMsg = $"Are you sure you want to delete ticket {ticketID}? Action cannot be undone";
+
+                        string optionYesOrNo2 = SelectMenu.Menu(new List<string> { yes, no }, currentUsername, deleteTicketMsg).NameOfChoice;
+                        if (optionYesOrNo2 == yes)
+                        {
+                            dbcon.Open();
+                            SqlCommand deleteCustomerTicket = new SqlCommand($"DELETE FROM CustomerTickets WHERE ticketID = {ticketID}", dbcon);
+                            deleteCustomerTicket.ExecuteScalar();
+                            InputOutputAnimationControl.QuasarScreen(currentUsername);
+                            InputOutputAnimationControl.UniversalLoadingOuput("Action in progress");
+                            Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully deleted");
+                            System.Threading.Thread.Sleep(1000);
+                        }
+                        else if (optionYesOrNo2 == no)
+                        {
+                            ManageCustomerTickets();
+                        }
                     }
-                }
+
+                    else if (optionYesOrNo == no)
+                    {
+                        int ticketID = InputOutputAnimationControl.SelectTicketID();
+                        if (CheckIfTicketIDWithStatusOpenOrClosedExistsInList(ticketID) == false)
+                        {
+                            Console.WriteLine($"There is no Customer Ticket with [ID = {ticketID}]");
+                            System.Threading.Thread.Sleep(1000);
+                            ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
+                        }
+                        Console.WriteLine($"Are you sure you want to delete ticket {ticketID}? Action cannot be undone");
+                        string deleteTicketMsg = $"Are you sure you want to delete ticket {ticketID}? Action cannot be undone";
+
+                        string optionYesOrNo2 = SelectMenu.Menu(new List<string> { yes, no }, currentUsername, deleteTicketMsg).NameOfChoice;
+
+                        if (optionYesOrNo2 == yes)
+                        {
+                            dbcon.Open();
+                            SqlCommand deleteCustomerTicket = new SqlCommand($"DELETE FROM CustomerTickets WHERE ticketID = {ticketID}", dbcon);
+                            deleteCustomerTicket.ExecuteScalar();
+                            InputOutputAnimationControl.QuasarScreen(currentUsername);
+                            InputOutputAnimationControl.UniversalLoadingOuput("Action in progress");
+                            Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully deleted");
+                            System.Threading.Thread.Sleep(1000);
+                        }
+                        else if (optionYesOrNo2 == no)
+                        {
+                            ManageCustomerTickets();
+                        }
+                    }
+                }                
             }
-            ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
         }
 
         public static void ViewExistingOpenTicketsFunction()
@@ -252,28 +279,45 @@ namespace IndividualProject
             InputOutputAnimationControl.UniversalLoadingOuput("Loading");
             Console.WriteLine("VIEW OPEN TECHNICAL TICKETS");
 
-            Console.WriteLine("Would you like to open the list of Opened Tickets?");
-            string option = InputOutputAnimationControl.PromptYesOrNo();
-            InputOutputAnimationControl.QuasarScreen(currentUsername);
-            InputOutputAnimationControl.UniversalLoadingOuput("Loading");
-
-            if (option == "Y" || option == "y")
+            //Console.WriteLine("Would you like to open the list of Opened Tickets?");
+            string listTicketsMsg = "Would you like to open the list of Opened Tickets?";
+            string yes = "Yes", no = "No";
+            while (true)
             {
-                ViewListOfOpenCustomerTickets();
-            }
+                string optionYesOrNo = SelectMenu.Menu(new List<string> { yes, no }, currentUsername, listTicketsMsg).NameOfChoice;
+                if (optionYesOrNo == yes)
+                {
+                    ViewListOfOpenCustomerTickets();
+                    int TicketID = InputOutputAnimationControl.SelectTicketID();
+                    if (CheckIfTicketIDWithStatusOpenExistsInList(TicketID) == false)
+                    {
+                        Console.WriteLine($"There is no Customer Ticket with [ID = {TicketID}]");
+                        System.Threading.Thread.Sleep(1000);
+                        InputOutputAnimationControl.QuasarScreen(currentUsername);
+                        InputOutputAnimationControl.UniversalLoadingOuput("Loading");
+                        ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
+                    }
 
-            int TicketID = InputOutputAnimationControl.SelectTicketID();
-            if (CheckIfTicketIDWithStatusOpenExistsInList(TicketID) == false)
-            {
-                Console.WriteLine($"There is no Customer Ticket with [ID = {TicketID}]");
-                System.Threading.Thread.Sleep(1000);
-                InputOutputAnimationControl.QuasarScreen(currentUsername);
-                InputOutputAnimationControl.UniversalLoadingOuput("Loading");
-                ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
-            }
+                    ViewSingleCustomerTicket(TicketID);
+                    ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
 
-            ViewSingleCustomerTicket(TicketID);
-            ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
+                }
+                else if (optionYesOrNo == no)
+                {
+                    int TicketID = InputOutputAnimationControl.SelectTicketID();
+                    if (CheckIfTicketIDWithStatusOpenExistsInList(TicketID) == false)
+                    {
+                        Console.WriteLine($"There is no Customer Ticket with [ID = {TicketID}]");
+                        System.Threading.Thread.Sleep(1000);
+                        InputOutputAnimationControl.QuasarScreen(currentUsername);
+                        InputOutputAnimationControl.UniversalLoadingOuput("Loading");
+                        ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
+                    }
+
+                    ViewSingleCustomerTicket(TicketID);
+                    ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
+                }
+            }
         }
 
         private static void ViewSingleCustomerTicket(int ticketID)
@@ -394,34 +438,81 @@ namespace IndividualProject
             Console.WriteLine("EDIT OPEN TECHNICAL TICKETS");
 
             Console.WriteLine("Would you like to open the list of Opened Tickets?");
-            string option = InputOutputAnimationControl.PromptYesOrNo();
-            InputOutputAnimationControl.QuasarScreen(currentUsername);
-            InputOutputAnimationControl.UniversalLoadingOuput("Loading");
 
-            if (option == "Y" || option == "y")
-            {
-                ViewListOfOpenCustomerTickets();
-            }
+            string listTicketsMsg = "Would you like to open the list of Opened Tickets?";
 
-            int TicketID = InputOutputAnimationControl.SelectTicketID();
-            if (CheckIfTicketIDWithStatusOpenExistsInList(TicketID) == false)
+            string yes = "Yes", no = "No";
+            while (true)
             {
-                Console.WriteLine($"There is no Customer Ticket with [ID = {TicketID}]");
-                System.Threading.Thread.Sleep(1000);
-                ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
-            }
-            else
-            {
-                EditTicketOptions(TicketID);
-                InputOutputAnimationControl.QuasarScreen(currentUsername);
-                Console.WriteLine();
-                Console.WriteLine($"Would you like to view the edited Ticket {TicketID}?");
-                string option2 = InputOutputAnimationControl.PromptYesOrNo();
-                if (option2 == "Y" || option2 == "y")
+                string optionYesOrNo = SelectMenu.Menu(new List<string> { yes, no }, currentUsername, listTicketsMsg).NameOfChoice;
+
+                if (optionYesOrNo == yes)
                 {
-                    ViewSingleCustomerTicket(TicketID);
+                    ViewListOfOpenCustomerTickets();
+                    int TicketID = InputOutputAnimationControl.SelectTicketID();
+                    if (CheckIfTicketIDWithStatusOpenExistsInList(TicketID) == false)
+                    {
+                        Console.WriteLine($"There is no Customer Ticket with [ID = {TicketID}]");
+                        System.Threading.Thread.Sleep(1000);
+                        ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
+                    }
+                    else
+                    {
+                        EditTicketOptions(TicketID);
+                        InputOutputAnimationControl.QuasarScreen(currentUsername);
+                        Console.WriteLine();
+                        //Console.WriteLine($"Would you like to view the edited Ticket {TicketID}?");
+
+                        string viewTicketMsg = $"Would you like to view the edited Ticket {TicketID}?";
+
+                        while (true)
+                        {
+                            optionYesOrNo = SelectMenu.Menu(new List<string> { yes, no }, currentUsername, viewTicketMsg).NameOfChoice;
+                            if (optionYesOrNo == yes)
+                            {
+                                ViewSingleCustomerTicket(TicketID);
+                                ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
+                            }
+                            else if (optionYesOrNo == no)
+                            {
+                                ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
+                            }
+                        }                       
+                    }
                 }
-                ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
+                else if (optionYesOrNo == no)
+                {
+                    int TicketID = InputOutputAnimationControl.SelectTicketID();
+                    if (CheckIfTicketIDWithStatusOpenExistsInList(TicketID) == false)
+                    {
+                        Console.WriteLine($"There is no Customer Ticket with [ID = {TicketID}]");
+                        System.Threading.Thread.Sleep(1000);
+                        ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
+                    }
+                    else
+                    {
+                        EditTicketOptions(TicketID);
+                        InputOutputAnimationControl.QuasarScreen(currentUsername);
+                        Console.WriteLine();
+                        //Console.WriteLine($"Would you like to view the edited Ticket {TicketID}?");
+
+                        string viewTicketMsg = $"Would you like to view the edited Ticket {TicketID}?";
+                        while (true)
+                        {
+
+                            optionYesOrNo = SelectMenu.Menu(new List<string> { yes, no }, currentUsername, viewTicketMsg).NameOfChoice;
+                            if (optionYesOrNo == yes)
+                            {
+                                ViewSingleCustomerTicket(TicketID);
+                                ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
+                            }
+                            else if (optionYesOrNo == no)
+                            {
+                                ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -469,7 +560,7 @@ namespace IndividualProject
                 SqlCommand EditTicketUserOwnerInDatabase = new SqlCommand($"UPDATE CustomerTickets SET userAssignedTo = '{nextOwner}' WHERE ticketID = {ID}", dbcon);
                 EditTicketUserOwnerInDatabase.ExecuteScalar();
             }
-            if(nextOwner == currentUsername)
+            if (nextOwner == currentUsername)
             {
                 InputOutputAnimationControl.QuasarScreen(currentUsername);
                 InputOutputAnimationControl.UniversalLoadingOuput("Action in progress");
@@ -483,8 +574,8 @@ namespace IndividualProject
                 Console.WriteLine($"The ownership of the Customer Ticket with [ID = {ID}] has been successfully transfered to User: {nextOwner}");
                 System.Threading.Thread.Sleep(1000);
             }
-            
-            
+
+
         }
 
         private static bool CheckIfTicketIDWithStatusOpenExistsInList(int ID)

@@ -16,11 +16,11 @@ namespace IndividualProject
         public static void LoginScreen()
         {
             string login = "Login with your Credentials", register = "New Account request", quit = "Quit Quasar", currentUser = "Not Registered";
-
             while (true)
             {
-                string LoginRegisterQuit = SelectMenu.Menu(new List<string> {login, register, quit}, currentUser).NameOfChoice;
-
+                string loginMsg = "Welcome to Quasar! Choose one of the following options";
+                string LoginRegisterQuit = SelectMenu.Menu(new List<string> {login, register, quit}, currentUser, loginMsg).NameOfChoice;
+                
                 if (LoginRegisterQuit == login)
                 {
                     ConnectToServer.UserLoginCredentials();
