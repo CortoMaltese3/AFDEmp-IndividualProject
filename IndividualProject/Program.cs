@@ -15,11 +15,11 @@ namespace IndividualProject
     {
         public static void LoginScreen()
         {
-            string login = "Login with your Credentials", register = "New Account request", quit = "Quit Quasar", currentUser = "Not Registered";
+            string login = "Login with your Credentials", register = "New Account request", quit = "Quit Quasar", currentUser = "Not Registered",
+                            loginMsg = "\r\nWelcome to Quasar! Choose one of the following options to continue:\r\n";
             while (true)
-            {
-                string loginMsg = "Welcome to Quasar! Choose one of the following options";
-                string LoginRegisterQuit = SelectMenu.Menu(new List<string> {login, register, quit}, currentUser, loginMsg).NameOfChoice;
+            { 
+                string LoginRegisterQuit = SelectMenu.MenuColumn(new List<string> {login, register, quit}, currentUser, loginMsg).NameOfChoice;
                 
                 if (LoginRegisterQuit == login)
                 {

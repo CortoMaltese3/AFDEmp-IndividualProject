@@ -48,7 +48,7 @@ namespace IndividualProject
             using (SqlConnection dbcon = new SqlConnection(connectionString))
             {
                 dbcon.Open();
-                SqlCommand checkUsername = new SqlCommand($"SELECT COUNT(*) FROM UserCredentials WHERE (username = '{usernameCheck}')", dbcon);
+                SqlCommand checkUsername = new SqlCommand($"EXECUTE CheckUniqueUsername '{usernameCheck}')", dbcon);
                 int UserCount = (int)checkUsername.ExecuteScalar();
                 if (UserCount != 0)
                 {

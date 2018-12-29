@@ -32,15 +32,14 @@ namespace IndividualProject
                 string pendingPassphrase = File.ReadLines(newUserRequestPath).Skip(1).Take(1).First();
                 pendingPassphrase = pendingPassphrase.Remove(0, 12);
                 InputOutputAnimationControl.QuasarScreen(currentUsername);
-                InputOutputAnimationControl.UniversalLoadingOuput("Loading");
-                //Console.WriteLine($"You are about to create a new username-password entry : {pendingUsername} - {pendingPassphrase}\r\nWould you like to proceed?");
+                InputOutputAnimationControl.UniversalLoadingOuput("Loading");                
 
                 string createUserMsg = $"You are about to create a new username-password entry : {pendingUsername} - {pendingPassphrase}\r\nWould you like to proceed?";
 
                 string yes = "Yes", no = "No";
                 InputOutputAnimationControl.QuasarScreen(currentUsername);
 
-                string yesOrNoSelection = SelectMenu.Menu(new List<string> { yes, no }, currentUsername, createUserMsg).NameOfChoice;
+                string yesOrNoSelection = SelectMenu.MenuColumn(new List<string> { yes, no }, currentUsername, createUserMsg).NameOfChoice;
 
                 if (yesOrNoSelection == yes)
                 {
@@ -105,7 +104,7 @@ namespace IndividualProject
             using (SqlConnection dbcon = new SqlConnection(connectionString))
             {
                 dbcon.Open();
-                SqlCommand ShowUsersFromDatabase = new SqlCommand("SELECT * FROM UserLevelAccess", dbcon);
+                SqlCommand ShowUsersFromDatabase = new SqlCommand("EXECUTE SelectUsersAndRolesInDatabase", dbcon);
 
                 using (var reader = ShowUsersFromDatabase.ExecuteReader())
                 {
@@ -132,7 +131,7 @@ namespace IndividualProject
             InputOutputAnimationControl.QuasarScreen(currentUsername);
             ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
         }
-        //TODO
+
         public static void CheckUserNotifications()
         {
             InputOutputAnimationControl.QuasarScreen(currentUsername);
@@ -161,7 +160,7 @@ namespace IndividualProject
                 string yes = "Yes", no = "No";
 
                 string requestMsg = "You have 1 pending User registration request. Would you like to create new user?";
-                string yesOrNoSelection = SelectMenu.Menu(new List<string> { yes, no }, currentUsername, requestMsg).NameOfChoice;
+                string yesOrNoSelection = SelectMenu.MenuColumn(new List<string> { yes, no }, currentUsername, requestMsg).NameOfChoice;
 
                 if (yesOrNoSelection == yes)
                 {
@@ -214,7 +213,7 @@ namespace IndividualProject
             using (SqlConnection dbcon = new SqlConnection(connectionString))
             {
                 dbcon.Open();
-                SqlCommand selectPreviousUserRole = new SqlCommand($"SELECT userRole FROM UserLevelAccess WHERE username = '{username}'", dbcon);
+                SqlCommand selectPreviousUserRole = new SqlCommand($"SelectSingleUserRole '{username}'", dbcon);
                 string previousUserRole = (string)selectPreviousUserRole.ExecuteScalar();
                 while (previousUserRole == userRole)
                 {
@@ -225,12 +224,12 @@ namespace IndividualProject
                     InputOutputAnimationControl.QuasarScreen(currentUsername);
                     Console.WriteLine();
                     userRole = InputOutputAnimationControl.SelectUserRole();
-                    selectPreviousUserRole = new SqlCommand($"SELECT userRole FROM UserLevelAccess WHERE username = '{username}'", dbcon);
+                    selectPreviousUserRole = new SqlCommand($"SelectSingleUserRole '{username}'", dbcon);
                     previousUserRole = (string)selectPreviousUserRole.ExecuteScalar();
                 }
 
-                SqlCommand alterUserRole = new SqlCommand($"UPDATE UserLevelAccess SET userRole = '{userRole}' WHERE username = '{username}'", dbcon);
-                SqlCommand selectUserRole = new SqlCommand($"SELECT userRole FROM UserLevelAccess WHERE username = '{username}'", dbcon);
+                SqlCommand alterUserRole = new SqlCommand($"EXECUTE UpdateUserRole '{username}', '{userRole}'", dbcon);
+                SqlCommand selectUserRole = new SqlCommand($"EXECUTE SelectSingleUserRole '{username}'", dbcon);
                 alterUserRole.ExecuteScalar();
                 string newUserRole = (string)selectUserRole.ExecuteScalar();
                 InputOutputAnimationControl.QuasarScreen(currentUsername);

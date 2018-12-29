@@ -190,7 +190,7 @@ namespace IndividualProject
             
             while (true)
             {
-                string yesOrNoSelection = SelectMenu.Menu(new List<string> { yes, no }, currentUser, "").NameOfChoice;
+                string yesOrNoSelection = SelectMenu.MenuColumn(new List<string> { yes, no }, currentUser, "").NameOfChoice;
 
                 if (yesOrNoSelection == yes)
                 {
@@ -285,16 +285,5 @@ namespace IndividualProject
             Console.ResetColor();
             WriteAt(0, 3);
         }
-
-        public static void BackGroundMusic()
-        {
-            SoundPlayer player = new SoundPlayer();
-            player.SoundLocation = AppDomain.CurrentDomain.BaseDirectory + "BG music.wav";
-            player.Play();
-        }
-
-
     }
-
-
 }

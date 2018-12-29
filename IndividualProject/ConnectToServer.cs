@@ -22,7 +22,6 @@ namespace IndividualProject
                     SetCurrentUserStatusToActive(username);
                     string currentUsernameRole = RetrieveCurrentUsernameRoleFromDatabase();
                     InputOutputAnimationControl.QuasarScreen(username);
-                    SetCurrentUserStatusToActive(username);
                     Console.ForegroundColor = ConsoleColor.DarkCyan;
                     Console.WriteLine($"Connection Established! Welcome back {username}!");
                     Console.ResetColor();
@@ -33,9 +32,8 @@ namespace IndividualProject
                 {
                     while (true)
                     {
-                        string currentUsernameRole = RetrieveCurrentUsernameRoleFromDatabase();
+                        //string currentUsernameRole = RetrieveCurrentUsernameRoleFromDatabase();
                         InputOutputAnimationControl.QuasarScreen("Not Registered");
-                        Console.WriteLine();
                         Console.Write($"Invalid Username or Passphrase. Try again.");
                         username = InputOutputAnimationControl.UsernameInput();
                         passphrase = InputOutputAnimationControl.PassphraseInput();
@@ -43,6 +41,7 @@ namespace IndividualProject
                         InputOutputAnimationControl.UniversalLoadingOuput("Attempting connection to server");
                         if (CheckUsernameAndPasswordMatchInDatabase(username, passphrase))
                         {
+                            string currentUsernameRole = RetrieveCurrentUsernameRoleFromDatabase();
                             InputOutputAnimationControl.QuasarScreen(username);
                             SetCurrentUserStatusToActive(username);
                             Console.ForegroundColor = ConsoleColor.DarkCyan;
@@ -77,9 +76,7 @@ namespace IndividualProject
             using (SqlConnection dbcon = new SqlConnection(connectionString))
             {
                 dbcon.Open();
-                SqlCommand checkUsername = new SqlCommand($"SELECT COUNT(*) FROM UserCredentials " +
-                    $"                                      WHERE (username = '{usernameCheck}' " +
-                    $"                                      AND passphrase = '{passphraseCheck}')", dbcon);
+                SqlCommand checkUsername = new SqlCommand($"EXECUTE CheckUniqueCredentials '{usernameCheck}', '{passphraseCheck}'", dbcon);
                 int UserCount = (int)checkUsername.ExecuteScalar();
                 if (UserCount != 0)
                 {
@@ -145,10 +142,9 @@ namespace IndividualProject
         public static void TerminateQuasar()
         {
             string yes = "Yes", no = "No", currentUsername = RetrieveCurrentUserFromDatabase();
-            InputOutputAnimationControl.QuasarScreen(currentUsername);
-            //Console.WriteLine("\r\nWould you like to exit Quasar? ");
+            InputOutputAnimationControl.QuasarScreen(currentUsername);            
             string exitMessage = "Would you like to exit Quasar ?";
-            string yesOrNoSelection = SelectMenu.Menu(new List<string> { yes, no }, currentUsername, exitMessage).NameOfChoice;
+            string yesOrNoSelection = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, exitMessage).NameOfChoice;
 
             if (yesOrNoSelection == yes)
             {
@@ -186,9 +182,8 @@ namespace IndividualProject
         {
             string yes = "Yes", no = "No", currentUsername = RetrieveCurrentUserFromDatabase();
             InputOutputAnimationControl.QuasarScreen(currentUsername);
-            //Console.WriteLine("\r\nWould you like to log out? ");
             string logOffMessage = "Would you like to log out? ";
-            string yesOrNoSelection = SelectMenu.Menu(new List<string> { yes, no }, currentUsername, logOffMessage).NameOfChoice;
+            string yesOrNoSelection = SelectMenu.MenuColumn(new List<string> { yes, no }, currentUsername, logOffMessage).NameOfChoice;
 
             if (yesOrNoSelection == yes)
             {

@@ -8,18 +8,17 @@ namespace IndividualProject
         public static void UserFunctionMenuScreen(string currentUsernameRole)
         {
             string currentUser = ConnectToServer.RetrieveCurrentUserFromDatabase();
-
             string notifications = "Check user notifications", requests = "Create new username/password from requests", viewUsers = "Show list of active users", modifyRole = "Upgrade/Downgrade user's role",
                    deleteUser = "Delete an active username from Database", manageTickets = "Manage Customer Trouble Tickets", viewTickets = "View Trouble Tickets",
                    editTicket = "Edit Trouble Tickets", deleteTicket = "Delete Trouble Tickets", logOut = "\nLog Out";
-            string message = "Choose one of the following functions";
+            string message = "Choose one of the following functions\n";
 
             switch (currentUsernameRole)
             {
                 case "super_admin":
                     while (true)
                     {
-                        string SuperAdminFunctionMenu = SelectMenu.Menu(new List<string> { notifications, requests, viewUsers, modifyRole, deleteUser, manageTickets, viewTickets, editTicket, deleteTicket, logOut }, currentUser, message).NameOfChoice;
+                        string SuperAdminFunctionMenu = SelectMenu.MenuColumn(new List<string> { notifications, requests, viewUsers, modifyRole, deleteUser, manageTickets, viewTickets, editTicket, deleteTicket, logOut }, currentUser, message).NameOfChoice;
 
                         if (SuperAdminFunctionMenu == notifications)
                         {
@@ -75,7 +74,7 @@ namespace IndividualProject
                 case "Administrator":
                     while (true)
                     {
-                        string AdminFunctionMenu = SelectMenu.Menu(new List<string> { notifications, manageTickets, viewTickets, editTicket, deleteTicket, logOut }, currentUser, message).NameOfChoice;
+                        string AdminFunctionMenu = SelectMenu.MenuColumn(new List<string> { notifications, manageTickets, viewTickets, editTicket, deleteTicket, logOut }, currentUser, message).NameOfChoice;
 
                         if (AdminFunctionMenu == notifications)
                         {
@@ -111,7 +110,7 @@ namespace IndividualProject
                 case "Moderator":
                     while (true)
                     {
-                        string ModeratorFunctionMenu = SelectMenu.Menu(new List<string> { notifications, manageTickets, viewTickets, editTicket, logOut }, currentUser, message).NameOfChoice;
+                        string ModeratorFunctionMenu = SelectMenu.MenuColumn(new List<string> { notifications, manageTickets, viewTickets, editTicket, logOut }, currentUser, message).NameOfChoice;
 
                         if (ModeratorFunctionMenu == notifications)
                         {
@@ -142,7 +141,7 @@ namespace IndividualProject
                 case "User":
                     while (true)
                     {
-                        string UserFunctionMenu = SelectMenu.Menu(new List<string> { notifications, manageTickets, viewTickets, logOut }, currentUser, message).NameOfChoice;
+                        string UserFunctionMenu = SelectMenu.MenuColumn(new List<string> { notifications, manageTickets, viewTickets, logOut }, currentUser, message).NameOfChoice;
 
                         if (UserFunctionMenu == notifications)
                         {
