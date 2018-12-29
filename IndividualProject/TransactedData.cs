@@ -14,10 +14,10 @@ namespace IndividualProject
         {
 
             string open = "Open new Customer Ticket", close = "Close Customer Ticket", back = "\r\nBack",
-                manageTicketmsg = "\r\nWelcome to Quasar! Choose one of the following options to continue:\r\n";
+                manageTicketmsg = "\r\nChoose one of the following options to continue:\r\n";
             while (true)
             {
-                string openCloseTicket = SelectMenu.MenuColumn(new List<string> { open, close, back }, currentUsername, manageTicketmsg).NameOfChoice;
+                string openCloseTicket = SelectMenu.MenuColumn(new List<string> {open, close, back}, currentUsername, manageTicketmsg).NameOfChoice;
 
                 if (openCloseTicket == open)
                 {
@@ -179,7 +179,7 @@ namespace IndividualProject
                         }
                         string closeTicketMsg = $"Are you sure you want to mark ticket {ticketID} as closed?";
 
-                        string optionYesOrNo2 = SelectMenu.MenuColumn(new List<string> { yes, no }, currentUsername, closeTicketMsg).NameOfChoice;
+                        string optionYesOrNo2 = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, closeTicketMsg).NameOfChoice;
 
                         if (optionYesOrNo2 == yes)
                         {
@@ -208,11 +208,11 @@ namespace IndividualProject
             Console.WriteLine("DELETE EXISTING TECHNICAL TICKETS");
 
             string listMsg = "Would you like to open the list of Existing Tickets?";
-
             string yes = "Yes", no = "No";
+
             while (true)
             {
-                string optionYesOrNo = SelectMenu.MenuColumn(new List<string> { yes, no }, currentUsername, listMsg).NameOfChoice;
+                string optionYesOrNo = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, listMsg).NameOfChoice;
                 using (SqlConnection dbcon = new SqlConnection(connectionString))
                 {
                     if (optionYesOrNo == yes)
@@ -228,7 +228,7 @@ namespace IndividualProject
                         }                        
                         string deleteTicketMsg = $"Are you sure you want to delete ticket {ticketID}? Action cannot be undone";
 
-                        string optionYesOrNo2 = SelectMenu.MenuColumn(new List<string> { yes, no }, currentUsername, deleteTicketMsg).NameOfChoice;
+                        string optionYesOrNo2 = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, deleteTicketMsg).NameOfChoice;
                         if (optionYesOrNo2 == yes)
                         {
                             dbcon.Open();
@@ -238,6 +238,7 @@ namespace IndividualProject
                             InputOutputAnimationControl.UniversalLoadingOuput("Action in progress");
                             Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully deleted");
                             System.Threading.Thread.Sleep(1000);
+                            ManageCustomerTickets();
                         }
                         else if (optionYesOrNo2 == no)
                         {
@@ -278,6 +279,38 @@ namespace IndividualProject
             }
         }
 
+        //public static void DeleteExistingOpenOrClosedTicketSubFunction()
+        //{
+
+        //    int ticketID = InputOutputAnimationControl.SelectTicketID();
+        //    if (CheckIfTicketIDWithStatusOpenOrClosedExistsInList(ticketID) == false)
+        //    {
+        //        Console.WriteLine($"There is no Customer Ticket with [ID = {ticketID}]");
+        //        System.Threading.Thread.Sleep(1000);
+        //        ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
+        //    }
+        //    string deleteTicketMsg = $"Are you sure you want to delete ticket {ticketID}? Action cannot be undone";
+
+        //    string optionYesOrNo2 = SelectMenu.MenuColumn(new List<string> { yes, no }, currentUsername, deleteTicketMsg).NameOfChoice;
+        //    if (optionYesOrNo2 == yes)
+        //    {
+        //        dbcon.Open();
+        //        SqlCommand deleteCustomerTicket = new SqlCommand($"EXECUTE DeleteCustomerTicket {ticketID}", dbcon);
+        //        deleteCustomerTicket.ExecuteScalar();
+        //        InputOutputAnimationControl.QuasarScreen(currentUsername);
+        //        InputOutputAnimationControl.UniversalLoadingOuput("Action in progress");
+        //        Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully deleted");
+        //        System.Threading.Thread.Sleep(1000);
+        //    }
+        //    else if (optionYesOrNo2 == no)
+        //    {
+        //        ManageCustomerTickets();
+        //    }
+        //}
+
+
+
+
         public static void ViewExistingOpenTicketsFunction()
         {
             InputOutputAnimationControl.QuasarScreen(currentUsername);
@@ -289,7 +322,7 @@ namespace IndividualProject
             string yes = "Yes", no = "No";
             while (true)
             {
-                string optionYesOrNo = SelectMenu.MenuColumn(new List<string> { yes, no }, currentUsername, listTicketsMsg).NameOfChoice;
+                string optionYesOrNo = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, listTicketsMsg).NameOfChoice;
                 if (optionYesOrNo == yes)
                 {
                     ViewListOfOpenCustomerTickets();
@@ -449,7 +482,7 @@ namespace IndividualProject
             string yes = "Yes", no = "No";
             while (true)
             {
-                string optionYesOrNo = SelectMenu.MenuColumn(new List<string> { yes, no }, currentUsername, listTicketsMsg).NameOfChoice;
+                string optionYesOrNo = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, listTicketsMsg).NameOfChoice;
 
                 if (optionYesOrNo == yes)
                 {
@@ -521,25 +554,30 @@ namespace IndividualProject
 
         private static void EditTicketOptions(int ID)
         {
-            ConsoleKey option = InputOutputAnimationControl.EditTicketScreenOptions();
-
-            switch (option)
+            string edit = "Edit Ticket Comment", assign = "Edit Ticket's User assignment", back = "Back",
+                editMsg = "\r\nChoose one of the following options to continue:\r\n";
+            while (true)
             {
-                case ConsoleKey.D1:
+                string EditCommentAndAssignment = SelectMenu.MenuColumn(new List<string> { edit, assign, back }, currentUsername, editMsg).NameOfChoice;
+
+                if (EditCommentAndAssignment == edit)
+                {
                     string ticketComment = InputOutputAnimationControl.TicketComment();
                     EditCommentOfOpenTicket(ID, ticketComment);
-                    break;
+                }
 
-                case ConsoleKey.D2:
+                else if (EditCommentAndAssignment == assign)
+                {
                     string newUserAssignment = AssignTicketToUser();
                     ChangeUserAssignmentToOpenTicket(ID, newUserAssignment);
-                    break;
+                }
 
-                case ConsoleKey.Escape:
+                else if (EditCommentAndAssignment == back)
+                {
                     InputOutputAnimationControl.QuasarScreen(currentUsername);
                     InputOutputAnimationControl.UniversalLoadingOuput("Loading");
                     ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
-                    break;
+                }             
             }
         }
 

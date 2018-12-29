@@ -7,82 +7,6 @@ namespace IndividualProject
 {
     class InputOutputAnimationControl
     {
-
-        public static ConsoleKey ManageTicketOptionsSreen()
-        {
-            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
-            QuasarScreen(currentUsername);
-            UniversalLoadingOuput("Loading");
-            Console.Write("Press '1' to Open a new ticket, '2' to Close an existing one or 'Esc' to go back to Main Menu: ");
-            ConsoleKey openOrCloseTicketInput = Console.ReadKey().Key;
-            if (openOrCloseTicketInput == ConsoleKey.Escape)
-            {
-                return openOrCloseTicketInput;
-            }
-            while (openOrCloseTicketInput != ConsoleKey.D1 && openOrCloseTicketInput != ConsoleKey.D2)
-            {
-                QuasarScreen(currentUsername);
-                System.Threading.Thread.Sleep(500);
-                Console.Write("Press '1' to Open a new ticket, '2' to Close an existing one or 'Esc' to go back to Main Menu: ");
-                openOrCloseTicketInput = Console.ReadKey().Key;
-                if (openOrCloseTicketInput == ConsoleKey.Escape)
-                {
-                    return openOrCloseTicketInput;
-                }
-            }
-            return openOrCloseTicketInput;
-        }
-
-        public static ConsoleKey ManageTicketOptionsSreenAsUser()
-        {
-            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
-            QuasarScreen(currentUsername);
-            UniversalLoadingOuput("Loading");
-            Console.Write("Press '1' to Open a new ticket or 'Esc' to go back to Main Menu: ");
-            ConsoleKey openOrCloseTicketInput = Console.ReadKey().Key;
-            if (openOrCloseTicketInput == ConsoleKey.Escape)
-            {
-                return openOrCloseTicketInput;
-            }
-            while (openOrCloseTicketInput != ConsoleKey.D1)
-            {
-                QuasarScreen(currentUsername);
-                System.Threading.Thread.Sleep(500);
-                Console.Write("Press '1' to Open a new ticket or 'Esc' to go back to Main Menu: ");
-                openOrCloseTicketInput = Console.ReadKey().Key;
-                if (openOrCloseTicketInput == ConsoleKey.Escape)
-                {
-                    return openOrCloseTicketInput;
-                }
-            }
-            return openOrCloseTicketInput;
-        }
-
-        public static ConsoleKey EditTicketScreenOptions()
-        {
-            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
-            QuasarScreen(currentUsername);
-            UniversalLoadingOuput("Loading");
-            Console.Write("Press '1' to edit the Ticket Comments, '2' assign it to a different User or 'Esc' to exit: ");
-            ConsoleKey editOrChangeAssignment = Console.ReadKey().Key;
-            if (editOrChangeAssignment == ConsoleKey.Escape)
-            {
-                return editOrChangeAssignment;
-            }
-            while (editOrChangeAssignment != ConsoleKey.D1 && editOrChangeAssignment != ConsoleKey.D2)
-            {
-                QuasarScreen(currentUsername);
-                System.Threading.Thread.Sleep(500);
-                Console.Write("Press '1' to edit the Ticket Comments, '2' assign it to a different User or 'Esc' to exit: ");
-                editOrChangeAssignment = Console.ReadKey().Key;
-                if (editOrChangeAssignment == ConsoleKey.Escape)
-                {
-                    return editOrChangeAssignment;
-                }
-            }
-            return editOrChangeAssignment;
-        }
-
         public static string UsernameInput()
         {
             Console.Write("\r\nusername: ");
@@ -98,13 +22,29 @@ namespace IndividualProject
         public static string PassphraseInput()
         {
             Console.Write("passphrase: ");
-            string passphraseInput = Console.ReadLine();
-            while (passphraseInput.Length > 20)
+            string passphrase = "";
+            do
             {
-                Console.Write("passphrase cannot be longer than 20 characters");
-                passphraseInput = Console.ReadLine();
-            }
-            return passphraseInput;
+                ConsoleKeyInfo key = Console.ReadKey(true);
+                if (key.Key != ConsoleKey.Backspace && key.Key != ConsoleKey.Enter)
+                {
+                    passphrase += key.KeyChar;
+                    Console.Write("*");
+                }
+                else
+                {
+                    if (key.Key == ConsoleKey.Backspace && passphrase.Length > 0)
+                    {
+                        passphrase = passphrase.Substring(0, (passphrase.Length - 1));
+                        Console.Write("\b \b");
+                    }
+                    else if (key.Key == ConsoleKey.Enter)
+                    {
+                        break;
+                    }
+                }
+            } while (true);
+            return passphrase;
         }
 
         public static string TicketComment()
@@ -166,24 +106,6 @@ namespace IndividualProject
             return pendingRole;
         }
 
-        //public static string PromptYesOrNo()
-        //{
-        //    Console.Write("Type 'Y' for yes or 'N' for no : ");
-        //    string yesOrNo = Console.ReadLine();
-        //    while
-        //        (
-        //            yesOrNo != "Y" &&
-        //            yesOrNo != "y" &&
-        //            yesOrNo != "N" &&
-        //            yesOrNo != "n"
-        //        )
-        //    {
-        //        Console.Write("Type 'Y' for yes or 'N' for no : ");
-        //        yesOrNo = Console.ReadLine();
-        //    }
-        //    return yesOrNo;
-        //}
-
         public static void PromptYesOrNoSelection()
         {
             string yes = "Yes", no = "No", currentUser = ConnectToServer.RetrieveCurrentUserFromDatabase();
@@ -224,7 +146,6 @@ namespace IndividualProject
                 }
             }
         }
-
 
         public static void UniversalLoadingOuput(string message)
         {
@@ -280,7 +201,6 @@ namespace IndividualProject
             CenterText("Quasar CRM Program - V2.0");
             CenterText("-IT Crowd-");
             CenterText($"[{currentUser}]");
-            //UniversalLoadingOuput("");
             WriteBottomLine("~CB6 Individual Project~");
             Console.ResetColor();
             WriteAt(0, 3);

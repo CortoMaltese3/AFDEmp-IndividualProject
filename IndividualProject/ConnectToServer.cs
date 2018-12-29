@@ -32,7 +32,6 @@ namespace IndividualProject
                 {
                     while (true)
                     {
-                        //string currentUsernameRole = RetrieveCurrentUsernameRoleFromDatabase();
                         InputOutputAnimationControl.QuasarScreen("Not Registered");
                         Console.Write($"Invalid Username or Passphrase. Try again.");
                         username = InputOutputAnimationControl.UsernameInput();
@@ -157,13 +156,13 @@ namespace IndividualProject
                 {
                     if (blink % 2 == 0)
                     {
-                        InputOutputAnimationControl.WriteBottomLine("~~~~~Dedicated to Afro~~~~~");
+                        InputOutputAnimationControl.WriteBottomLine("~~~~~Special thanks to Afro~~~~~");
                         Console.ForegroundColor = ConsoleColor.DarkCyan;
                         System.Threading.Thread.Sleep(300);
                     }
                     else
                     {
-                        InputOutputAnimationControl.WriteBottomLine("~~~~~Dedicated to Afro~~~~~");
+                        InputOutputAnimationControl.WriteBottomLine("~~~~~Special thanks to Afro~~~~~");
                         Console.ForegroundColor = ConsoleColor.Cyan;
                         System.Threading.Thread.Sleep(300);
                     }

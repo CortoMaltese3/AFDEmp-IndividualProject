@@ -71,7 +71,7 @@ namespace IndividualProject
                 for (int option = 0; option < ListOfOptions.Count; option++)
                 {
                     Console.ForegroundColor = (option == currentOption) ? ConsoleColor.Green : ConsoleColor.White;
-                    Console.Write(ListOfOptions[option] + "\t");
+                    Console.Write(ListOfOptions[option] + "\t\t");
                 }
                 currentKeyPressed = Console.ReadKey();
 
