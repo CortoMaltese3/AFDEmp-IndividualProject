@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace IndividualProject
 {
@@ -18,7 +17,7 @@ namespace IndividualProject
                 case "super_admin":
                     while (true)
                     {
-                        string SuperAdminFunctionMenu = SelectMenu.MenuColumn(new List<string> { notifications, requests, viewUsers, modifyRole, deleteUser, manageTickets, viewTickets, editTicket, deleteTicket, logOut }, currentUser, message).NameOfChoice;
+                        string SuperAdminFunctionMenu = SelectMenu.MenuColumn(new List<string> { notifications, requests, viewUsers, modifyRole, deleteUser, manageTickets, viewTickets, editTicket, deleteTicket, logOut }, currentUser, message).option;
 
                         if (SuperAdminFunctionMenu == notifications)
                         {
@@ -74,7 +73,7 @@ namespace IndividualProject
                 case "Administrator":
                     while (true)
                     {
-                        string AdminFunctionMenu = SelectMenu.MenuColumn(new List<string> { notifications, manageTickets, viewTickets, editTicket, deleteTicket, logOut }, currentUser, message).NameOfChoice;
+                        string AdminFunctionMenu = SelectMenu.MenuColumn(new List<string> { notifications, manageTickets, viewTickets, editTicket, deleteTicket, logOut }, currentUser, message).option;
 
                         if (AdminFunctionMenu == notifications)
                         {
@@ -110,7 +109,7 @@ namespace IndividualProject
                 case "Moderator":
                     while (true)
                     {
-                        string ModeratorFunctionMenu = SelectMenu.MenuColumn(new List<string> { notifications, manageTickets, viewTickets, editTicket, logOut }, currentUser, message).NameOfChoice;
+                        string ModeratorFunctionMenu = SelectMenu.MenuColumn(new List<string> { notifications, manageTickets, viewTickets, editTicket, logOut }, currentUser, message).option;
 
                         if (ModeratorFunctionMenu == notifications)
                         {
@@ -141,7 +140,7 @@ namespace IndividualProject
                 case "User":
                     while (true)
                     {
-                        string UserFunctionMenu = SelectMenu.MenuColumn(new List<string> { notifications, manageTickets, viewTickets, logOut }, currentUser, message).NameOfChoice;
+                        string UserFunctionMenu = SelectMenu.MenuColumn(new List<string> { notifications, manageTickets, viewTickets, logOut }, currentUser, message).option;
 
                         if (UserFunctionMenu == notifications)
                         {

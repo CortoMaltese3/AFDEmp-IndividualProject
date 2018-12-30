@@ -11,7 +11,6 @@ namespace IndividualProject
         {
             int currentOption = 0;
             ConsoleKeyInfo currentKeyPressed;
-
             do
             {
                 InputOutputAnimationControl.QuasarScreen(currentUser);
@@ -53,8 +52,8 @@ namespace IndividualProject
 
             return new UserOptionList()
             {
-                NameOfChoice = ListOfOptions[currentOption],
-                IndexOfChoice = currentOption
+                option = ListOfOptions[currentOption],
+                tempOption = currentOption
             };
 
         }
@@ -105,21 +104,17 @@ namespace IndividualProject
 
             return new UserOptionList()
             {
-                NameOfChoice = ListOfOptions[currentOption],
-                IndexOfChoice = currentOption
+                option = ListOfOptions[currentOption],
+                tempOption = currentOption
             };
 
         }
-
-
-
-
     }
 
-    public struct UserOptionList
+    public class UserOptionList
     {
-        public string NameOfChoice;
-        public int IndexOfChoice;
+        public string option;
+        public int tempOption;
     }
 }
     

@@ -6,8 +6,7 @@ namespace IndividualProject
 {
     class TransactedData
     {
-        static readonly string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
-        static readonly string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
+        static readonly string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();        
         static readonly string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
 
         public static void ManageCustomerTickets()
@@ -17,7 +16,7 @@ namespace IndividualProject
                 manageTicketmsg = "\r\nChoose one of the following options to continue:\r\n";
             while (true)
             {
-                string openCloseTicket = SelectMenu.MenuColumn(new List<string> {open, close, back}, currentUsername, manageTicketmsg).NameOfChoice;
+                string openCloseTicket = SelectMenu.MenuColumn(new List<string> {open, close, back}, currentUsername, manageTicketmsg).option;
 
                 if (openCloseTicket == open)
                 {
@@ -42,7 +41,7 @@ namespace IndividualProject
             string open = "Open new Customer Ticket", back = "\r\nBack", manageTicketmsg = "\r\nChoose one of the following options to continue:\r\n";
             while (true)
             {
-                string openTicket = SelectMenu.MenuRow(new List<string> { open, back }, currentUsername, manageTicketmsg).NameOfChoice;
+                string openTicket = SelectMenu.MenuRow(new List<string> { open, back }, currentUsername, manageTicketmsg).option;
 
                 if (openTicket == open)
                 {
@@ -62,7 +61,7 @@ namespace IndividualProject
             string assignTicket = "Would you like to assign the ticket to another user?";
             string yes = "Yes", no = "No";
 
-            string yesOrNoSelection = SelectMenu.MenuRow(new List<string> { yes, no, }, currentUsername, assignTicket).NameOfChoice;
+            string yesOrNoSelection = SelectMenu.MenuRow(new List<string> { yes, no, }, currentUsername, assignTicket).option;
 
             if (yesOrNoSelection == yes)
             {
@@ -109,7 +108,7 @@ namespace IndividualProject
             string comment = InputOutputAnimationControl.TicketComment();
             string userAssignedTo = AssignTicketToUser();
 
-            using (SqlConnection dbcon = new SqlConnection(connectionString))
+            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
             {
                 dbcon.Open();
                 SqlCommand openNewTechnicalTicket = new SqlCommand($"EXECUTE OpenNewTechnicalTicket '{currentUsername}', '{userAssignedTo}', '{comment}'", dbcon);
@@ -135,8 +134,8 @@ namespace IndividualProject
             string yes = "Yes", no = "No";
             while (true)
             {
-                string optionYesOrNo = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, listOfTickets).NameOfChoice;
-                using (SqlConnection dbcon = new SqlConnection(connectionString))
+                string optionYesOrNo = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, listOfTickets).option;
+                using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
                 {
                     if (optionYesOrNo == yes)
                     {
@@ -150,7 +149,7 @@ namespace IndividualProject
                             CloseCustomerTicket();
                         }                        
                         string closeTicket = $"Are you sure you want to mark ticket {ticketID} as closed?";
-                        string optionYesOrNo2 = SelectMenu.MenuColumn(new List<string> { yes, no }, currentUsername, closeTicket).NameOfChoice;
+                        string optionYesOrNo2 = SelectMenu.MenuColumn(new List<string> { yes, no }, currentUsername, closeTicket).option;
                         if (optionYesOrNo2 == yes)
                         {
                             dbcon.Open();
@@ -179,7 +178,7 @@ namespace IndividualProject
                         }
                         string closeTicketMsg = $"Are you sure you want to mark ticket {ticketID} as closed?";
 
-                        string optionYesOrNo2 = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, closeTicketMsg).NameOfChoice;
+                        string optionYesOrNo2 = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, closeTicketMsg).option;
 
                         if (optionYesOrNo2 == yes)
                         {
@@ -212,8 +211,8 @@ namespace IndividualProject
 
             while (true)
             {
-                string optionYesOrNo = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, listMsg).NameOfChoice;
-                using (SqlConnection dbcon = new SqlConnection(connectionString))
+                string optionYesOrNo = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, listMsg).option;
+                using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
                 {
                     if (optionYesOrNo == yes)
                     {
@@ -228,7 +227,7 @@ namespace IndividualProject
                         }                        
                         string deleteTicketMsg = $"Are you sure you want to delete ticket {ticketID}? Action cannot be undone";
 
-                        string optionYesOrNo2 = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, deleteTicketMsg).NameOfChoice;
+                        string optionYesOrNo2 = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, deleteTicketMsg).option;
                         if (optionYesOrNo2 == yes)
                         {
                             dbcon.Open();
@@ -258,7 +257,7 @@ namespace IndividualProject
                         Console.WriteLine($"Are you sure you want to delete ticket {ticketID}? Action cannot be undone");
                         string deleteTicketMsg = $"Are you sure you want to delete ticket {ticketID}? Action cannot be undone";
 
-                        string optionYesOrNo2 = SelectMenu.MenuColumn(new List<string> { yes, no }, currentUsername, deleteTicketMsg).NameOfChoice;
+                        string optionYesOrNo2 = SelectMenu.MenuColumn(new List<string> { yes, no }, currentUsername, deleteTicketMsg).option;
 
                         if (optionYesOrNo2 == yes)
                         {
@@ -322,7 +321,7 @@ namespace IndividualProject
             string yes = "Yes", no = "No";
             while (true)
             {
-                string optionYesOrNo = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, listTicketsMsg).NameOfChoice;
+                string optionYesOrNo = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, listTicketsMsg).option;
                 if (optionYesOrNo == yes)
                 {
                     ViewListOfOpenCustomerTickets();
@@ -364,7 +363,7 @@ namespace IndividualProject
             InputOutputAnimationControl.UniversalLoadingOuput("Loading");
             Console.WriteLine($"VIEW TECHNICAL TICKET WITH [ID = {ticketID}]");
 
-            using (SqlConnection dbcon = new SqlConnection(connectionString))
+            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
             {
                 dbcon.Open();
                 SqlCommand ShowTicketsFromDatabase = new SqlCommand($"EXECUTE SelectSingleCustomerTicket {ticketID}", dbcon);
@@ -397,7 +396,7 @@ namespace IndividualProject
 
         private static void ViewListOfOpenCustomerTickets()
         {
-            using (SqlConnection dbcon = new SqlConnection(connectionString))
+            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
             {
                 dbcon.Open();
                 SqlCommand ShowTicketsFromDatabase = new SqlCommand("EXECUTE SelectOpenCustomerTickets", dbcon);
@@ -434,7 +433,7 @@ namespace IndividualProject
 
         private static void ViewListOfAllCustomerTickets()
         {
-            using (SqlConnection dbcon = new SqlConnection(connectionString))
+            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
             {
                 dbcon.Open();
                 SqlCommand ShowTicketsFromDatabase = new SqlCommand("SELECT * FROM CustomerTickets", dbcon);
@@ -482,7 +481,7 @@ namespace IndividualProject
             string yes = "Yes", no = "No";
             while (true)
             {
-                string optionYesOrNo = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, listTicketsMsg).NameOfChoice;
+                string optionYesOrNo = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, listTicketsMsg).option;
 
                 if (optionYesOrNo == yes)
                 {
@@ -504,7 +503,7 @@ namespace IndividualProject
 
                         while (true)
                         {
-                            optionYesOrNo = SelectMenu.MenuColumn(new List<string> { yes, no }, currentUsername, viewTicketMsg).NameOfChoice;
+                            optionYesOrNo = SelectMenu.MenuColumn(new List<string> { yes, no }, currentUsername, viewTicketMsg).option;
                             if (optionYesOrNo == yes)
                             {
                                 ViewSingleCustomerTicket(TicketID);
@@ -536,7 +535,7 @@ namespace IndividualProject
                         while (true)
                         {
 
-                            optionYesOrNo = SelectMenu.MenuColumn(new List<string> { yes, no }, currentUsername, viewTicketMsg).NameOfChoice;
+                            optionYesOrNo = SelectMenu.MenuColumn(new List<string> { yes, no }, currentUsername, viewTicketMsg).option;
                             if (optionYesOrNo == yes)
                             {
                                 ViewSingleCustomerTicket(TicketID);
@@ -558,7 +557,7 @@ namespace IndividualProject
                 editMsg = "\r\nChoose one of the following options to continue:\r\n";
             while (true)
             {
-                string EditCommentAndAssignment = SelectMenu.MenuColumn(new List<string> { edit, assign, back }, currentUsername, editMsg).NameOfChoice;
+                string EditCommentAndAssignment = SelectMenu.MenuColumn(new List<string> { edit, assign, back }, currentUsername, editMsg).option;
 
                 if (EditCommentAndAssignment == edit)
                 {
@@ -583,7 +582,7 @@ namespace IndividualProject
 
         private static void EditCommentOfOpenTicket(int ID, string ticketComment)
         {
-            using (SqlConnection dbcon = new SqlConnection(connectionString))
+            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
             {
                 dbcon.Open();
                 SqlCommand EditTicketCommendInDatabase = new SqlCommand($"EditCustomerTicketCommentSection '{ticketComment}', {ID}", dbcon);
@@ -595,7 +594,7 @@ namespace IndividualProject
 
         private static void ChangeUserAssignmentToOpenTicket(int ID, string nextOwner)
         {
-            using (SqlConnection dbcon = new SqlConnection(connectionString))
+            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
             {
                 dbcon.Open();
                 SqlCommand EditTicketUserOwnerInDatabase = new SqlCommand($"EXECUTE ChangeUserAssignedTo '{nextOwner}', {ID}", dbcon);
@@ -621,7 +620,7 @@ namespace IndividualProject
 
         private static bool CheckIfTicketIDWithStatusOpenExistsInList(int ID)
         {
-            using (SqlConnection dbcon = new SqlConnection(connectionString))
+            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
             {
                 dbcon.Open();
                 SqlCommand ShowTicketsFromDatabase = new SqlCommand("EXECUTE SelectTicketIDWithOpenStatus", dbcon);
@@ -644,7 +643,7 @@ namespace IndividualProject
 
         private static bool CheckIfTicketIDWithStatusOpenOrClosedExistsInList(int ID)
         {
-            using (SqlConnection dbcon = new SqlConnection(connectionString))
+            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
             {
                 dbcon.Open();
                 SqlCommand ShowTicketsFromDatabase = new SqlCommand("SELECT ticketID FROM CustomerTickets", dbcon);

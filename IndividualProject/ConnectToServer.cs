@@ -4,16 +4,20 @@ using System.Data.SqlClient;
 
 namespace IndividualProject
 {
-    static class ConnectToServer
+    public static class Globals
     {
-        static readonly string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
+        public static readonly string connectionString = "Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
+    }
 
+    static class ConnectToServer
+    {        
+        
         public static void UserLoginCredentials()
         {
             InputOutputAnimationControl.QuasarScreen("Not Registered");
             string username = InputOutputAnimationControl.UsernameInput();
             string passphrase = InputOutputAnimationControl.PassphraseInput();
-            var dbcon = new SqlConnection(connectionString);
+            var dbcon = new SqlConnection(Globals.connectionString);
 
             while (TestConnectionToSqlServer(dbcon))
             {
@@ -25,37 +29,20 @@ namespace IndividualProject
                     Console.ForegroundColor = ConsoleColor.DarkCyan;
                     Console.WriteLine($"Connection Established! Welcome back {username}!");
                     Console.ResetColor();
-                    System.Threading.Thread.Sleep(1000);
+                    System.Threading.Thread.Sleep(1500);
                     ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
                 }
                 else
                 {
-                    while (true)
-                    {
-                        InputOutputAnimationControl.QuasarScreen("Not Registered");
-                        Console.Write($"Invalid Username or Passphrase. Try again.");
-                        username = InputOutputAnimationControl.UsernameInput();
-                        passphrase = InputOutputAnimationControl.PassphraseInput();
-                        InputOutputAnimationControl.QuasarScreen("Not Registered");
-                        InputOutputAnimationControl.UniversalLoadingOuput("Attempting connection to server");
-                        if (CheckUsernameAndPasswordMatchInDatabase(username, passphrase))
-                        {
-                            string currentUsernameRole = RetrieveCurrentUsernameRoleFromDatabase();
-                            InputOutputAnimationControl.QuasarScreen(username);
-                            SetCurrentUserStatusToActive(username);
-                            Console.ForegroundColor = ConsoleColor.DarkCyan;
-                            Console.WriteLine($"Connection Established! Welcome back {username}!");
-                            Console.ResetColor();
-                            System.Threading.Thread.Sleep(1000);
-                            ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
-                        }
-                    }
+                    InputOutputAnimationControl.QuasarScreen("Not Registered");
+                    Console.Write($"\r\nInvalid Username or Passphrase. Try again. \r\n(press any key to continue)");
+                    Console.ReadKey();
+                    UserLoginCredentials();
                 }
             }
-            return;
         }
 
-        public static bool TestConnectionToSqlServer(this SqlConnection connectionString)
+        private static bool TestConnectionToSqlServer(this SqlConnection connectionString)
         {
             try
             {
@@ -70,9 +57,9 @@ namespace IndividualProject
             return true;
         }
 
-        public static bool CheckUsernameAndPasswordMatchInDatabase(string usernameCheck, string passphraseCheck)
+        private static bool CheckUsernameAndPasswordMatchInDatabase(string usernameCheck, string passphraseCheck)
         {
-            using (SqlConnection dbcon = new SqlConnection(connectionString))
+            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
             {
                 dbcon.Open();
                 SqlCommand checkUsername = new SqlCommand($"EXECUTE CheckUniqueCredentials '{usernameCheck}', '{passphraseCheck}'", dbcon);
@@ -85,9 +72,9 @@ namespace IndividualProject
             }
         }
 
-        public static void SetCurrentUserStatusToActive(string currentUsername)
+        private static void SetCurrentUserStatusToActive(string currentUsername)
         {
-            using (SqlConnection dbcon = new SqlConnection(connectionString))
+            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
             {
                 dbcon.Open();
                 SqlCommand SetStatusToActive = new SqlCommand($"EXECUTE SetCurrentUserStatusToActive '{currentUsername}'", dbcon);
@@ -95,9 +82,9 @@ namespace IndividualProject
             }
         }
 
-        public static void SetCurrentUserStatusToInactive(string currentUsername)
+        private static void SetCurrentUserStatusToInactive(string currentUsername)
         {
-            using (SqlConnection dbcon = new SqlConnection(connectionString))
+            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
             {
                 dbcon.Open();
                 SqlCommand SetStatusToInactive = new SqlCommand("EXECUTE SetCurrentUserStatusToInactive", dbcon);
@@ -107,7 +94,7 @@ namespace IndividualProject
 
         public static string RetrieveCurrentUserFromDatabase()
         {
-            using (SqlConnection dbcon = new SqlConnection(connectionString))
+            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
             {
                 dbcon.Open();
                 SqlCommand RetrieveLoginCredentials = new SqlCommand($"EXECUTE SelectCurrentUserFromDatabase", dbcon);
@@ -118,7 +105,7 @@ namespace IndividualProject
 
         public static string RetrieveCurrentUsernameRoleFromDatabase()
         {
-            using (SqlConnection dbcon = new SqlConnection(connectionString))
+            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
             {
                 dbcon.Open();
                 SqlCommand RetrieveCurrentUsernameRole = new SqlCommand("EXECUTE SelectCurrentUserRoleFromDatabase", dbcon);
@@ -127,9 +114,9 @@ namespace IndividualProject
             }
         }
 
-        public static string RetrieveCurrentUserStatusFromDatabase()
+        private static string RetrieveCurrentUserStatusFromDatabase()
         {
-            using (SqlConnection dbcon = new SqlConnection(connectionString))
+            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
             {
                 dbcon.Open();
                 SqlCommand RetrieveCurrentUserStatus = new SqlCommand("EXECUTE SelectCurrentUserStatusFromDatabase", dbcon);
@@ -140,49 +127,26 @@ namespace IndividualProject
 
         public static void TerminateQuasar()
         {
-            string yes = "Yes", no = "No", currentUsername = RetrieveCurrentUserFromDatabase();
-            InputOutputAnimationControl.QuasarScreen(currentUsername);            
-            string exitMessage = "Would you like to exit Quasar ?";
-            string yesOrNoSelection = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, exitMessage).NameOfChoice;
+            string yes = "Yes", no = "No", currentUsername = "Not Registered", exitMessage = "\r\nWould you like to exit Quasar?\r\n";               
+            string yesOrNoSelection = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, exitMessage).option;
 
             if (yesOrNoSelection == yes)
-            {
-                InputOutputAnimationControl.QuasarScreen("Not Registered");
-                ConnectToServer.SetCurrentUserStatusToInactive(currentUsername);
+            {                
+                SetCurrentUserStatusToInactive(currentUsername);
                 InputOutputAnimationControl.UniversalLoadingOuput("Wait for Quasar to shut down");
-
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                for (int blink = 0; blink < 6; blink++)
-                {
-                    if (blink % 2 == 0)
-                    {
-                        InputOutputAnimationControl.WriteBottomLine("~~~~~Special thanks to Afro~~~~~");
-                        Console.ForegroundColor = ConsoleColor.DarkCyan;
-                        System.Threading.Thread.Sleep(300);
-                    }
-                    else
-                    {
-                        InputOutputAnimationControl.WriteBottomLine("~~~~~Special thanks to Afro~~~~~");
-                        Console.ForegroundColor = ConsoleColor.Cyan;
-                        System.Threading.Thread.Sleep(300);
-                    }
-                }
+                InputOutputAnimationControl.SpecialThanksMessage();
                 Environment.Exit(0);
             }
-
             else if (yesOrNoSelection == no)
-            {
-                InputOutputAnimationControl.QuasarScreen(currentUsername);
+            {                
                 ApplicationMenuClass.LoginScreen();
             }
         }
 
         public static void LoggingOffQuasar()
         {
-            string yes = "Yes", no = "No", currentUsername = RetrieveCurrentUserFromDatabase();
-            InputOutputAnimationControl.QuasarScreen(currentUsername);
-            string logOffMessage = "Would you like to log out? ";
-            string yesOrNoSelection = SelectMenu.MenuColumn(new List<string> { yes, no }, currentUsername, logOffMessage).NameOfChoice;
+            string yes = "Yes", no = "No", logOffMessage = "Would you like to log out? ", currentUsername = RetrieveCurrentUserFromDatabase();            
+            string yesOrNoSelection = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, logOffMessage).option;
 
             if (yesOrNoSelection == yes)
             {
@@ -191,10 +155,8 @@ namespace IndividualProject
                 ApplicationMenuClass.LoginScreen();
 
             }
-
             else if (yesOrNoSelection == no)
-            {
-                InputOutputAnimationControl.QuasarScreen(currentUsername);
+            {                
                 ActiveUserFunctions.UserFunctionMenuScreen(currentUsername);
             }
         }

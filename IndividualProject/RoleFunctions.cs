@@ -7,8 +7,7 @@ using System.Linq;
 namespace IndividualProject
 {
     class RoleFunctions
-    {
-        static readonly string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
+    {        
         static readonly string newUserRequestPath = @"C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\CRMTickets\NewUserRequests\NewUserRequest.txt";
         static string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
         static string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
@@ -39,12 +38,12 @@ namespace IndividualProject
                 string yes = "Yes", no = "No";
                 InputOutputAnimationControl.QuasarScreen(currentUsername);
 
-                string yesOrNoSelection = SelectMenu.MenuColumn(new List<string> { yes, no }, currentUsername, createUserMsg).NameOfChoice;
+                string yesOrNoSelection = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, createUserMsg).option;
 
                 if (yesOrNoSelection == yes)
                 {
                     CreateNewUserFromRequestFunction();
-
+                    
                 }
 
                 else if (yesOrNoSelection == no)
@@ -84,7 +83,7 @@ namespace IndividualProject
                 }
             }
 
-            using (SqlConnection dbcon = new SqlConnection(connectionString))
+            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
             {
                 dbcon.Open();
                 SqlCommand deleteUsername = new SqlCommand($"RemoveUsernameFromDatabase @username = '{username}'", dbcon);
@@ -101,7 +100,7 @@ namespace IndividualProject
         public static Dictionary<string, string> ShowAvailableUsersFromDatabase()
         {           
             Console.WriteLine("LIST OF USERS REGISTERED IN QUASAR\r\n");
-            using (SqlConnection dbcon = new SqlConnection(connectionString))
+            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
             {
                 dbcon.Open();
                 SqlCommand ShowUsersFromDatabase = new SqlCommand("EXECUTE SelectUsersAndRolesInDatabase", dbcon);
@@ -156,11 +155,10 @@ namespace IndividualProject
             }
             else
             {
-                Console.WriteLine("You have 1 pending User registration request. Would you like to create new user?");
                 string yes = "Yes", no = "No";
 
                 string requestMsg = "You have 1 pending User registration request. Would you like to create new user?";
-                string yesOrNoSelection = SelectMenu.MenuColumn(new List<string> { yes, no }, currentUsername, requestMsg).NameOfChoice;
+                string yesOrNoSelection = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, requestMsg).option;
 
                 if (yesOrNoSelection == yes)
                 {
@@ -210,7 +208,7 @@ namespace IndividualProject
 
             InputOutputAnimationControl.QuasarScreen(currentUsername);
 
-            using (SqlConnection dbcon = new SqlConnection(connectionString))
+            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
             {
                 dbcon.Open();
                 SqlCommand selectPreviousUserRole = new SqlCommand($"SelectSingleUserRole '{username}'", dbcon);

@@ -7,8 +7,7 @@ namespace IndividualProject
 {
     class CreateNewAccount
     {
-        static readonly string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
-        static readonly string connectionString = $"Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
+        static readonly string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();        
         static readonly string newUserRequestPath = @"C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\CRMTickets\NewUserRequests\NewUserRequest.txt";
 
         internal static void CreateNewAccountRequest()
@@ -43,9 +42,9 @@ namespace IndividualProject
             }
         }
 
-        public static bool CheckUsernameAvailabilityInDatabase(string usernameCheck)
+        private static bool CheckUsernameAvailabilityInDatabase(string usernameCheck)
         {
-            using (SqlConnection dbcon = new SqlConnection(connectionString))
+            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
             {
                 dbcon.Open();
                 SqlCommand checkUsername = new SqlCommand($"EXECUTE CheckUniqueUsername '{usernameCheck}')", dbcon);
@@ -58,7 +57,7 @@ namespace IndividualProject
             }
         }
 
-        public static void CheckUsernameAvailabilityInPendingList(string usernameCheck, string passphraseCheck)
+        private static void CheckUsernameAvailabilityInPendingList(string usernameCheck, string passphraseCheck)
         {
             
             string pendingUsernameCheck = File.ReadLines(newUserRequestPath).First();
@@ -79,11 +78,10 @@ namespace IndividualProject
             ApplicationMenuClass.LoginScreen();
         }
 
-        public static void NewUsernameRequestToList(string usernameAdd, string passphraseAdd)
+        private static void NewUsernameRequestToList(string usernameAdd, string passphraseAdd)
         {
             var newUserRequestPath = @"C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\CRMTickets\NewUserRequests\NewUserRequest.txt";
-            {
-                //TODO creates a file and writes collection of string (array) and closes the File - //check why catch fails, it creates a new file if it doesnt exist
+            {                
                 File.WriteAllLines(newUserRequestPath, new string[] { $"username: {usernameAdd}", $"passphrase: {passphraseAdd}" });
             }
         }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Media;
 
 namespace IndividualProject
 {
@@ -106,47 +105,6 @@ namespace IndividualProject
             return pendingRole;
         }
 
-        public static void PromptYesOrNoSelection()
-        {
-            string yes = "Yes", no = "No", currentUser = ConnectToServer.RetrieveCurrentUserFromDatabase();
-            
-            while (true)
-            {
-                string yesOrNoSelection = SelectMenu.MenuColumn(new List<string> { yes, no }, currentUser, "").NameOfChoice;
-
-                if (yesOrNoSelection == yes)
-                {
-                    InputOutputAnimationControl.QuasarScreen("Not Registered");
-                    ConnectToServer.SetCurrentUserStatusToInactive(currentUser);
-                    InputOutputAnimationControl.UniversalLoadingOuput("Wait for Quasar to shut down");
-
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    for (int blink = 0; blink < 6; blink++)
-                    {
-                        if (blink % 2 == 0)
-                        {
-                            InputOutputAnimationControl.WriteBottomLine("~~~~~Dedicated to Afro~~~~~");
-                            Console.ForegroundColor = ConsoleColor.DarkCyan;
-                            System.Threading.Thread.Sleep(300);
-                        }
-                        else
-                        {
-                            InputOutputAnimationControl.WriteBottomLine("~~~~~Dedicated to Afro~~~~~");
-                            Console.ForegroundColor = ConsoleColor.Cyan;
-                            System.Threading.Thread.Sleep(300);
-                        }
-                    }
-                    Environment.Exit(0);
-                }
-
-                else if (yesOrNoSelection == no)
-                {
-                    InputOutputAnimationControl.QuasarScreen(currentUser);
-                    ApplicationMenuClass.LoginScreen();
-                }
-            }
-        }
-
         public static void UniversalLoadingOuput(string message)
         {
             Console.ForegroundColor = ConsoleColor.DarkCyan;
@@ -169,7 +127,7 @@ namespace IndividualProject
                     case 3: Console.Write("."); break;
                     case 4: Console.Write("."); break;
                 }
-                System.Threading.Thread.Sleep(200);
+                System.Threading.Thread.Sleep(300);
                 Console.SetCursorPosition(Console.CursorLeft + 0, Console.CursorTop + 0);
 
             }
@@ -197,13 +155,33 @@ namespace IndividualProject
         public static void QuasarScreen(string currentUser)
         {
             Console.Clear();
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.ForegroundColor = ConsoleColor.DarkCyan;            
             CenterText("Quasar CRM Program - V2.0");
             CenterText("-IT Crowd-");
             CenterText($"[{currentUser}]");
             WriteBottomLine("~CB6 Individual Project~");
             Console.ResetColor();
             WriteAt(0, 3);
+        }
+
+        public static void SpecialThanksMessage()
+        {
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            for (int blink = 0; blink < 6; blink++)
+            {
+                if (blink % 2 == 0)
+                {
+                    WriteBottomLine("~~~~~Special thanks to Afro~~~~~");
+                    Console.ForegroundColor = ConsoleColor.DarkCyan;
+                    System.Threading.Thread.Sleep(300);
+                }
+                else
+                {
+                    WriteBottomLine("~~~~~Special thanks to Afro~~~~~");
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    System.Threading.Thread.Sleep(300);
+                }
+            }
         }
     }
 }
