@@ -8,8 +8,7 @@ namespace IndividualProject
     class CreateNewAccount
     {
         static readonly string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();        
-        static readonly string newUserRequestPath = @"C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\CRMTickets\NewUserRequests\NewUserRequest.txt";
-
+        
         internal static void CreateNewAccountRequest()
         {
             try
@@ -26,12 +25,7 @@ namespace IndividualProject
                     InputOutputAnimationControl.QuasarScreen(currentUsername);
                     Console.Write("\r\nThis username is already in use. Choose a different one");
                     System.Threading.Thread.Sleep(1000);
-                    InputOutputAnimationControl.QuasarScreen(currentUsername);
-                    Console.Write("\r\nRegistration Form:\r\nChoose your username and password. Both must be limited to 20 characters");
-                    username = InputOutputAnimationControl.UsernameInput();
-                    passphrase = InputOutputAnimationControl.PassphraseInput();
-                    InputOutputAnimationControl.QuasarScreen(currentUsername);
-                    InputOutputAnimationControl.UniversalLoadingOuput("Check in progress");
+                    CreateNewAccountRequest();
                 }
 
                 CheckUsernameAvailabilityInPendingList(username, passphrase);
@@ -47,7 +41,7 @@ namespace IndividualProject
             using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
             {
                 dbcon.Open();
-                SqlCommand checkUsername = new SqlCommand($"EXECUTE CheckUniqueUsername '{usernameCheck}')", dbcon);
+                SqlCommand checkUsername = new SqlCommand($"EXECUTE CheckUniqueUsername '{usernameCheck}'", dbcon);
                 int UserCount = (int)checkUsername.ExecuteScalar();
                 if (UserCount != 0)
                 {
@@ -60,7 +54,7 @@ namespace IndividualProject
         private static void CheckUsernameAvailabilityInPendingList(string usernameCheck, string passphraseCheck)
         {
             
-            string pendingUsernameCheck = File.ReadLines(newUserRequestPath).First();
+            string pendingUsernameCheck = File.ReadLines(Globals.newUserRequestPath).First();
 
             if (pendingUsernameCheck == $"username: {usernameCheck}")
             {
@@ -79,10 +73,9 @@ namespace IndividualProject
         }
 
         private static void NewUsernameRequestToList(string usernameAdd, string passphraseAdd)
-        {
-            var newUserRequestPath = @"C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\CRMTickets\NewUserRequests\NewUserRequest.txt";
+        {            
             {                
-                File.WriteAllLines(newUserRequestPath, new string[] { $"username: {usernameAdd}", $"passphrase: {passphraseAdd}" });
+                File.WriteAllLines(Globals.newUserRequestPath, new string[] { $"username: {usernameAdd}", $"passphrase: {passphraseAdd}" });
             }
         }
     }

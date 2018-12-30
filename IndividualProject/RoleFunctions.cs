@@ -7,17 +7,16 @@ using System.Linq;
 namespace IndividualProject
 {
     class RoleFunctions
-    {        
-        static readonly string newUserRequestPath = @"C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\CRMTickets\NewUserRequests\NewUserRequest.txt";
+    {                
         static string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
         static string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
 
         public static void CreateNewUserFromRequestFunction()
         {            
-            string pendingUsername = File.ReadLines(newUserRequestPath).First();
+            string pendingUsername = File.ReadLines(Globals.newUserRequestPath).First();
             if (pendingUsername == " ")
             {
-                InputOutputAnimationControl.QuasarScreen(currentUsername);
+                //InputOutputAnimationControl.QuasarScreen(currentUsername);
                 InputOutputAnimationControl.UniversalLoadingOuput("Action in progress");
                 Console.Write("There are no pending requests");
                 System.Threading.Thread.Sleep(1000);
@@ -28,12 +27,12 @@ namespace IndividualProject
             {
                 pendingUsername = pendingUsername.Remove(0, 10);
 
-                string pendingPassphrase = File.ReadLines(newUserRequestPath).Skip(1).Take(1).First();
+                string pendingPassphrase = File.ReadLines(Globals.newUserRequestPath).Skip(1).Take(1).First();
                 pendingPassphrase = pendingPassphrase.Remove(0, 12);
                 InputOutputAnimationControl.QuasarScreen(currentUsername);
                 InputOutputAnimationControl.UniversalLoadingOuput("Loading");                
 
-                string createUserMsg = $"You are about to create a new username-password entry : {pendingUsername} - {pendingPassphrase}\r\nWould you like to proceed?";
+                string createUserMsg = $"\r\nYou are about to create a new username-password entry : {pendingUsername} - {pendingPassphrase}\r\nWould you like to proceed?\r\n";
 
                 string yes = "Yes", no = "No";
                 InputOutputAnimationControl.QuasarScreen(currentUsername);
@@ -42,13 +41,27 @@ namespace IndividualProject
 
                 if (yesOrNoSelection == yes)
                 {
-                    CreateNewUserFromRequestFunction();
-                    
-                }
+                    //InputOutputAnimationControl.QuasarScreen(currentUsername);
+                    //InputOutputAnimationControl.UniversalLoadingOuput("Action in progress");
+                    string pendingRole = InputOutputAnimationControl.SelectUserRole();
 
+                    using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+                    {
+                        dbcon.Open();
+                        SqlCommand appendUserToDatabase = new SqlCommand($"EXECUTE InsertNewUserIntoDatabase '{pendingUsername}', '{pendingPassphrase}', '{pendingRole}'", dbcon);                        
+                        appendUserToDatabase.ExecuteScalar();
+                    }
+                    InputOutputAnimationControl.QuasarScreen(currentUsername);
+                    InputOutputAnimationControl.UniversalLoadingOuput("Creating new user in progress");
+                    File.WriteAllLines(Globals.newUserRequestPath, new string[] { " " });
+                    Console.WriteLine($"User {pendingUsername} has been created successfully. Status : {pendingRole}\r\nPress any key to continue");
+                    Console.ReadKey();                    
+                    //InputOutputAnimationControl.QuasarScreen(currentUsername);
+                    ActiveUserFunctions.UserFunctionMenuScreen(currentUsername);
+                }
                 else if (yesOrNoSelection == no)
                 {
-                    InputOutputAnimationControl.QuasarScreen(currentUsername);
+                    //InputOutputAnimationControl.QuasarScreen(currentUsername);
                     ActiveUserFunctions.UserFunctionMenuScreen(currentUsername);
                 }
             }
@@ -144,7 +157,7 @@ namespace IndividualProject
         {
             InputOutputAnimationControl.QuasarScreen(currentUsername);
             InputOutputAnimationControl.UniversalLoadingOuput("Loading");
-            string pendingUsernameCheck = File.ReadLines(newUserRequestPath).First();
+            string pendingUsernameCheck = File.ReadLines(Globals.newUserRequestPath).First();
 
             if (pendingUsernameCheck == " ")
             {              
@@ -157,7 +170,7 @@ namespace IndividualProject
             {
                 string yes = "Yes", no = "No";
 
-                string requestMsg = "You have 1 pending User registration request. Would you like to create new user?";
+                string requestMsg = "\r\nYou have 1 pending User registration request. Would you like to create new user?\r\n";
                 string yesOrNoSelection = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, requestMsg).option;
 
                 if (yesOrNoSelection == yes)
