@@ -6,9 +6,9 @@ using System.Linq;
 namespace IndividualProject
 {
     class CreateNewAccount
-    {
-        static readonly string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();        
-        
+    {              
+        static readonly string currentUsername = "Not Registered";
+
         internal static void CreateNewAccountRequest()
         {
             try

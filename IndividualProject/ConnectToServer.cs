@@ -11,8 +11,7 @@ namespace IndividualProject
     }
 
     static class ConnectToServer
-    {        
-        
+    {                
         public static void UserLoginCredentials()
         {
             InputOutputAnimationControl.QuasarScreen("Not Registered");

@@ -280,6 +280,8 @@ namespace IndividualProject
 
         //public static void DeleteExistingOpenOrClosedTicketSubFunction()
         //{
+        //    string listMsg = "Would you like to open the list of Existing Tickets?";
+        //    string yes = "Yes", no = "No";
 
         //    int ticketID = InputOutputAnimationControl.SelectTicketID();
         //    if (CheckIfTicketIDWithStatusOpenOrClosedExistsInList(ticketID) == false)
@@ -315,8 +317,6 @@ namespace IndividualProject
             InputOutputAnimationControl.QuasarScreen(currentUsername);
             InputOutputAnimationControl.UniversalLoadingOuput("Loading");
             Console.WriteLine("VIEW OPEN TECHNICAL TICKETS");
-
-            //Console.WriteLine("Would you like to open the list of Opened Tickets?");
             string listTicketsMsg = "Would you like to open the list of Opened Tickets?";
             string yes = "Yes", no = "No";
             while (true)

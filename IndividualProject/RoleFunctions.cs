@@ -55,13 +55,11 @@ namespace IndividualProject
                     InputOutputAnimationControl.UniversalLoadingOuput("Creating new user in progress");
                     File.WriteAllLines(Globals.newUserRequestPath, new string[] { " " });
                     Console.WriteLine($"User {pendingUsername} has been created successfully. Status : {pendingRole}\r\nPress any key to continue");
-                    Console.ReadKey();                    
-                    //InputOutputAnimationControl.QuasarScreen(currentUsername);
+                    Console.ReadKey();                                        
                     ActiveUserFunctions.UserFunctionMenuScreen(currentUsername);
                 }
                 else if (yesOrNoSelection == no)
-                {
-                    //InputOutputAnimationControl.QuasarScreen(currentUsername);
+                {                    
                     ActiveUserFunctions.UserFunctionMenuScreen(currentUsername);
                 }
             }
