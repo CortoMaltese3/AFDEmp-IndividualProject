@@ -23,8 +23,8 @@ namespace IndividualProject
                 while (CheckUsernameAvailabilityInDatabase(username) == false)
                 {
                     InputOutputAnimationControl.QuasarScreen(currentUsername);
-                    Console.Write("\r\nThis username is already in use. Choose a different one");
-                    System.Threading.Thread.Sleep(1000);
+                    Console.Write("\r\nThis username is already in use. Choose a different one.\r\n(Press any key to continue)");
+                    Console.ReadKey();
                     CreateNewAccountRequest();
                 }
 
@@ -59,24 +59,22 @@ namespace IndividualProject
             if (pendingUsernameCheck == $"username: {usernameCheck}")
             {
                 InputOutputAnimationControl.QuasarScreen(currentUsername);
-                Console.Write("\r\nYour Account Request is Pending. Please wait for the administrator to grant you access.\r\nPress any key to return to Login Screen");
+                Console.Write("\r\nYour Account Request is Pending. Please wait for the administrator to grant you access.\n\nPress any key to return to Login Screen");
             }
             else
             {
                 NewUsernameRequestToList(usernameCheck, passphraseCheck);
                 InputOutputAnimationControl.QuasarScreen(currentUsername);
-                Console.WriteLine("\r\nNew account request is registered. Please wait for the administrator to grant you access.\r\nPress any key to return to Login Screen");
+                Console.WriteLine("\r\nNew account request is registered. Please wait for the administrator to grant you access.\n\nPress any key to return to Login Screen");
             }
             Console.ReadKey();
             InputOutputAnimationControl.QuasarScreen(currentUsername);
-            ApplicationMenuClass.LoginScreen();
+            ApplicationMenu.LoginScreen();
         }
 
         private static void NewUsernameRequestToList(string usernameAdd, string passphraseAdd)
         {            
-            {                
-                File.WriteAllLines(Globals.newUserRequestPath, new string[] { $"username: {usernameAdd}", $"passphrase: {passphraseAdd}" });
-            }
+            File.WriteAllLines(Globals.newUserRequestPath, new string[] { $"username: {usernameAdd}", $"passphrase: {passphraseAdd}" });
         }
     }
 }

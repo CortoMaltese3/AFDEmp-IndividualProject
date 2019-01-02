@@ -8,6 +8,8 @@ namespace IndividualProject
     {
         public static readonly string connectionString = "Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
         public static readonly string newUserRequestPath = @"C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\CRMTickets\NewUserRequests\NewUserRequest.txt";
+        public static readonly string TTnotificationToUser = @"C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\CRMTickets\TechnicalIssues\TroubleTicketNotificationToUser_";
+        
     }
 
     static class ConnectToServer
@@ -35,7 +37,7 @@ namespace IndividualProject
                 else
                 {
                     InputOutputAnimationControl.QuasarScreen("Not Registered");
-                    Console.Write($"\r\nInvalid Username or Passphrase. Try again. \r\n(press any key to continue)");
+                    Console.Write($"\r\nInvalid Username or Passphrase. Try again.\n\n(press any key to continue)");
                     Console.ReadKey();
                     UserLoginCredentials();
                 }
@@ -139,20 +141,20 @@ namespace IndividualProject
             }
             else if (yesOrNoSelection == no)
             {                
-                ApplicationMenuClass.LoginScreen();
+                ApplicationMenu.LoginScreen();
             }
         }
 
         public static void LoggingOffQuasar()
         {
-            string yes = "Yes", no = "No", logOffMessage = "Would you like to log out? ", currentUsername = RetrieveCurrentUserFromDatabase();            
+            string yes = "Yes", no = "No", logOffMessage = "Would you like to log out?\r\n", currentUsername = RetrieveCurrentUserFromDatabase();            
             string yesOrNoSelection = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, logOffMessage).option;
 
             if (yesOrNoSelection == yes)
             {
                 InputOutputAnimationControl.QuasarScreen("Not Registered");
                 SetCurrentUserStatusToInactive(currentUsername);
-                ApplicationMenuClass.LoginScreen();
+                ApplicationMenu.LoginScreen();
 
             }
             else if (yesOrNoSelection == no)

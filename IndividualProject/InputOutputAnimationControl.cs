@@ -10,10 +10,22 @@ namespace IndividualProject
         {
             Console.Write("\r\nusername: ");
             string usernameInput = Console.ReadLine();
-            while (usernameInput.Length > 20)
+            while (usernameInput.Length > 20 || CheckUserInputToAvoidInjection(usernameInput))
             {
-                Console.Write("username cannot be longer than 20 characters");
-                usernameInput = Console.ReadLine();
+                if (CheckUserInputToAvoidInjection(usernameInput.ToLower()))
+                {
+                    QuasarScreen("Not registered");
+                    Console.WriteLine("\r\nnot valid username. Please try again");
+                    Console.Write("username: ");
+                    usernameInput = Console.ReadLine();
+                }
+                if (usernameInput.Length > 20)
+                {
+                    QuasarScreen("Not registered");
+                    Console.WriteLine("\r\nusername cannot be longer than 20 characters. Please try again");
+                    Console.Write("username: ");
+                    usernameInput = Console.ReadLine();
+                }
             }
             return usernameInput;
         }
@@ -43,6 +55,24 @@ namespace IndividualProject
                     }
                 }
             } while (true);
+
+            while (passphrase.Length > 20 || CheckUserInputToAvoidInjection(passphrase))
+            {
+                if (CheckUserInputToAvoidInjection(passphrase.ToLower()))
+                {
+                    QuasarScreen("Not registered");
+                    Console.WriteLine("\r\nnot valid passphrase. Please try again");
+                    Console.Write("passphrase: ");
+                    passphrase = Console.ReadLine();
+                }
+                if (passphrase.Length > 20)
+                {
+                    QuasarScreen("Not registered");
+                    Console.WriteLine("\r\npassphrase cannot be longer than 20 characters. Please try again");
+                    Console.Write("passphrase: ");
+                    passphrase = Console.ReadLine();
+                }
+            }
             return passphrase;
         }
 
@@ -52,136 +82,172 @@ namespace IndividualProject
             QuasarScreen(currentUsername);
             UniversalLoadingOuput("Loading");
             Console.Write("EDIT TECHNICAL TICKET");
-            Console.WriteLine("\r\nCompile a summary of the Customer's issue (limit 500 characters): ");
+            Console.WriteLine("\r\nCompile a summary of the Customer's issue (limit 500 characters):");
             string ticketComment = Console.ReadLine();
-            while (ticketComment.Length > 500)
+            
+            while (CheckUserInputToAvoidInjection(ticketComment.ToLower()) || ticketComment.Length > 500 || ticketComment.Length < 20)
             {
-                QuasarScreen(currentUsername);
-                Console.WriteLine("FILE NEW TECHNICAL TICKET");
-                Console.Write("\r\nSummary cannot be longer than 500 characters. Compile a summary of the Customer's issue (limit 500 characters): ");
-                ticketComment = Console.ReadLine();
+                if (CheckUserInputToAvoidInjection(ticketComment.ToLower()))
+                {
+                    Console.WriteLine("\r\nAn error occured while trying to register the ticket comment. Changes have been aborted\n\n(Press any key to continue)");
+                    Console.ReadKey();
+                    QuasarScreen(currentUsername);
+                    Console.Write("\r\nEDIT TECHNICAL TICKET COMMENT SECTION\r\n");
+                    Console.WriteLine("Compile a summary of the Customer's issue (limit 500 characters):");
+                    ticketComment = Console.ReadLine();
+                }
+
+                if (ticketComment.Length > 500)
+                {
+                    QuasarScreen(currentUsername);
+                    Console.WriteLine("EDIT TECHNICAL TICKET COMMENT SECTION");
+                    Console.WriteLine("\r\nSummary cannot be longer than 500 characters. Compile a summary of the Customer's issue (limit 500 characters): ");
+                    ticketComment = Console.ReadLine();
+                }
+
+                if (ticketComment.Length < 20)
+                {
+                    QuasarScreen(currentUsername);
+                    Console.WriteLine("FILE NEW TECHNICAL TICKET");
+                    Console.WriteLine("\r\nComment section cannot be shorter than 20 characters. Compile a more extensive summary of the Customer's issue (limit 500 characters): ");
+                    ticketComment = Console.ReadLine();
+                }               
             }
-            System.Threading.Thread.Sleep(500);
             return ticketComment;
         }
 
-        public static int SelectTicketID()
-        {
-            Console.Write("Select the TicketID of the ticket you want to manage: ");
-            while (true)
+            public static bool CheckUserInputToAvoidInjection(string inputTSQL)
             {
-                try
-                {
-                    return int.Parse(Console.ReadLine());
-                }
-                catch (Exception)
-                {
-                    Console.WriteLine("Input needs to be a real number greater than 0");
-                }
-            }
-        }
-
-        public static string SelectUserRole()
-        {
-            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
-            Console.Write("\r\nPlease choose one of the following user roles : Administrator, Moderator, User  ->  ");
-            string pendingRole = Console.ReadLine();
-            List<string> roleList = new List<string>
+                List<string> forbiddenInputCharactersList = new List<string>
             {
-                "Administrator",
-                "Moderator",
-                "User"
+                ";", "'", "/", "*", "drop table", "truncate table", "delete from"
             };
 
-            bool notInRoleList = roleList.Any(x => x.Contains(pendingRole));
-
-            while (notInRoleList == false || pendingRole == "")
-            {
-                QuasarScreen(currentUsername);
-                Console.Write("\r\nPlease choose one of the following user roles : Administrator, Moderator, User  ->  ");
-                pendingRole = Console.ReadLine();
-                notInRoleList = roleList.Any(x => x.Contains(pendingRole));
-            }
-            return pendingRole;
-        }
-
-        public static void UniversalLoadingOuput(string message)
-        {
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
-            Console.Write(message);
-            DotsBlinking();
-            Console.Write("\r" + new string(' ', Console.WindowWidth) + "\r");
-            Console.ResetColor();
-        }
-
-        protected static void DotsBlinking()
-        {
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
-            for (int blink = 0; blink < 5; blink++)
-            {
-                switch (blink)
+                if (forbiddenInputCharactersList.Any(x => inputTSQL.Contains(x)))
                 {
-                    case 0: Console.Write("."); break;
-                    case 1: Console.Write("."); break;
-                    case 2: Console.Write("."); break;
-                    case 3: Console.Write("."); break;
-                    case 4: Console.Write("."); break;
-                }
-                System.Threading.Thread.Sleep(200);
-                Console.SetCursorPosition(Console.CursorLeft + 0, Console.CursorTop + 0);
-
-            }
-            Console.ResetColor();
-        }
-
-        public static void WriteBottomLine(string text)
-        {
-            int x = Console.CursorLeft;
-            int y = Console.CursorTop;
-            Console.CursorTop = Console.WindowTop + Console.WindowHeight - 2;
-            CenterText(text);
-        }
-
-        private static void WriteAt(int column, int row)
-        {
-            Console.SetCursorPosition(column, row);
-        }
-
-        private static void CenterText(string text)
-        {
-            Console.WriteLine(string.Format("{0," + (Console.WindowWidth + text.Length) / 2 + "}", text));
-        }
-
-        public static void QuasarScreen(string currentUser)
-        {
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.DarkCyan;            
-            CenterText("Quasar CRM Program - V2.0");
-            CenterText("-IT Crowd-");
-            CenterText($"[{currentUser}]");
-            WriteBottomLine("~CB6 Individual Project~");
-            Console.ResetColor();
-            WriteAt(0, 3);
-        }
-
-        public static void SpecialThanksMessage()
-        {
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            for (int blink = 0; blink < 6; blink++)
-            {
-                if (blink % 2 == 0)
-                {
-                    WriteBottomLine("~~~~~Special thanks to Afro~~~~~");
-                    Console.ForegroundColor = ConsoleColor.DarkCyan;
-                    System.Threading.Thread.Sleep(300);
+                    return true;
                 }
                 else
                 {
-                    WriteBottomLine("~~~~~Special thanks to Afro~~~~~");
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    System.Threading.Thread.Sleep(300);
+                    return false;
+                }
+            }
+
+            public static int SelectTicketID()
+            {
+                Console.Write("Select the TicketID of the ticket you want to manage: ");
+                while (true)
+                {
+                    try
+                    {
+                        return int.Parse(Console.ReadLine());
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine("Input needs to be a real number greater than 0");
+                    }
+                }
+            }
+
+            public static string SelectUserRole()
+            {
+                string administrator = "Administrator", moderator = "Moderator", user = "User",
+                       selectionMsg = "\r\nChoose one of the following User Roles:\r\n", currentUser = ConnectToServer.RetrieveCurrentUserFromDatabase();
+                while (true)
+                {
+                    string SelectUserRoleFromList = SelectMenu.MenuColumn(new List<string> { administrator, moderator, user }, currentUser, selectionMsg).option;
+
+                    if (SelectUserRoleFromList == administrator)
+                    {
+                        return administrator;
+                    }
+                    else if (SelectUserRoleFromList == moderator)
+                    {
+                        return moderator;
+                    }
+                    else if (SelectUserRoleFromList == user)
+                    {
+                        return user;
+                    }
+                }
+            }
+
+            public static void UniversalLoadingOuput(string message)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkCyan;
+                Console.Write(message);
+                DotsBlinking();
+                Console.Write("\r" + new string(' ', Console.WindowWidth) + "\r");
+                Console.ResetColor();
+            }
+
+            protected static void DotsBlinking()
+            {
+                Console.ForegroundColor = ConsoleColor.DarkCyan;
+                for (int blink = 0; blink < 5; blink++)
+                {
+                    switch (blink)
+                    {
+                        case 0: Console.Write("."); break;
+                        case 1: Console.Write("."); break;
+                        case 2: Console.Write("."); break;
+                        case 3: Console.Write("."); break;
+                        case 4: Console.Write("."); break;
+                    }
+                    System.Threading.Thread.Sleep(200);
+                    Console.SetCursorPosition(Console.CursorLeft + 0, Console.CursorTop + 0);
+                }
+                Console.ResetColor();
+            }
+
+            public static void WriteBottomLine(string text)
+            {
+                int x = Console.CursorLeft;
+                int y = Console.CursorTop;
+                Console.CursorTop = Console.WindowTop + Console.WindowHeight - 2;
+                CenterText(text);
+            }
+
+            private static void WriteAt(int column, int row)
+            {
+                Console.SetCursorPosition(column, row);
+            }
+
+            private static void CenterText(string text)
+            {
+                Console.WriteLine(string.Format("{0," + (Console.WindowWidth + text.Length) / 2 + "}", text));
+            }
+
+            public static void QuasarScreen(string currentUser)
+            {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.DarkCyan;
+                CenterText("Quasar CRM Program - V2.1");
+                CenterText("-IT Crowd-");
+                CenterText($"[{currentUser}]");
+                WriteBottomLine("~CB6 Individual Project~");
+                Console.ResetColor();
+                WriteAt(0, 3);
+            }
+
+            public static void SpecialThanksMessage()
+            {
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                for (int blink = 0; blink < 6; blink++)
+                {
+                    if (blink % 2 == 0)
+                    {
+                        WriteBottomLine("~~~~~Special thanks to Afro~~~~~");
+                        Console.ForegroundColor = ConsoleColor.DarkCyan;
+                        System.Threading.Thread.Sleep(300);
+                    }
+                    else
+                    {
+                        WriteBottomLine("~~~~~Special thanks to Afro~~~~~");
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        System.Threading.Thread.Sleep(300);
+                    }
                 }
             }
         }
     }
-}

@@ -7,19 +7,18 @@ using System.Linq;
 namespace IndividualProject
 {
     class RoleFunctions
-    {                
+    {
         static string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
         static string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
 
         public static void CreateNewUserFromRequestFunction()
-        {            
+        {
             string pendingUsername = File.ReadLines(Globals.newUserRequestPath).First();
             if (pendingUsername == " ")
             {
-                //InputOutputAnimationControl.QuasarScreen(currentUsername);
                 InputOutputAnimationControl.UniversalLoadingOuput("Action in progress");
-                Console.Write("There are no pending requests");
-                System.Threading.Thread.Sleep(1000);
+                Console.Write("There are no pending requests.\n\n(Press any key to continue)");
+                Console.ReadKey();
                 InputOutputAnimationControl.QuasarScreen(currentUsername);
                 ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
             }
@@ -30,9 +29,9 @@ namespace IndividualProject
                 string pendingPassphrase = File.ReadLines(Globals.newUserRequestPath).Skip(1).Take(1).First();
                 pendingPassphrase = pendingPassphrase.Remove(0, 12);
                 InputOutputAnimationControl.QuasarScreen(currentUsername);
-                InputOutputAnimationControl.UniversalLoadingOuput("Loading");                
+                InputOutputAnimationControl.UniversalLoadingOuput("Loading");
 
-                string createUserMsg = $"\r\nYou are about to create a new username-password entry : {pendingUsername} - {pendingPassphrase}\r\nWould you like to proceed?\r\n";
+                string createUserMsg = $"\r\nYou are about to create a new username-password entry : {pendingUsername} - {pendingPassphrase}.\r\nWould you like to proceed?\r\n";
 
                 string yes = "Yes", no = "No";
                 InputOutputAnimationControl.QuasarScreen(currentUsername);
@@ -41,25 +40,26 @@ namespace IndividualProject
 
                 if (yesOrNoSelection == yes)
                 {
-                    //InputOutputAnimationControl.QuasarScreen(currentUsername);
-                    //InputOutputAnimationControl.UniversalLoadingOuput("Action in progress");
                     string pendingRole = InputOutputAnimationControl.SelectUserRole();
 
                     using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
                     {
                         dbcon.Open();
-                        SqlCommand appendUserToDatabase = new SqlCommand($"EXECUTE InsertNewUserIntoDatabase '{pendingUsername}', '{pendingPassphrase}', '{pendingRole}'", dbcon);                        
+                        SqlCommand appendUserToDatabase = new SqlCommand($"EXECUTE InsertNewUserIntoDatabase '{pendingUsername}', '{pendingPassphrase}', '{pendingRole}'", dbcon);
                         appendUserToDatabase.ExecuteScalar();
                     }
                     InputOutputAnimationControl.QuasarScreen(currentUsername);
                     InputOutputAnimationControl.UniversalLoadingOuput("Creating new user in progress");
+                    //Clears the new user registrations List
                     File.WriteAllLines(Globals.newUserRequestPath, new string[] { " " });
-                    Console.WriteLine($"User {pendingUsername} has been created successfully. Status : {pendingRole}\r\nPress any key to continue");
-                    Console.ReadKey();                                        
+                    //Creates a file for the new user to check notifications
+                    File.WriteAllLines(Globals.TTnotificationToUser + pendingUsername + ".txt", new string[] { " " });
+                    Console.WriteLine($"User {pendingUsername} has been created successfully. Status : {pendingRole}.\n\n(Press any key to continue)");
+                    Console.ReadKey();
                     ActiveUserFunctions.UserFunctionMenuScreen(currentUsername);
                 }
                 else if (yesOrNoSelection == no)
-                {                    
+                {
                     ActiveUserFunctions.UserFunctionMenuScreen(currentUsername);
                 }
             }
@@ -69,9 +69,9 @@ namespace IndividualProject
         {
             InputOutputAnimationControl.QuasarScreen(currentUsername);
             InputOutputAnimationControl.UniversalLoadingOuput("Loading");
-            Console.WriteLine("\r\nChoose a User from the list and proceed to delete");
+            Console.WriteLine("\r\nChoose a User from the list and proceed to delete.");
             Dictionary<string, string> AvailableUsernamesDictionary = ShowAvailableUsersFromDatabase();
-            
+
             string username = InputOutputAnimationControl.UsernameInput();
 
             while (AvailableUsernamesDictionary.ContainsKey(username) == false || username == "admin")
@@ -80,15 +80,15 @@ namespace IndividualProject
                 {
                     Console.WriteLine($"Database does not contain a User {username}");
                     InputOutputAnimationControl.QuasarScreen(currentUsername);
-                    Console.WriteLine("\r\nChoose a User from the list and proceed to delete");
+                    Console.WriteLine("\r\nChoose a User from the list and proceed to delete.");
                     AvailableUsernamesDictionary = ShowAvailableUsersFromDatabase();
                     username = InputOutputAnimationControl.UsernameInput();
                 }
                 else
                 {
-                    Console.WriteLine("Cannot delete super_admin! Please choose a different user");
+                    Console.WriteLine("Cannot delete super_admin! Please choose a different user.");
                     InputOutputAnimationControl.QuasarScreen(currentUsername);
-                    Console.WriteLine("\r\nChoose a User from the list and proceed to delete");
+                    Console.WriteLine("\r\nChoose a User from the list and proceed to delete.");
                     AvailableUsernamesDictionary = ShowAvailableUsersFromDatabase();
                     username = InputOutputAnimationControl.UsernameInput();
                 }
@@ -102,14 +102,14 @@ namespace IndividualProject
             }
             InputOutputAnimationControl.QuasarScreen(currentUsername);
             InputOutputAnimationControl.UniversalLoadingOuput("Deleting existing user in progress");
-            Console.WriteLine($"Username {username} has been successfully deleted from database");
-            System.Threading.Thread.Sleep(1000);
+            Console.WriteLine($"Username {username} has been successfully deleted from database.\n\n(Press any key to continue)");
+            Console.ReadKey();
             InputOutputAnimationControl.QuasarScreen(currentUsername);
             ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
         }
 
         public static Dictionary<string, string> ShowAvailableUsersFromDatabase()
-        {           
+        {
             Console.WriteLine("LIST OF USERS REGISTERED IN QUASAR\r\n");
             using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
             {
@@ -128,7 +128,7 @@ namespace IndividualProject
                     }
                     return AvailableUsernamesDictionary;
                 }
-            }         
+            }
         }
 
         public static void ShowAvailableUsersFunction()
@@ -138,7 +138,8 @@ namespace IndividualProject
             ShowAvailableUsersFromDatabase();
             Console.Write("\r\nPress any key to return to Functions menu");
             Console.ReadKey();
-            InputOutputAnimationControl.QuasarScreen(currentUsername);
+
+
             ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
         }
 
@@ -146,9 +147,70 @@ namespace IndividualProject
         {
             InputOutputAnimationControl.QuasarScreen(currentUsername);
             InputOutputAnimationControl.UniversalLoadingOuput("Loading");
-            Console.WriteLine("There are no notifications");
-            System.Threading.Thread.Sleep(1000);
-            ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
+            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+            {
+                dbcon.Open();
+                SqlCommand CountOpenTicketsAssignedToUser = new SqlCommand($"EXECUTE CountOpenTicketsAssignedToUser '{currentUsername}'", dbcon);
+                SqlCommand OpenListOfTicketsAssignedToUser = new SqlCommand($"EXECUTE SelectOpenTicketsAssignedToUser '{currentUsername}'", dbcon);
+                int countTickets = (int)CountOpenTicketsAssignedToUser.ExecuteScalar();
+
+                if (countTickets == 0)
+                {
+                    Console.WriteLine("\r\nThere are no notifications\n\n(Press any key to go back to Main Menu)");
+                    Console.ReadKey();
+                    ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
+                }
+                else
+                {
+                    string yes = "Yes", no = "No", openListMsg = $"There are [{countTickets}] open Trouble Tickets assigned to you.\r\nWould you like to open a list of the Tickets?";
+                    string yesOrNoSelection = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, openListMsg).option;
+
+                    if (yesOrNoSelection == yes)
+                    {
+                        using (var reader = OpenListOfTicketsAssignedToUser.ExecuteReader())
+                        {
+                            List<string> ShowtTicketsList = new List<string>();
+                            while (reader.Read())
+                            {
+                                int ticketID = (int)reader[0];
+                                DateTime dateCreated = (DateTime)reader[1];
+                                string username = (string)reader[2];
+                                string userAssignedTo = (string)reader[3];
+                                string ticketStatus = (string)reader[4];
+                                string comments = (string)reader[5];
+                                var stringLength = comments.Length;
+                                if (stringLength > 60)
+                                {
+                                    comments = comments.Substring(0, 60) + "...";
+                                }
+
+                                ShowtTicketsList.Add(ticketID.ToString());
+                                ShowtTicketsList.Add(dateCreated.ToString());
+                                ShowtTicketsList.Add(username);
+                                ShowtTicketsList.Add(userAssignedTo);
+                                ShowtTicketsList.Add(ticketStatus);
+                                ShowtTicketsList.Add(comments);
+                                Console.WriteLine($"TicketID: {ticketID} \r\nDate created: {dateCreated} \r\nCreated By: {username} \r\nAssigned To: {userAssignedTo} \r\nTicket status: {ticketStatus} \r\bComment preview: {comments}");
+                                Console.WriteLine(new string('#', Console.WindowWidth));
+                                Console.WriteLine();
+                            }
+                        }
+                        Console.WriteLine("(Press any key to go back to Main Menu)");
+                        Console.ReadKey();
+                        ActiveUserFunctions.UserFunctionMenuScreen(currentUsername);
+                    }
+                    else if (yesOrNoSelection == no)
+                    {
+                        //InputOutputAnimationControl.QuasarScreen(currentUsername);
+                        ActiveUserFunctions.UserFunctionMenuScreen(currentUsername);
+                    }
+                }
+            }
+            //InputOutputAnimationControl.QuasarScreen(currentUsername);
+            //InputOutputAnimationControl.UniversalLoadingOuput("Loading");
+            //Console.WriteLine("\r\nThere are no notifications\n\n(Press any key to continue)");
+            //Console.ReadKey();
+            //ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
         }
 
         public static void CheckAdminNotifications()
@@ -158,17 +220,16 @@ namespace IndividualProject
             string pendingUsernameCheck = File.ReadLines(Globals.newUserRequestPath).First();
 
             if (pendingUsernameCheck == " ")
-            {              
-                Console.WriteLine("There are no pending User registrations");
-                System.Threading.Thread.Sleep(1000);
-                InputOutputAnimationControl.QuasarScreen(currentUsername);
+            {
+                Console.WriteLine("\r\nThere are no pending User registrations\n\n(Press any key to continue)");
+                Console.ReadKey();
                 ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
             }
             else
             {
                 string yes = "Yes", no = "No";
 
-                string requestMsg = "\r\nYou have 1 pending User registration request. Would you like to create new user?\r\n";
+                string requestMsg = "\r\nYou have 1 pending User registration request. Would you like to create new user?\n";
                 string yesOrNoSelection = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, requestMsg).option;
 
                 if (yesOrNoSelection == yes)
@@ -193,21 +254,25 @@ namespace IndividualProject
             Console.WriteLine("\r\nChoose a User from the list and proceed to upgrade/downgrade Role Status");
 
             string username = InputOutputAnimationControl.UsernameInput();
-            
+
             while (AvailableUsernamesDictionary.ContainsKey(username) == false || username == "admin")
             {
                 if (AvailableUsernamesDictionary.ContainsKey(username) == false)
                 {
-                    Console.WriteLine($"Database does not contain a User {username}");
-                    System.Threading.Thread.Sleep(1000);
+                    InputOutputAnimationControl.QuasarScreen(currentUsername);
+                    Console.WriteLine($"Database does not contain a User {username}\n\n(Press any key to continue)");
+                    Console.ReadKey();
+                    InputOutputAnimationControl.QuasarScreen(currentUsername);
                     AvailableUsernamesDictionary = ShowAvailableUsersFromDatabase();
                     Console.WriteLine("\r\nChoose a User from the list and proceed to upgrade/downgrade Role Status");
                     username = InputOutputAnimationControl.UsernameInput();
                 }
                 else
                 {
-                    Console.WriteLine("Cannot alter super_admin's Status! Please choose a different user");
-                    System.Threading.Thread.Sleep(1000);
+                    InputOutputAnimationControl.QuasarScreen(currentUsername);
+                    Console.WriteLine("Cannot alter super_admin's Status! Please choose a different user\n\n");
+                    Console.ReadKey();
+                    InputOutputAnimationControl.QuasarScreen(currentUsername);
                     AvailableUsernamesDictionary = ShowAvailableUsersFromDatabase();
                     Console.WriteLine("\r\nChoose a User from the list and proceed to upgrade/downgrade Role Status");
                     username = InputOutputAnimationControl.UsernameInput();
@@ -228,8 +293,8 @@ namespace IndividualProject
                 {
                     InputOutputAnimationControl.QuasarScreen(currentUsername);
                     Console.WriteLine();
-                    Console.WriteLine($"User '{username}' already is {userRole}. Please proceed to choose a different Role Status");
-                    System.Threading.Thread.Sleep(1000);
+                    Console.WriteLine($"User '{username}' already is {userRole}. Please proceed to choose a different Role Status\n\n(Press any key to continue)");
+                    Console.ReadKey();
                     InputOutputAnimationControl.QuasarScreen(currentUsername);
                     Console.WriteLine();
                     userRole = InputOutputAnimationControl.SelectUserRole();
@@ -243,9 +308,9 @@ namespace IndividualProject
                 string newUserRole = (string)selectUserRole.ExecuteScalar();
                 InputOutputAnimationControl.QuasarScreen(currentUsername);
                 InputOutputAnimationControl.UniversalLoadingOuput("Modifying User's role status in progress");
-                Console.WriteLine($"Username {username} has been successfully modified as {newUserRole}");
+                Console.WriteLine($"Username {username} has been successfully modified as {newUserRole}\n\n(Press any key to continue)");
             }
-            System.Threading.Thread.Sleep(1000);
+            Console.ReadKey();
             InputOutputAnimationControl.QuasarScreen(currentUsername);
             ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
         }

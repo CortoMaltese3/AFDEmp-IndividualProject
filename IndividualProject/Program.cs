@@ -6,15 +6,14 @@ namespace IndividualProject
     {
         static void Main(string[] args)
         {
-            ApplicationMenuClass.LoginScreen();
+            ApplicationMenu.LoginScreen();
         }
     }
 
-    class ApplicationMenuClass
+    class ApplicationMenu
     {
         public static void LoginScreen()
-        {
-            
+        {            
             string login = "Login with your Credentials", register = "New Account request", quit = "Quit Quasar", currentUser = "Not Registered",
                             loginMsg = "\r\nWelcome to Quasar! Choose one of the following options to continue:\r\n";
             while (true)
@@ -25,12 +24,10 @@ namespace IndividualProject
                 {
                     ConnectToServer.UserLoginCredentials();
                 }
-
                 else if (LoginRegisterQuit == register)
                 {
                     CreateNewAccount.CreateNewAccountRequest();                    
                 }
-
                 else if (LoginRegisterQuit == quit)
                 {
                     ConnectToServer.TerminateQuasar();

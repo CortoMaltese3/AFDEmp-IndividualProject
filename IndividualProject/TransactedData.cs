@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 
 namespace IndividualProject
 {
@@ -37,7 +39,6 @@ namespace IndividualProject
 
         public static void OpenCustomerTickets()
         {
-
             string open = "Open new Customer Ticket", back = "\r\nBack", manageTicketmsg = "\r\nChoose one of the following options to continue:\r\n";
             while (true)
             {
@@ -58,7 +59,7 @@ namespace IndividualProject
         public static string AssignTicketToUser()
         {
             
-            string assignTicket = "Would you like to assign the ticket to another user?";
+            string assignTicket = "Would you like to assign the ticket to another user?\r\n";
             string yes = "Yes", no = "No";
 
             string yesOrNoSelection = SelectMenu.MenuRow(new List<string> { yes, no, }, currentUsername, assignTicket).option;
@@ -76,8 +77,8 @@ namespace IndividualProject
                 {
                     if (AvailableUsernamesDictionary.ContainsKey(usernameAssignment) == false)
                     {
-                        Console.WriteLine($"Database does not contain a User {usernameAssignment}");
-                        System.Threading.Thread.Sleep(1000);
+                        Console.WriteLine($"Database does not contain a User {usernameAssignment}.");
+                        System.Threading.Thread.Sleep(1500);
                         InputOutputAnimationControl.QuasarScreen(currentUsername);
                         AvailableUsernamesDictionary = RoleFunctions.ShowAvailableUsersFromDatabase();
                         Console.Write("\r\nPlease select a user and proceed to assign: ");
@@ -85,14 +86,15 @@ namespace IndividualProject
                     }
                     else
                     {
-                        Console.WriteLine("Cannot assign ticket to super_admin! Please choose a different user");
-                        System.Threading.Thread.Sleep(1000);
+                        Console.WriteLine("Cannot assign ticket to super_admin! Please choose a different user.");
+                        System.Threading.Thread.Sleep(1500);
                         InputOutputAnimationControl.QuasarScreen(currentUsername);
                         AvailableUsernamesDictionary = RoleFunctions.ShowAvailableUsersFromDatabase();
                         Console.Write("\r\nPlease select a user and proceed to assign: ");
                         usernameAssignment = InputOutputAnimationControl.UsernameInput();
                     }
                 }
+                AssignTicketToUserNotification(currentUsername, usernameAssignment);
                 return usernameAssignment;
             }
 
@@ -103,6 +105,13 @@ namespace IndividualProject
             return currentUsername;
         }
 
+
+        public static void AssignTicketToUserNotification(string currentUserAssigning, string UserAssigningTicketTo)
+        {
+
+            File.WriteAllLines(Globals.TTnotificationToUser + UserAssigningTicketTo + ".txt", new string[] { $"User {currentUserAssigning} has mplamplampla" });
+        }
+
         public static void OpenNewCustomerTicket()
         {
             string comment = InputOutputAnimationControl.TicketComment();
@@ -110,16 +119,35 @@ namespace IndividualProject
 
             using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
             {
-                dbcon.Open();
-                SqlCommand openNewTechnicalTicket = new SqlCommand($"EXECUTE OpenNewTechnicalTicket '{currentUsername}', '{userAssignedTo}', '{comment}'", dbcon);
-                openNewTechnicalTicket.ExecuteNonQuery();
-                SqlCommand fetchNewTicketID = new SqlCommand("EXECUTE fetchNewTicketID", dbcon);
-                int ticketID = (int)fetchNewTicketID.ExecuteScalar();
-                InputOutputAnimationControl.QuasarScreen(currentUsername);
-                InputOutputAnimationControl.UniversalLoadingOuput("Filing new customer ticket in progress");
-                Console.WriteLine($"New Customer Ticket with ID: {ticketID} has been successfully created and assigned to {userAssignedTo}. Status: Open");
+                try
+                {
+                    dbcon.Open();
+
+                    //SqlDataAdapter openNewTechnicalTicket = new SqlDataAdapter("OpenNewTechnicalTicket", dbcon);
+                    //openNewTechnicalTicket.SelectCommand.CommandType = CommandType.StoredProcedure;
+                    //SqlParameter currentUsernameParameter = openNewTechnicalTicket.SelectCommand.Parameters.Add("@username", SqlDbType.VarChar, 20);
+                    //SqlParameter userAssignedToParameter = openNewTechnicalTicket.SelectCommand.Parameters.Add("@userAssignedTo", SqlDbType.VarChar, 20);
+                    //SqlParameter commentParameter = openNewTechnicalTicket.SelectCommand.Parameters.Add("@comments", SqlDbType.VarChar, 500);
+
+                    //currentUsernameParameter.Value = currentUsername;
+                    //userAssignedToParameter.Value = userAssignedTo;
+                    //commentParameter.Value = comment;
+
+
+                    SqlCommand openNewTechnicalTicket = new SqlCommand($"EXECUTE OpenNewTechnicalTicket '{currentUsername}', '{userAssignedTo}', '{comment}'", dbcon);
+                    openNewTechnicalTicket.ExecuteNonQuery();
+                    SqlCommand fetchNewTicketID = new SqlCommand("EXECUTE fetchNewTicketID", dbcon);
+                    int ticketID = (int)fetchNewTicketID.ExecuteScalar();
+                    InputOutputAnimationControl.QuasarScreen(currentUsername);
+                    InputOutputAnimationControl.UniversalLoadingOuput("Filing new customer ticket in progress");
+                    Console.WriteLine($"New Customer Ticket with ID: {ticketID} has been successfully created and assigned to {userAssignedTo}. Status: Open");
+                }
+                catch (SqlException)
+                {
+                    Console.WriteLine("An error occured while trying to register the ticket comment. Changes have been aborted");
+                }                
             }
-            Console.WriteLine("\r\nPress any key to return");
+            Console.WriteLine("\n\nPress any key to return");
             Console.ReadKey();
             ManageCustomerTickets();
         }
@@ -130,7 +158,7 @@ namespace IndividualProject
             InputOutputAnimationControl.UniversalLoadingOuput("Loading");
             Console.WriteLine("CLOSE EXISTING TECHNICAL TICKETS");
             
-            string listOfTickets = "Would you like to open the list of Opened Tickets?";
+            string listOfTickets = "Would you like to open the list of Opened Tickets?\r\n";
             string yes = "Yes", no = "No";
             while (true)
             {
@@ -148,7 +176,7 @@ namespace IndividualProject
                             System.Threading.Thread.Sleep(1000);
                             CloseCustomerTicket();
                         }                        
-                        string closeTicket = $"Are you sure you want to mark ticket {ticketID} as closed?";
+                        string closeTicket = $"Are you sure you want to mark ticket {ticketID} as closed?\r\n";
                         string optionYesOrNo2 = SelectMenu.MenuColumn(new List<string> { yes, no }, currentUsername, closeTicket).option;
                         if (optionYesOrNo2 == yes)
                         {
@@ -157,8 +185,8 @@ namespace IndividualProject
                             closeCustomerTicket.ExecuteScalar();
                             InputOutputAnimationControl.QuasarScreen(currentUsername);
                             InputOutputAnimationControl.UniversalLoadingOuput("Action in progress");
-                            Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully marked as closed");
-                            System.Threading.Thread.Sleep(1000);
+                            Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully marked as closed.\n\n(Press any key to continue)");
+                            Console.ReadKey();
                         }
 
                         else if (optionYesOrNo2 == no)
@@ -173,10 +201,10 @@ namespace IndividualProject
                         if (CheckIfTicketIDWithStatusOpenExistsInList(ticketID) == false)
                         {
                             Console.WriteLine($"There is no Customer Ticket with [ID = {ticketID}]");
-                            System.Threading.Thread.Sleep(1000);
+                            System.Threading.Thread.Sleep(1500);
                             ManageCustomerTickets();
                         }
-                        string closeTicketMsg = $"Are you sure you want to mark ticket {ticketID} as closed?";
+                        string closeTicketMsg = $"Are you sure you want to mark ticket {ticketID} as closed?\r\n";
 
                         string optionYesOrNo2 = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, closeTicketMsg).option;
 
@@ -187,8 +215,8 @@ namespace IndividualProject
                             closeCustomerTicket.ExecuteScalar();
                             InputOutputAnimationControl.QuasarScreen(currentUsername);
                             InputOutputAnimationControl.UniversalLoadingOuput("Action in progress");
-                            Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully marked as closed");
-                            System.Threading.Thread.Sleep(1000);
+                            Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully marked as closed.\n\n(Press any key to continue)");
+                            Console.ReadKey();
                         }
                         else if (optionYesOrNo2 == no)
                         {
@@ -206,7 +234,7 @@ namespace IndividualProject
             InputOutputAnimationControl.UniversalLoadingOuput("Loading");
             Console.WriteLine("DELETE EXISTING TECHNICAL TICKETS");
 
-            string listMsg = "Would you like to open the list of Existing Tickets?";
+            string listMsg = "Would you like to open the list of Existing Tickets?\r\n";
             string yes = "Yes", no = "No";
 
             while (true)
@@ -225,7 +253,7 @@ namespace IndividualProject
                             System.Threading.Thread.Sleep(1000);
                             ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
                         }                        
-                        string deleteTicketMsg = $"Are you sure you want to delete ticket {ticketID}? Action cannot be undone";
+                        string deleteTicketMsg = $"Are you sure you want to delete ticket {ticketID}? Action cannot be undone.\r\n";
 
                         string optionYesOrNo2 = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, deleteTicketMsg).option;
                         if (optionYesOrNo2 == yes)
@@ -235,8 +263,8 @@ namespace IndividualProject
                             deleteCustomerTicket.ExecuteScalar();
                             InputOutputAnimationControl.QuasarScreen(currentUsername);
                             InputOutputAnimationControl.UniversalLoadingOuput("Action in progress");
-                            Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully deleted");
-                            System.Threading.Thread.Sleep(1000);
+                            Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully deleted\n\n(Press any key to continue)");
+                            Console.ReadKey();
                             ManageCustomerTickets();
                         }
                         else if (optionYesOrNo2 == no)
@@ -251,11 +279,10 @@ namespace IndividualProject
                         if (CheckIfTicketIDWithStatusOpenOrClosedExistsInList(ticketID) == false)
                         {
                             Console.WriteLine($"There is no Customer Ticket with [ID = {ticketID}]");
-                            System.Threading.Thread.Sleep(1000);
+                            System.Threading.Thread.Sleep(1500);
                             ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
-                        }
-                        Console.WriteLine($"Are you sure you want to delete ticket {ticketID}? Action cannot be undone");
-                        string deleteTicketMsg = $"Are you sure you want to delete ticket {ticketID}? Action cannot be undone";
+                        }                        
+                        string deleteTicketMsg = $"Are you sure you want to delete ticket {ticketID}? Action cannot be undone\r\n";
 
                         string optionYesOrNo2 = SelectMenu.MenuColumn(new List<string> { yes, no }, currentUsername, deleteTicketMsg).option;
 
@@ -317,7 +344,7 @@ namespace IndividualProject
             InputOutputAnimationControl.QuasarScreen(currentUsername);
             InputOutputAnimationControl.UniversalLoadingOuput("Loading");
             Console.WriteLine("VIEW OPEN TECHNICAL TICKETS");
-            string listTicketsMsg = "Would you like to open the list of Opened Tickets?";
+            string listTicketsMsg = "Would you like to open the list of Opened Tickets?\r\n";
             string yes = "Yes", no = "No";
             while (true)
             {
@@ -328,10 +355,8 @@ namespace IndividualProject
                     int TicketID = InputOutputAnimationControl.SelectTicketID();
                     if (CheckIfTicketIDWithStatusOpenExistsInList(TicketID) == false)
                     {
-                        Console.WriteLine($"There is no Customer Ticket with [ID = {TicketID}]");
-                        System.Threading.Thread.Sleep(1000);
-                        InputOutputAnimationControl.QuasarScreen(currentUsername);
-                        InputOutputAnimationControl.UniversalLoadingOuput("Loading");
+                        Console.WriteLine($"There is no Customer Ticket with [ID = {TicketID}]\n\n(Press any key to go back to Main Menu)");
+                        Console.ReadKey();
                         ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
                     }
 
@@ -344,13 +369,12 @@ namespace IndividualProject
                     int TicketID = InputOutputAnimationControl.SelectTicketID();
                     if (CheckIfTicketIDWithStatusOpenExistsInList(TicketID) == false)
                     {
-                        Console.WriteLine($"There is no Customer Ticket with [ID = {TicketID}]");
-                        System.Threading.Thread.Sleep(1000);
+                        Console.WriteLine($"There is no Customer Ticket with [ID = {TicketID}]\n\n(Press any key to continue)");
+                        Console.ReadKey();
                         InputOutputAnimationControl.QuasarScreen(currentUsername);
                         InputOutputAnimationControl.UniversalLoadingOuput("Loading");
                         ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
                     }
-
                     ViewSingleCustomerTicket(TicketID);
                     ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
                 }
