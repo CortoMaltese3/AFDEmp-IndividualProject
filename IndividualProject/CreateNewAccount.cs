@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 
@@ -20,7 +19,7 @@ namespace IndividualProject
                 string passphrase = InputOutputAnimationControl.PassphraseInput();
                 InputOutputAnimationControl.QuasarScreen(currentUsername);
                 InputOutputAnimationControl.UniversalLoadingOuput("Check in progress");
-                while (CheckUsernameAvailabilityInDatabase(username) == false)
+                while (ConnectToServer.CheckUsernameAvailabilityInDatabase(username) == false)
                 {
                     InputOutputAnimationControl.QuasarScreen(currentUsername);
                     Console.Write("\r\nThis username is already in use. Choose a different one.\r\n(Press any key to continue)");
@@ -32,23 +31,6 @@ namespace IndividualProject
             catch (DirectoryNotFoundException d)
             {
                 Console.WriteLine(d.Message);
-            }
-        }
-
-        private static bool CheckUsernameAvailabilityInDatabase(string usernameCheck)
-        {
-            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
-            {
-                dbcon.Open();
-                SqlCommand checkUsername = new SqlCommand("CheckUniqueUsername" , dbcon);
-                checkUsername.CommandType = System.Data.CommandType.StoredProcedure;
-                checkUsername.Parameters.AddWithValue("@usernameCheck", usernameCheck);
-                int UserCount = (int)checkUsername.ExecuteScalar();
-                if (UserCount != 0)
-                {
-                    return false;
-                }
-                return true;
             }
         }
 
