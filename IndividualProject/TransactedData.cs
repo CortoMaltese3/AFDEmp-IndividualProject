@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.IO;
 
 namespace IndividualProject
@@ -352,6 +350,17 @@ namespace IndividualProject
                 InputOutputAnimationControl.UniversalLoadingOuput("Action in progress");
                 Console.WriteLine($"The ownership of the Customer Ticket with [ID = {ID}] has been successfully transfered to User: {nextOwner}\n\n(Press any key to continue)");
                 Console.ReadKey();
+            }
+        }
+
+        public static void ViewUserNotificationsLog(string currentUser)
+        {
+            string[] lines = File.ReadAllLines(Globals.TTnotificationToUser + currentUser + ".txt");
+            int index = 1;
+            foreach (string line in lines)
+            {
+                Console.WriteLine(index + ". " + line + "\n");
+                index++;                    
             }
         }
     }

@@ -107,19 +107,26 @@ namespace IndividualProject
             }
             else
             {
-                string yes = "Yes", no = "No", openListMsg = $"There are [{countTickets}] open Trouble Tickets assigned to you.\r\nWould you like to open a list of the Tickets?";
-                string yesOrNoSelection = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, openListMsg).option;
-                if (yesOrNoSelection == yes)
+                string showListOfTickets = "Show List of Tickets", back = "\r\nBack", showNotificationsLog = "Show notifications Log", openListMsg = $"There are [{countTickets}] open Trouble Tickets assigned to you.\r\nHow would you like to proceed?";
+                string viewNotificationsList = SelectMenu.MenuColumn(new List<string> { showListOfTickets, showNotificationsLog, back }, currentUsername, openListMsg).option;
+                if (viewNotificationsList == showListOfTickets)
                 {
                     ConnectToServer.SelectOpenTicketsAssignedToUser(currentUsername);
-                    Console.WriteLine("(Press any key to go back to Main Menu)");
+                    Console.WriteLine("(Press any key to continue)");
                     Console.ReadKey();
-                    ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
+                    CheckUserNotifications();
                 }
-                else if (yesOrNoSelection == no)
+                else if (viewNotificationsList == showNotificationsLog)
+                {
+                    TransactedData.ViewUserNotificationsLog(currentUsername);
+                    Console.WriteLine("(Press any key to continue)");
+                    Console.ReadKey();
+                    CheckUserNotifications();
+                }
+                else if (viewNotificationsList == back)
                 {
                     ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
-                }
+                }                
             }
         }
 
