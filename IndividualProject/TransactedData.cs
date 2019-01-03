@@ -108,8 +108,19 @@ namespace IndividualProject
 
         public static void AssignTicketToUserNotification(string currentUserAssigning, string UserAssigningTicketTo)
         {
-
-            File.WriteAllLines(Globals.TTnotificationToUser + UserAssigningTicketTo + ".txt", new string[] { $"User {currentUserAssigning} has mplamplampla" });
+            try
+            {
+                DateTime dateTimeAdded = DateTime.Now;
+                using (StreamWriter sw = File.AppendText(Globals.TTnotificationToUser + UserAssigningTicketTo + ".txt"))
+                {
+                    sw.WriteLine($"[{dateTimeAdded}] - User {currentUserAssigning} has assigned a new TT to you. Check your notifications for more details");
+                }                
+            }
+            catch (FileNotFoundException fileNotFound)
+            {
+                Console.WriteLine(fileNotFound.Message);
+            }
+            
         }
 
         public static void OpenNewCustomerTicket()
@@ -122,20 +133,13 @@ namespace IndividualProject
                 try
                 {
                     dbcon.Open();
-
-                    //SqlDataAdapter openNewTechnicalTicket = new SqlDataAdapter("OpenNewTechnicalTicket", dbcon);
-                    //openNewTechnicalTicket.SelectCommand.CommandType = CommandType.StoredProcedure;
-                    //SqlParameter currentUsernameParameter = openNewTechnicalTicket.SelectCommand.Parameters.Add("@username", SqlDbType.VarChar, 20);
-                    //SqlParameter userAssignedToParameter = openNewTechnicalTicket.SelectCommand.Parameters.Add("@userAssignedTo", SqlDbType.VarChar, 20);
-                    //SqlParameter commentParameter = openNewTechnicalTicket.SelectCommand.Parameters.Add("@comments", SqlDbType.VarChar, 500);
-
-                    //currentUsernameParameter.Value = currentUsername;
-                    //userAssignedToParameter.Value = userAssignedTo;
-                    //commentParameter.Value = comment;
-
-
-                    SqlCommand openNewTechnicalTicket = new SqlCommand($"EXECUTE OpenNewTechnicalTicket '{currentUsername}', '{userAssignedTo}', '{comment}'", dbcon);
+                    SqlCommand openNewTechnicalTicket = new SqlCommand("OpenNewTechnicalTicket", dbcon);
+                    openNewTechnicalTicket.CommandType = CommandType.StoredProcedure;
+                    openNewTechnicalTicket.Parameters.AddWithValue("@username", currentUsername);
+                    openNewTechnicalTicket.Parameters.AddWithValue("@userAssignedTo", userAssignedTo);  
+                    openNewTechnicalTicket.Parameters.AddWithValue("@comments", comment);
                     openNewTechnicalTicket.ExecuteNonQuery();
+
                     SqlCommand fetchNewTicketID = new SqlCommand("EXECUTE fetchNewTicketID", dbcon);
                     int ticketID = (int)fetchNewTicketID.ExecuteScalar();
                     InputOutputAnimationControl.QuasarScreen(currentUsername);
@@ -194,7 +198,6 @@ namespace IndividualProject
                             ManageCustomerTickets();
                         }
                     }
-
                     else if (optionYesOrNo == no)
                     {
                         int ticketID = InputOutputAnimationControl.SelectTicketID();
@@ -259,17 +262,19 @@ namespace IndividualProject
                         if (optionYesOrNo2 == yes)
                         {
                             dbcon.Open();
-                            SqlCommand deleteCustomerTicket = new SqlCommand($"EXECUTE DeleteCustomerTicket {ticketID}", dbcon);
+                            SqlCommand deleteCustomerTicket = new SqlCommand("DeleteCustomerTicket", dbcon);
+                            deleteCustomerTicket.CommandType = CommandType.StoredProcedure;
+                            deleteCustomerTicket.Parameters.AddWithValue("@ticketID", ticketID);
                             deleteCustomerTicket.ExecuteScalar();
                             InputOutputAnimationControl.QuasarScreen(currentUsername);
                             InputOutputAnimationControl.UniversalLoadingOuput("Action in progress");
                             Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully deleted\n\n(Press any key to continue)");
                             Console.ReadKey();
-                            ManageCustomerTickets();
+                            ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
                         }
                         else if (optionYesOrNo2 == no)
                         {
-                            ManageCustomerTickets();
+                            ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
                         }
                     }
 
@@ -289,55 +294,24 @@ namespace IndividualProject
                         if (optionYesOrNo2 == yes)
                         {
                             dbcon.Open();
-                            SqlCommand deleteCustomerTicket = new SqlCommand($"EXECUTE DeleteCustomerTicket {ticketID}", dbcon);
+                            SqlCommand deleteCustomerTicket = new SqlCommand("DeleteCustomerTicket", dbcon);
+                            deleteCustomerTicket.CommandType = CommandType.StoredProcedure;
+                            deleteCustomerTicket.Parameters.AddWithValue("@ticketID", ticketID);
                             deleteCustomerTicket.ExecuteScalar();
                             InputOutputAnimationControl.QuasarScreen(currentUsername);
                             InputOutputAnimationControl.UniversalLoadingOuput("Action in progress");
-                            Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully deleted");
-                            System.Threading.Thread.Sleep(1000);
+                            Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully deleted\n\nPress any key to go back to main menu");
+                            Console.ReadKey();
+                            ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
                         }
                         else if (optionYesOrNo2 == no)
                         {
-                            ManageCustomerTickets();
+                            ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
                         }
                     }
                 }                
             }
         }
-
-        //public static void DeleteExistingOpenOrClosedTicketSubFunction()
-        //{
-        //    string listMsg = "Would you like to open the list of Existing Tickets?";
-        //    string yes = "Yes", no = "No";
-
-        //    int ticketID = InputOutputAnimationControl.SelectTicketID();
-        //    if (CheckIfTicketIDWithStatusOpenOrClosedExistsInList(ticketID) == false)
-        //    {
-        //        Console.WriteLine($"There is no Customer Ticket with [ID = {ticketID}]");
-        //        System.Threading.Thread.Sleep(1000);
-        //        ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
-        //    }
-        //    string deleteTicketMsg = $"Are you sure you want to delete ticket {ticketID}? Action cannot be undone";
-
-        //    string optionYesOrNo2 = SelectMenu.MenuColumn(new List<string> { yes, no }, currentUsername, deleteTicketMsg).NameOfChoice;
-        //    if (optionYesOrNo2 == yes)
-        //    {
-        //        dbcon.Open();
-        //        SqlCommand deleteCustomerTicket = new SqlCommand($"EXECUTE DeleteCustomerTicket {ticketID}", dbcon);
-        //        deleteCustomerTicket.ExecuteScalar();
-        //        InputOutputAnimationControl.QuasarScreen(currentUsername);
-        //        InputOutputAnimationControl.UniversalLoadingOuput("Action in progress");
-        //        Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully deleted");
-        //        System.Threading.Thread.Sleep(1000);
-        //    }
-        //    else if (optionYesOrNo2 == no)
-        //    {
-        //        ManageCustomerTickets();
-        //    }
-        //}
-
-
-
 
         public static void ViewExistingOpenTicketsFunction()
         {
@@ -391,6 +365,8 @@ namespace IndividualProject
             {
                 dbcon.Open();
                 SqlCommand ShowTicketsFromDatabase = new SqlCommand($"EXECUTE SelectSingleCustomerTicket {ticketID}", dbcon);
+                ShowTicketsFromDatabase.CommandType = CommandType.StoredProcedure;
+                ShowTicketsFromDatabase.Parameters.AddWithValue("@ticketID", ticketID);
                 using (var reader = ShowTicketsFromDatabase.ExecuteReader())
                 {
                     List<string> ShowtTicketToList = new List<string>();
@@ -622,26 +598,26 @@ namespace IndividualProject
             {
                 dbcon.Open();
                 SqlCommand EditTicketUserOwnerInDatabase = new SqlCommand($"EXECUTE ChangeUserAssignedTo '{nextOwner}', {ID}", dbcon);
+                EditTicketUserOwnerInDatabase.CommandType = CommandType.StoredProcedure;
+                EditTicketUserOwnerInDatabase.Parameters.AddWithValue("@username", nextOwner);
+                EditTicketUserOwnerInDatabase.Parameters.AddWithValue("@ID", ID);
                 EditTicketUserOwnerInDatabase.ExecuteScalar();
             }
             if (nextOwner == currentUsername)
             {
                 InputOutputAnimationControl.QuasarScreen(currentUsername);
                 InputOutputAnimationControl.UniversalLoadingOuput("Action in progress");
-                Console.WriteLine($"The ownership of the Customer Ticket with [ID = {ID}] remains to User: {nextOwner}");
-                System.Threading.Thread.Sleep(1000);
+                Console.WriteLine($"The ownership of the Customer Ticket with [ID = {ID}] remains to User: {nextOwner}\n\n(Press any key to continue)");
+                Console.ReadKey();
             }
             else
             {
                 InputOutputAnimationControl.QuasarScreen(currentUsername);
                 InputOutputAnimationControl.UniversalLoadingOuput("Action in progress");
-                Console.WriteLine($"The ownership of the Customer Ticket with [ID = {ID}] has been successfully transfered to User: {nextOwner}");
-                System.Threading.Thread.Sleep(1000);
+                Console.WriteLine($"The ownership of the Customer Ticket with [ID = {ID}] has been successfully transfered to User: {nextOwner}\n\n(Press any key to continue)");
+                Console.ReadKey();
             }
-
-
         }
-
         private static bool CheckIfTicketIDWithStatusOpenExistsInList(int ID)
         {
             using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))

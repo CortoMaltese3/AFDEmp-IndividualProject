@@ -9,8 +9,7 @@ namespace IndividualProject
             string currentUser = ConnectToServer.RetrieveCurrentUserFromDatabase();
             string notifications = "Check user notifications", requests = "Create new username/password from requests", viewUsers = "Show list of active users", modifyRole = "Upgrade/Downgrade user's role",
                    deleteUser = "Delete an active username from Database", manageTickets = "Manage Customer Trouble Tickets", viewTickets = "View Trouble Tickets",
-                   editTicket = "Edit Trouble Tickets", deleteTicket = "Delete Trouble Tickets", logOut = "\nLog Out";
-            string message = "Choose one of the following functions\n";
+                   editTicket = "Edit Trouble Tickets", deleteTicket = "Delete Trouble Tickets", logOut = "\nLog Out", message = "Choose one of the following functions\n";
 
             switch (currentUsernameRole)
             {
@@ -69,7 +68,6 @@ namespace IndividualProject
                             ConnectToServer.LoggingOffQuasar();
                         }
                     }
-
                 case "Administrator":
                     while (true)
                     {
@@ -105,7 +103,6 @@ namespace IndividualProject
                             ConnectToServer.LoggingOffQuasar();
                         }
                     }
-
                 case "Moderator":
                     while (true)
                     {
@@ -136,7 +133,6 @@ namespace IndividualProject
                             ConnectToServer.LoggingOffQuasar();
                         }
                     }
-
                 case "User":
                     while (true)
                     {

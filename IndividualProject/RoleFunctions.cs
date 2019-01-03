@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Data;
 using System.IO;
 using System.Linq;
 
@@ -19,7 +20,6 @@ namespace IndividualProject
                 InputOutputAnimationControl.UniversalLoadingOuput("Action in progress");
                 Console.Write("There are no pending requests.\n\n(Press any key to continue)");
                 Console.ReadKey();
-                InputOutputAnimationControl.QuasarScreen(currentUsername);
                 ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
             }
             else
@@ -28,8 +28,6 @@ namespace IndividualProject
 
                 string pendingPassphrase = File.ReadLines(Globals.newUserRequestPath).Skip(1).Take(1).First();
                 pendingPassphrase = pendingPassphrase.Remove(0, 12);
-                InputOutputAnimationControl.QuasarScreen(currentUsername);
-                InputOutputAnimationControl.UniversalLoadingOuput("Loading");
 
                 string createUserMsg = $"\r\nYou are about to create a new username-password entry : {pendingUsername} - {pendingPassphrase}.\r\nWould you like to proceed?\r\n";
 
@@ -45,7 +43,11 @@ namespace IndividualProject
                     using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
                     {
                         dbcon.Open();
-                        SqlCommand appendUserToDatabase = new SqlCommand($"EXECUTE InsertNewUserIntoDatabase '{pendingUsername}', '{pendingPassphrase}', '{pendingRole}'", dbcon);
+                        SqlCommand appendUserToDatabase = new SqlCommand("InsertNewUserIntoDatabase", dbcon);
+                        appendUserToDatabase.CommandType = CommandType.StoredProcedure;
+                        appendUserToDatabase.Parameters.AddWithValue("@username", pendingUsername);
+                        appendUserToDatabase.Parameters.AddWithValue("@passphrase", pendingPassphrase);
+                        appendUserToDatabase.Parameters.AddWithValue("@userRole", pendingRole);
                         appendUserToDatabase.ExecuteScalar();
                     }
                     InputOutputAnimationControl.QuasarScreen(currentUsername);
@@ -56,11 +58,11 @@ namespace IndividualProject
                     File.WriteAllLines(Globals.TTnotificationToUser + pendingUsername + ".txt", new string[] { " " });
                     Console.WriteLine($"User {pendingUsername} has been created successfully. Status : {pendingRole}.\n\n(Press any key to continue)");
                     Console.ReadKey();
-                    ActiveUserFunctions.UserFunctionMenuScreen(currentUsername);
+                    ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
                 }
                 else if (yesOrNoSelection == no)
                 {
-                    ActiveUserFunctions.UserFunctionMenuScreen(currentUsername);
+                    ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
                 }
             }
         }
@@ -97,7 +99,9 @@ namespace IndividualProject
             using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
             {
                 dbcon.Open();
-                SqlCommand deleteUsername = new SqlCommand($"RemoveUsernameFromDatabase @username = '{username}'", dbcon);
+                SqlCommand deleteUsername = new SqlCommand("RemoveUsernameFromDatabase", dbcon);
+                deleteUsername.CommandType = CommandType.StoredProcedure;
+                deleteUsername.Parameters.AddWithValue("@username", username);
                 deleteUsername.ExecuteNonQuery();
             }
             InputOutputAnimationControl.QuasarScreen(currentUsername);
@@ -138,8 +142,6 @@ namespace IndividualProject
             ShowAvailableUsersFromDatabase();
             Console.Write("\r\nPress any key to return to Functions menu");
             Console.ReadKey();
-
-
             ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
         }
 
@@ -150,8 +152,13 @@ namespace IndividualProject
             using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
             {
                 dbcon.Open();
-                SqlCommand CountOpenTicketsAssignedToUser = new SqlCommand($"EXECUTE CountOpenTicketsAssignedToUser '{currentUsername}'", dbcon);
+                SqlCommand CountOpenTicketsAssignedToUser = new SqlCommand("CountOpenTicketsAssignedToUser", dbcon);
+                CountOpenTicketsAssignedToUser.CommandType = CommandType.StoredProcedure;
+                CountOpenTicketsAssignedToUser.Parameters.AddWithValue("@userAssignedTo", currentUsername);
+
                 SqlCommand OpenListOfTicketsAssignedToUser = new SqlCommand($"EXECUTE SelectOpenTicketsAssignedToUser '{currentUsername}'", dbcon);
+                OpenListOfTicketsAssignedToUser.CommandType = CommandType.StoredProcedure;
+                OpenListOfTicketsAssignedToUser.Parameters.AddWithValue("@userAssignedTo", currentUsername);
                 int countTickets = (int)CountOpenTicketsAssignedToUser.ExecuteScalar();
 
                 if (countTickets == 0)
@@ -197,20 +204,14 @@ namespace IndividualProject
                         }
                         Console.WriteLine("(Press any key to go back to Main Menu)");
                         Console.ReadKey();
-                        ActiveUserFunctions.UserFunctionMenuScreen(currentUsername);
+                        ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
                     }
                     else if (yesOrNoSelection == no)
                     {
-                        //InputOutputAnimationControl.QuasarScreen(currentUsername);
-                        ActiveUserFunctions.UserFunctionMenuScreen(currentUsername);
+                        ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
                     }
                 }
             }
-            //InputOutputAnimationControl.QuasarScreen(currentUsername);
-            //InputOutputAnimationControl.UniversalLoadingOuput("Loading");
-            //Console.WriteLine("\r\nThere are no notifications\n\n(Press any key to continue)");
-            //Console.ReadKey();
-            //ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
         }
 
         public static void CheckAdminNotifications()
@@ -241,7 +242,7 @@ namespace IndividualProject
                 else if (yesOrNoSelection == no)
                 {
                     InputOutputAnimationControl.QuasarScreen(currentUsername);
-                    ActiveUserFunctions.UserFunctionMenuScreen(currentUsername);
+                    ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
                 }
             }
         }
@@ -287,7 +288,9 @@ namespace IndividualProject
             using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
             {
                 dbcon.Open();
-                SqlCommand selectPreviousUserRole = new SqlCommand($"SelectSingleUserRole '{username}'", dbcon);
+                SqlCommand selectPreviousUserRole = new SqlCommand("SelectSingleUserRole", dbcon);
+                selectPreviousUserRole.CommandType = CommandType.StoredProcedure;
+                selectPreviousUserRole.Parameters.AddWithValue("@username", username);
                 string previousUserRole = (string)selectPreviousUserRole.ExecuteScalar();
                 while (previousUserRole == userRole)
                 {
@@ -298,17 +301,24 @@ namespace IndividualProject
                     InputOutputAnimationControl.QuasarScreen(currentUsername);
                     Console.WriteLine();
                     userRole = InputOutputAnimationControl.SelectUserRole();
-                    selectPreviousUserRole = new SqlCommand($"SelectSingleUserRole '{username}'", dbcon);
+                    selectPreviousUserRole = new SqlCommand("SelectSingleUserRole", dbcon);
+                    selectPreviousUserRole.CommandType = CommandType.StoredProcedure;
+                    selectPreviousUserRole.Parameters.AddWithValue("@username", username);
                     previousUserRole = (string)selectPreviousUserRole.ExecuteScalar();
                 }
 
-                SqlCommand alterUserRole = new SqlCommand($"EXECUTE UpdateUserRole '{username}', '{userRole}'", dbcon);
-                SqlCommand selectUserRole = new SqlCommand($"EXECUTE SelectSingleUserRole '{username}'", dbcon);
+                SqlCommand alterUserRole = new SqlCommand("UpdateUserRole", dbcon);
+                alterUserRole.CommandType = CommandType.StoredProcedure;
+                alterUserRole.Parameters.AddWithValue("@username", username);
+                alterUserRole.Parameters.AddWithValue("@userRole", userRole);
+                SqlCommand selectUserRole = new SqlCommand("SelectSingleUserRole", dbcon);
+                selectUserRole.CommandType = CommandType.StoredProcedure;
+                selectUserRole.Parameters.AddWithValue("@username", username);
                 alterUserRole.ExecuteScalar();
                 string newUserRole = (string)selectUserRole.ExecuteScalar();
                 InputOutputAnimationControl.QuasarScreen(currentUsername);
                 InputOutputAnimationControl.UniversalLoadingOuput("Modifying User's role status in progress");
-                Console.WriteLine($"Username {username} has been successfully modified as {newUserRole}\n\n(Press any key to continue)");
+                Console.WriteLine($"User {username} has been successfully modified as {newUserRole}\n\n(Press any key to continue)");
             }
             Console.ReadKey();
             InputOutputAnimationControl.QuasarScreen(currentUsername);

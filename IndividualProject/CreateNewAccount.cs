@@ -27,7 +27,6 @@ namespace IndividualProject
                     Console.ReadKey();
                     CreateNewAccountRequest();
                 }
-
                 CheckUsernameAvailabilityInPendingList(username, passphrase);
             }
             catch (DirectoryNotFoundException d)
@@ -41,7 +40,9 @@ namespace IndividualProject
             using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
             {
                 dbcon.Open();
-                SqlCommand checkUsername = new SqlCommand($"EXECUTE CheckUniqueUsername '{usernameCheck}'", dbcon);
+                SqlCommand checkUsername = new SqlCommand("CheckUniqueUsername" , dbcon);
+                checkUsername.CommandType = System.Data.CommandType.StoredProcedure;
+                checkUsername.Parameters.AddWithValue("@usernameCheck", usernameCheck);
                 int UserCount = (int)checkUsername.ExecuteScalar();
                 if (UserCount != 0)
                 {
@@ -67,8 +68,7 @@ namespace IndividualProject
                 InputOutputAnimationControl.QuasarScreen(currentUsername);
                 Console.WriteLine("\r\nNew account request is registered. Please wait for the administrator to grant you access.\n\nPress any key to return to Login Screen");
             }
-            Console.ReadKey();
-            InputOutputAnimationControl.QuasarScreen(currentUsername);
+            Console.ReadKey();            
             ApplicationMenu.LoginScreen();
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Data;
 
 namespace IndividualProject
 {
@@ -8,8 +9,7 @@ namespace IndividualProject
     {
         public static readonly string connectionString = "Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
         public static readonly string newUserRequestPath = @"C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\CRMTickets\NewUserRequests\NewUserRequest.txt";
-        public static readonly string TTnotificationToUser = @"C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\CRMTickets\TechnicalIssues\TroubleTicketNotificationToUser_";
-        
+        public static readonly string TTnotificationToUser = @"C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\CRMTickets\TechnicalIssues\TroubleTicketNotificationToUser_";        
     }
 
     static class ConnectToServer
@@ -25,14 +25,12 @@ namespace IndividualProject
             {
                 if (CheckUsernameAndPasswordMatchInDatabase(username, passphrase))
                 {
-                    SetCurrentUserStatusToActive(username);
-                    string currentUsernameRole = RetrieveCurrentUsernameRoleFromDatabase();
+                    SetCurrentUserStatusToActive(username);                    
                     InputOutputAnimationControl.QuasarScreen(username);
                     Console.ForegroundColor = ConsoleColor.DarkCyan;
                     Console.WriteLine($"Connection Established! Welcome back {username}!");
-                    Console.ResetColor();
                     System.Threading.Thread.Sleep(1500);
-                    ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
+                    ActiveUserFunctions.UserFunctionMenuScreen(RetrieveCurrentUsernameRoleFromDatabase());
                 }
                 else
                 {
@@ -64,7 +62,10 @@ namespace IndividualProject
             using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
             {
                 dbcon.Open();
-                SqlCommand checkUsername = new SqlCommand($"EXECUTE CheckUniqueCredentials '{usernameCheck}', '{passphraseCheck}'", dbcon);
+                SqlCommand checkUsername = new SqlCommand("CheckUniqueCredentials", dbcon);
+                checkUsername.CommandType = CommandType.StoredProcedure;
+                checkUsername.Parameters.AddWithValue("@usernameCheck", usernameCheck);
+                checkUsername.Parameters.AddWithValue("@passphraseCheck", passphraseCheck);
                 int UserCount = (int)checkUsername.ExecuteScalar();
                 if (UserCount != 0)
                 {
@@ -79,7 +80,9 @@ namespace IndividualProject
             using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
             {
                 dbcon.Open();
-                SqlCommand SetStatusToActive = new SqlCommand($"EXECUTE SetCurrentUserStatusToActive '{currentUsername}'", dbcon);
+                SqlCommand SetStatusToActive = new SqlCommand($"SetCurrentUserStatusToActive", dbcon);
+                SetStatusToActive.CommandType = CommandType.StoredProcedure;
+                SetStatusToActive.Parameters.AddWithValue("@username", currentUsername);
                 SetStatusToActive.ExecuteScalar();
             }
         }
@@ -159,7 +162,7 @@ namespace IndividualProject
             }
             else if (yesOrNoSelection == no)
             {                
-                ActiveUserFunctions.UserFunctionMenuScreen(currentUsername);
+                ActiveUserFunctions.UserFunctionMenuScreen(RetrieveCurrentUsernameRoleFromDatabase());
             }
         }
     }
