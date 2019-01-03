@@ -1,40 +1,38 @@
-﻿using System;
-using System.IO;
-using System.Media;
+﻿using System.Collections.Generic;
 
 namespace IndividualProject
 {
     class Program
     {
         static void Main(string[] args)
-        {
-            //Console.CancelKeyPress += new ConsoleCancelEventHandler(ActiveUserFunctionsClass.MainMenuScreen);
-            //InputOutputAnimationControlClass.BackGroundMusic();
-            ApplicationMenuClass.LoginScreen();
+        {         
+            ApplicationMenu.LoginScreen();
         }
     }
 
-    class ApplicationMenuClass
+    class ApplicationMenu
     {
         public static void LoginScreen()
-        {
-            ConsoleKey loginOrRegisterInput = InputOutputAnimationControlClass.LoginScreenOptions();
-            switch (loginOrRegisterInput)
-            {
-                case ConsoleKey.D1:
-                    ActiveUserFunctionsClass.ActiveUserProcedures();
-                    break;
-
-                case ConsoleKey.D2:
-                    CreateNewAccountClass.CreateNewAccountRequest();
-                    break;
-
-                case ConsoleKey.Escape:
-                    ConnectToServerClass.TerminateQuasar();
-                    break;
-            }
+        {            
+            string login = "Login with your Credentials", register = "New Account request", quit = "Quit Quasar", currentUser = "Not Registered",
+                            loginMsg = "\r\nWelcome to Quasar! Choose one of the following options to continue:\r\n";
+            while (true)
+            { 
+                string LoginRegisterQuit = SelectMenu.MenuColumn(new List<string> {login, register, quit}, currentUser, loginMsg).option;
+                
+                if (LoginRegisterQuit == login)
+                {
+                    ConnectToServer.UserLoginCredentials();
+                }
+                else if (LoginRegisterQuit == register)
+                {
+                    CreateNewAccount.CreateNewAccountRequest();                    
+                }
+                else if (LoginRegisterQuit == quit)
+                {
+                    ConnectToServer.TerminateQuasar();
+                }
+            }          
         }
     }
-
-
 }
