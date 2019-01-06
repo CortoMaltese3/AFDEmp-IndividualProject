@@ -14,10 +14,12 @@ namespace IndividualProject
             do
             {
                 InputOutputAnimationControl.QuasarScreen(currentUser);
+                //InputOutputAnimationControl.CenterText(message);
                 Console.WriteLine(message);
                 for (int option = 0; option < ListOfOptions.Count; option++)
                 {
                     Console.ForegroundColor = (option == currentOption) ? ConsoleColor.Green : ConsoleColor.White;
+                    //InputOutputAnimationControl.CenterText(ListOfOptions[option] + "\n");
                     Console.Write(ListOfOptions[option] + "\n");
                 }
                 currentKeyPressed = Console.ReadKey();
@@ -55,7 +57,6 @@ namespace IndividualProject
                 option = ListOfOptions[currentOption],
                 tempOption = currentOption
             };
-
         }
 
         public static UserOptionList MenuRow(List<string> ListOfOptions, string currentUser, string message)
@@ -67,9 +68,11 @@ namespace IndividualProject
             {
                 InputOutputAnimationControl.QuasarScreen(currentUser);
                 Console.WriteLine(message);
+                //InputOutputAnimationControl.CenterText(message);
                 for (int option = 0; option < ListOfOptions.Count; option++)
                 {
                     Console.ForegroundColor = (option == currentOption) ? ConsoleColor.Green : ConsoleColor.White;
+                    //InputOutputAnimationControl.CenterText(ListOfOptions[option] + "\t\t");
                     Console.Write(ListOfOptions[option] + "\t\t");
                 }
                 currentKeyPressed = Console.ReadKey();
@@ -111,7 +114,7 @@ namespace IndividualProject
         }
     }
 
-    public class UserOptionList
+    public struct UserOptionList
     {
         public string option;
         public int tempOption;

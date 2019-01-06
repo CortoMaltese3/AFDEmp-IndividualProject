@@ -159,13 +159,13 @@ namespace IndividualProject
             Console.CursorTop = Console.WindowTop + Console.WindowHeight - 2;
             CenterText(text);
         }
-
+        
         private static void WriteAt(int column, int row)
         {
-            Console.SetCursorPosition(column, row);
+            Console.SetCursorPosition(column, row);            
         }
 
-        private static void CenterText(string text)
+        public static void CenterText(string text)
         {
             Console.WriteLine(string.Format("{0," + (Console.WindowWidth + text.Length) / 2 + "}", text));
         }
@@ -174,7 +174,7 @@ namespace IndividualProject
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.DarkCyan;
-            CenterText("Quasar CRM Program - V2.1");
+            CenterText("Quasar CRM Program - V2.3");
             CenterText("-IT Crowd-");
             CenterText($"[{currentUser}]");
             WriteBottomLine("~CB6 Individual Project~");

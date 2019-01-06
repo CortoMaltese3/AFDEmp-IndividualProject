@@ -452,7 +452,7 @@ namespace IndividualProject
                 deleteCustomerTicket.ExecuteScalar();
                 InputOutputAnimationControl.QuasarScreen(currentUsername);
                 InputOutputAnimationControl.UniversalLoadingOuput("Action in progress");
-                Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully deleted\n\n(Press any key to continue)");
+                Console.WriteLine($"Customer ticket with ID = {ticketID} has been successfully deleted\n\n(Press any key to continue)");
                 Console.ReadKey();
             }
         }
@@ -492,6 +492,21 @@ namespace IndividualProject
                 EditTicketUserOwnerInDatabase.ExecuteScalar();
             }
         }
+
+        public static string SelectUserAssignedToTicket(int ticketID)
+        {
+            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+            {
+                dbcon.Open();
+                SqlCommand SelectUserAssignedToTicketInDatabase = new SqlCommand("SelectUserAssignedToTicket", dbcon);
+                SelectUserAssignedToTicketInDatabase.CommandType = CommandType.StoredProcedure;
+                SelectUserAssignedToTicketInDatabase.Parameters.AddWithValue("@ID", ticketID);
+                string user = (string)SelectUserAssignedToTicketInDatabase.ExecuteScalar();
+                return user;
+            }           
+        }
+
+
 
         public static bool CheckIfTicketIDWithStatusOpenOrClosedExistsInList(int ID)
         {

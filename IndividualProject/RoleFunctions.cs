@@ -40,7 +40,7 @@ namespace IndividualProject
                     //Clears the new user registrations List
                     File.WriteAllLines(Globals.newUserRequestPath, new string[] { " " });
                     //Creates a file for the new user to check notifications
-                    File.WriteAllLines(Globals.TTnotificationToUser + pendingUsername + ".txt", new string[] { " " });
+                    File.WriteAllLines(Globals.TTnotificationToUser + pendingUsername + ".txt", new string[] { "NOTIFICATIONS LOG" });
                     Console.WriteLine($"User {pendingUsername} has been created successfully. Status : {pendingRole}.\n\n(Press any key to continue)");
                     Console.ReadKey();
                     ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
@@ -79,6 +79,7 @@ namespace IndividualProject
             ConnectToServer.RemoveUsernameFromDatabase(username);
             InputOutputAnimationControl.QuasarScreen(currentUsername);
             InputOutputAnimationControl.UniversalLoadingOuput("Deleting existing user in progress");
+            TransactedData.DeleteUserNotificationsLog(username);
             Console.WriteLine($"Username {username} has been successfully deleted from database.\n\n(Press any key to continue)");
             Console.ReadKey();
             ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
@@ -96,9 +97,10 @@ namespace IndividualProject
 
         public static void CheckUserNotifications()
         {
+            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
             InputOutputAnimationControl.QuasarScreen(currentUsername);
             InputOutputAnimationControl.UniversalLoadingOuput("Loading");
-
+            
             int countTickets = ConnectToServer.CountOpenTicketsAssignedToUser(currentUsername);
             if (countTickets == 0)
             {

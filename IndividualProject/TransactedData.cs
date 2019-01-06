@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace IndividualProject
 {
@@ -75,17 +76,17 @@ namespace IndividualProject
                 {
                     if (AvailableUsernamesDictionary.ContainsKey(usernameAssignment) == false)
                     {
-                        Console.WriteLine($"Database does not contain a User {usernameAssignment}.");
-                        System.Threading.Thread.Sleep(1500);
+                        Console.WriteLine($"Database does not contain a User {usernameAssignment}.\n\n(Press any key to continue)");
+                        Console.ReadKey();
                         InputOutputAnimationControl.QuasarScreen(currentUsername);
                         AvailableUsernamesDictionary = ConnectToServer.ShowAvailableUsersFromDatabase();
-                        Console.Write("\r\nPlease select a user and proceed to assign: ");
+                        Console.Write("\r\n\nPlease select a user and proceed to assign: ");
                         usernameAssignment = InputOutputAnimationControl.UsernameInput();
                     }
                     else
                     {
-                        Console.WriteLine("Cannot assign ticket to super_admin! Please choose a different user.");
-                        System.Threading.Thread.Sleep(1500);
+                        Console.WriteLine("Cannot assign ticket to super_admin! Please choose a different user.\n\n(Press any key to continue)");
+                        Console.ReadKey();
                         InputOutputAnimationControl.QuasarScreen(currentUsername);
                         AvailableUsernamesDictionary = ConnectToServer.ShowAvailableUsersFromDatabase();
                         Console.Write("\r\nPlease select a user and proceed to assign: ");
@@ -110,7 +111,7 @@ namespace IndividualProject
                 DateTime dateTimeAdded = DateTime.Now;
                 using (StreamWriter sw = File.AppendText(Globals.TTnotificationToUser + UserAssigningTicketTo + ".txt"))
                 {
-                    sw.WriteLine($"[{dateTimeAdded}] - User {currentUserAssigning} has assigned a new TT to you. Check your notifications for more details");
+                    sw.WriteLine($"[{dateTimeAdded}] - User {currentUserAssigning} has assigned a new TT to you. Visit the View TT Section for more details");
                 }
             }
             catch (FileNotFoundException fileNotFound)
@@ -136,18 +137,22 @@ namespace IndividualProject
             InputOutputAnimationControl.UniversalLoadingOuput("Loading");
             Console.WriteLine("CLOSE EXISTING TECHNICAL TICKETS");
 
-            string yes = "Yes", no = "No", listOfTickets = "Would you like to open the list of Opened Tickets?\r\n";
+            string viewList = "View List of Open Tickets", back = "\r\nBack" ,closeSpecific = "Close Specific Ticket", listOfTickets = "Choose one of the following functions\r\n";
             while (true)
             {
-                string optionYesOrNo = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, listOfTickets).option;
-                if (optionYesOrNo == yes)
+                string optionYesOrNo = SelectMenu.MenuColumn(new List<string> { viewList, closeSpecific, back }, currentUsername, listOfTickets).option;
+                if (optionYesOrNo == viewList)
                 {
                     ConnectToServer.ViewListOfOpenCustomerTickets();
                     CloseCustomerTicketFunction();
                 }
-                else if (optionYesOrNo == no)
+                else if (optionYesOrNo == closeSpecific)
                 {
                     CloseCustomerTicketFunction();
+                }
+                else if (optionYesOrNo == back)
+                {
+                    ManageCustomerTickets();
                 }
             }
         }
@@ -155,6 +160,8 @@ namespace IndividualProject
         public static void CloseCustomerTicketFunction()
         {
             int ticketID = InputOutputAnimationControl.SelectTicketID();
+            string previousUserAssignedTo = ConnectToServer.SelectUserAssignedToTicket(ticketID);
+
             if (ConnectToServer.CheckIfTicketIDWithStatusOpenExistsInList(ticketID) == false)
             {
                 Console.WriteLine($"There is no Customer Ticket with [ID = {ticketID}]\n\n(Press any key to continue)");
@@ -168,6 +175,7 @@ namespace IndividualProject
                 if (optionYesOrNo2 == yes)
                 {
                     ConnectToServer.SetTicketStatusToClosed(currentUsername, ticketID);
+                    CloseTicketToUserNotification(currentUsername, previousUserAssignedTo, ticketID);
                     ManageCustomerTickets();
                 }
                 else if (optionYesOrNo2 == no)
@@ -183,18 +191,22 @@ namespace IndividualProject
             InputOutputAnimationControl.UniversalLoadingOuput("Loading");
             Console.WriteLine("DELETE EXISTING TECHNICAL TICKETS");
 
-            string yes = "Yes", no = "No", listMsg = "Would you like to open the list of Existing Tickets?\r\n";
+            string viewList = "View List of Tickets", back = "\r\nBack", closeSpecific = "Delete Specific Ticket", deleteTicketsMsg = "Choose one of the following functions\r\n";
             while (true)
             {
-                string optionYesOrNo = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, listMsg).option;
-                if (optionYesOrNo == yes)
+                string deleteTickets = SelectMenu.MenuColumn(new List<string> { viewList, closeSpecific, back }, currentUsername, deleteTicketsMsg).option;
+                if (deleteTickets == viewList)
                 {
                     ConnectToServer.ViewListOfAllCustomerTickets();
                     DeleteExistingOpenOrClosedTicketSubFunction();
                 }
-                else if (optionYesOrNo == no)
+                else if (deleteTickets == closeSpecific)
                 {
                     DeleteExistingOpenOrClosedTicketSubFunction();
+                }
+                else if (deleteTickets == back)
+                {
+                    ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
                 }
             }
         }
@@ -202,6 +214,7 @@ namespace IndividualProject
         public static void DeleteExistingOpenOrClosedTicketSubFunction()
         {
             int ticketID = InputOutputAnimationControl.SelectTicketID();
+            string previousTicketOwner = ConnectToServer.SelectUserAssignedToTicket(ticketID);
             if (ConnectToServer.CheckIfTicketIDWithStatusOpenOrClosedExistsInList(ticketID) == false)
             {
                 Console.WriteLine($"There is no Customer Ticket with [ID = {ticketID}]\n\n(Press any key to continue)");
@@ -210,10 +223,11 @@ namespace IndividualProject
             }
 
             string yes = "Yes", no = "No", deleteTicketMsg = $"Are you sure you want to delete ticket {ticketID}? Action cannot be undone.\r\n";
-            string optionYesOrNo2 = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, deleteTicketMsg).option;
+            string optionYesOrNo2 = SelectMenu.MenuColumn(new List<string> { yes, no }, currentUsername, deleteTicketMsg).option;
             if (optionYesOrNo2 == yes)
             {
                 ConnectToServer.DeleteCustomerTicket(currentUsername, ticketID);
+                DeleteTicketToUserNotification(currentUsername, previousTicketOwner, ticketID);
                 ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
             }
             else if (optionYesOrNo2 == no)
@@ -227,19 +241,24 @@ namespace IndividualProject
             InputOutputAnimationControl.QuasarScreen(currentUsername);
             InputOutputAnimationControl.UniversalLoadingOuput("Loading");
             Console.WriteLine("VIEW OPEN TECHNICAL TICKETS");
-            string listTicketsMsg = "Would you like to open the list of Opened Tickets?\r\n";
-            string yes = "Yes", no = "No";
+            string listTicketsMsg = "Choose one of the following options\r\n";
+            string viewList = "View Trouble Ticket List", viewSpecific = "View Specific Trouble Ticket" , back = "\r\nBack";
             while (true)
             {
-                string optionYesOrNo = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, listTicketsMsg).option;
-                if (optionYesOrNo == yes)
+                string viewTickets = SelectMenu.MenuColumn(new List<string> { viewList, viewSpecific, back }, currentUsername, listTicketsMsg).option;
+                if (viewTickets == viewList)
                 {
                     ConnectToServer.ViewListOfOpenCustomerTickets();
                     ViewExistingOpenTicketsSubFunction();
                 }
-                else if (optionYesOrNo == no)
+                else if (viewTickets == viewSpecific)
                 {
                     ViewExistingOpenTicketsSubFunction();
+                }
+                else if (viewTickets == back)
+                {
+                    InputOutputAnimationControl.QuasarScreen(currentUsername);
+                    ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
                 }
             }
         }
@@ -273,18 +292,24 @@ namespace IndividualProject
             InputOutputAnimationControl.UniversalLoadingOuput("Loading");
             Console.WriteLine("EDIT OPEN TECHNICAL TICKET");
 
-            string yes = "Yes", no = "No", listTicketsMsg = "Would you like to open the list of Opened Tickets?";
+            string listTicketsMsg = "Choose one of the following options\r\n";
+            string viewList = "View Trouble Ticket List", viewSpecific = "Edit Specific Trouble Ticket", back = "\r\nBack";            
             while (true)
             {
-                string optionYesOrNo = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, listTicketsMsg).option;
-                if (optionYesOrNo == yes)
+                string editTicket = SelectMenu.MenuColumn(new List<string> { viewList, viewSpecific, back }, currentUsername, listTicketsMsg).option;
+                if (editTicket == viewList)
                 {
                     ConnectToServer.ViewListOfOpenCustomerTickets();
                     EditExistingOpenTicketSubFunction();
                 }
-                else if (optionYesOrNo == no)
+                else if (editTicket == viewSpecific)
                 {
                     EditExistingOpenTicketSubFunction();
+                }
+                else if (editTicket == back)
+                {
+                    InputOutputAnimationControl.QuasarScreen(currentUsername);
+                    ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
                 }
             }
         }
@@ -308,7 +333,7 @@ namespace IndividualProject
 
         private static void EditTicketOptions(int ID)
         {
-            string edit = "Edit Ticket Comment", assign = "Edit Ticket's User assignment", back = "Back",
+            string edit = "Edit Ticket Comment", assign = "Edit Ticket's User assignment", back = "\r\nBack",
                 editMsg = "\r\nChoose one of the following options to continue:\r\n";
             while (true)
             {
@@ -326,8 +351,7 @@ namespace IndividualProject
                 }
                 else if (EditCommentAndAssignment == back)
                 {
-                    InputOutputAnimationControl.QuasarScreen(currentUsername);
-                    InputOutputAnimationControl.UniversalLoadingOuput("Loading");
+                    InputOutputAnimationControl.QuasarScreen(currentUsername);                    
                     ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
                 }
             }
@@ -357,10 +381,56 @@ namespace IndividualProject
         {
             string[] lines = File.ReadAllLines(Globals.TTnotificationToUser + currentUser + ".txt");
             int index = 1;
-            foreach (string line in lines)
+            Console.WriteLine("NOTIFICATIONS LOG");            
+            foreach (string line in lines.Skip(1))
             {
                 Console.WriteLine(index + ". " + line + "\n");
                 index++;                    
+            }
+        }
+
+        public static void DeleteUserNotificationsLog(string userToBeDeleted)
+        {
+            try
+            {                
+                File.Delete(Globals.TTnotificationToUser + userToBeDeleted + ".txt");
+            }
+            catch(FileNotFoundException dir)
+            {
+                Console.WriteLine(dir.Message);
+            }
+            Console.WriteLine($"{userToBeDeleted}'s notifications log has been successfully deleted");
+        }
+
+        public static void CloseTicketToUserNotification(string userClosingTheTicket, string previousTicketOwner, int ticketID)
+        {
+            try
+            {
+                DateTime dateTimeAdded = DateTime.Now;
+                using (StreamWriter sw = File.AppendText(Globals.TTnotificationToUser + previousTicketOwner + ".txt"))
+                {
+                    sw.WriteLine($"[{dateTimeAdded}] - User {userClosingTheTicket} has marked the TT with [ID = {ticketID}] that was assigned to you as closed. Visit the View TT Section for more details");
+                }
+            }
+            catch (FileNotFoundException fileNotFound)
+            {
+                Console.WriteLine(fileNotFound.Message);
+            }
+        }
+
+        public static void DeleteTicketToUserNotification(string userDeletingTheTicket, string previousTicketOwner, int ticketID)
+        {
+            try
+            {
+                DateTime dateTimeAdded = DateTime.Now;
+                using (StreamWriter sw = File.AppendText(Globals.TTnotificationToUser + previousTicketOwner + ".txt"))
+                {
+                    sw.WriteLine($"[{dateTimeAdded}] - User {userDeletingTheTicket} has deleted the TT with [ID = {ticketID}] assigned to you. In case of emergency, contact the super_admin");
+                }
+            }
+            catch (FileNotFoundException fileNotFound)
+            {
+                Console.WriteLine(fileNotFound.Message);
             }
         }
     }
