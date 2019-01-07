@@ -7,12 +7,10 @@ namespace IndividualProject
 {
     class TransactedData
     {
-        static readonly string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
-        static readonly string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
-
         public static void ManageCustomerTickets()
         {
-
+            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
+            string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
             string open = "Open new Customer Ticket", close = "Close Customer Ticket", back = "\r\nBack",
                 manageTicketmsg = "\r\nChoose one of the following options to continue:\r\n";
             while (true)
@@ -38,6 +36,8 @@ namespace IndividualProject
 
         public static void OpenCustomerTickets()
         {
+            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
+            string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
             string open = "Open new Customer Ticket", back = "\r\nBack", manageTicketmsg = "\r\nChoose one of the following options to continue:\r\n";
             while (true)
             {
@@ -57,7 +57,7 @@ namespace IndividualProject
 
         public static string AssignTicketToUser()
         {
-
+            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
             string assignTicket = "Would you like to assign the ticket to another user?\r\n";
             string yes = "Yes", no = "No";
 
@@ -122,6 +122,7 @@ namespace IndividualProject
 
         public static void OpenNewCustomerTicket()
         {
+            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
             string comment = InputOutputAnimationControl.TicketComment();
             string userAssignedTo = AssignTicketToUser();
 
@@ -133,6 +134,7 @@ namespace IndividualProject
 
         public static void CloseCustomerTicket()
         {
+            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
             InputOutputAnimationControl.QuasarScreen(currentUsername);
             InputOutputAnimationControl.UniversalLoadingOuput("Loading");
             Console.WriteLine("CLOSE EXISTING TECHNICAL TICKETS");
@@ -159,6 +161,7 @@ namespace IndividualProject
 
         public static void CloseCustomerTicketFunction()
         {
+            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
             int ticketID = InputOutputAnimationControl.SelectTicketID();
             string previousUserAssignedTo = ConnectToServer.SelectUserAssignedToTicket(ticketID);
 
@@ -187,6 +190,8 @@ namespace IndividualProject
 
         public static void DeleteExistingOpenOrClosedTicketFunction()
         {
+            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
+            string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
             InputOutputAnimationControl.QuasarScreen(currentUsername);
             InputOutputAnimationControl.UniversalLoadingOuput("Loading");
             Console.WriteLine("DELETE EXISTING TECHNICAL TICKETS");
@@ -213,6 +218,8 @@ namespace IndividualProject
 
         public static void DeleteExistingOpenOrClosedTicketSubFunction()
         {
+            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
+            string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
             int ticketID = InputOutputAnimationControl.SelectTicketID();
             string previousTicketOwner = ConnectToServer.SelectUserAssignedToTicket(ticketID);
             if (ConnectToServer.CheckIfTicketIDWithStatusOpenOrClosedExistsInList(ticketID) == false)
@@ -238,6 +245,8 @@ namespace IndividualProject
 
         public static void ViewExistingOpenTicketsFunction()
         {
+            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
+            string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
             InputOutputAnimationControl.QuasarScreen(currentUsername);
             InputOutputAnimationControl.UniversalLoadingOuput("Loading");
             Console.WriteLine("VIEW OPEN TECHNICAL TICKETS");
@@ -265,6 +274,7 @@ namespace IndividualProject
 
         public static void ViewExistingOpenTicketsSubFunction()
         {
+            string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
             int TicketID = InputOutputAnimationControl.SelectTicketID();
             if (ConnectToServer.CheckIfTicketIDWithStatusOpenExistsInList(TicketID) == false)
             {
@@ -278,6 +288,7 @@ namespace IndividualProject
 
         private static void ViewSingleCustomerTicket(int ticketID)
         {
+            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
             InputOutputAnimationControl.QuasarScreen(currentUsername);
             InputOutputAnimationControl.UniversalLoadingOuput("Loading");
             Console.WriteLine($"VIEW TECHNICAL TICKET WITH [ID = {ticketID}]");
@@ -288,10 +299,12 @@ namespace IndividualProject
 
         public static void EditExistingOpenTicketFunction()
         {
+            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
             InputOutputAnimationControl.QuasarScreen(currentUsername);
             InputOutputAnimationControl.UniversalLoadingOuput("Loading");
             Console.WriteLine("EDIT OPEN TECHNICAL TICKET");
 
+            string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
             string listTicketsMsg = "Choose one of the following options\r\n";
             string viewList = "View Trouble Ticket List", viewSpecific = "Edit Specific Trouble Ticket", back = "\r\nBack";            
             while (true)
@@ -316,6 +329,7 @@ namespace IndividualProject
 
         public static void EditExistingOpenTicketSubFunction()
         {
+            string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
             int TicketID = InputOutputAnimationControl.SelectTicketID();
             if (ConnectToServer.CheckIfTicketIDWithStatusOpenExistsInList(TicketID) == false)
             {
@@ -333,6 +347,8 @@ namespace IndividualProject
 
         private static void EditTicketOptions(int ID)
         {
+            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
+            string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
             string edit = "Edit Ticket Comment", assign = "Edit Ticket's User assignment", back = "\r\nBack",
                 editMsg = "\r\nChoose one of the following options to continue:\r\n";
             while (true)
@@ -359,6 +375,7 @@ namespace IndividualProject
 
         private static void ChangeUserAssignmentToOpenTicket(int ID, string nextOwner)
         {
+            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
             ConnectToServer.ChangeUserAssignedTo(nextOwner, ID);
 
             if (nextOwner == currentUsername)

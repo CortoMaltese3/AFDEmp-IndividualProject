@@ -6,10 +6,9 @@ namespace IndividualProject
 {
     class CreateNewAccount
     {              
-        static readonly string currentUsername = "Not Registered";
-
         internal static void CreateNewAccountRequest()
         {
+            string currentUsername = "Not Registered";
             try
             {
                 InputOutputAnimationControl.QuasarScreen(currentUsername);
@@ -36,7 +35,7 @@ namespace IndividualProject
 
         private static void CheckUsernameAvailabilityInPendingList(string usernameCheck, string passphraseCheck)
         {
-            
+            string currentUsername = "Not Registered";
             string pendingUsernameCheck = File.ReadLines(Globals.newUserRequestPath).First();
 
             if (pendingUsernameCheck == $"username: {usernameCheck}")

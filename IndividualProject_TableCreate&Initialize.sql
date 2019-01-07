@@ -252,5 +252,3 @@ EXECUTE OpenNewTechnicalTicket 'admin', 'giorgos', 'Led Power indicator on UPS d
 select * from UserCredentials
 select * from CustomerTickets
 select * from DeletedCustomerTickets
-
-DELETE FROM UserCredentials WHERE username = 'giorgos'

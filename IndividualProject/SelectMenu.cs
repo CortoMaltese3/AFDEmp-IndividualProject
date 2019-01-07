@@ -4,22 +4,20 @@ using System.Collections.Generic;
 namespace IndividualProject
 {
     class SelectMenu
-    {
-        static string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
+    {        
 
         public static UserOptionList MenuColumn(List<string> ListOfOptions, string currentUser, string message)
         {
+            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
             int currentOption = 0;
             ConsoleKeyInfo currentKeyPressed;
             do
             {
-                InputOutputAnimationControl.QuasarScreen(currentUser);
-                //InputOutputAnimationControl.CenterText(message);
+                InputOutputAnimationControl.QuasarScreen(currentUser);                
                 Console.WriteLine(message);
                 for (int option = 0; option < ListOfOptions.Count; option++)
                 {
-                    Console.ForegroundColor = (option == currentOption) ? ConsoleColor.Green : ConsoleColor.White;
-                    //InputOutputAnimationControl.CenterText(ListOfOptions[option] + "\n");
+                    Console.ForegroundColor = (option == currentOption) ? ConsoleColor.Green : ConsoleColor.White;                    
                     Console.Write(ListOfOptions[option] + "\n");
                 }
                 currentKeyPressed = Console.ReadKey();
@@ -67,12 +65,10 @@ namespace IndividualProject
             do
             {
                 InputOutputAnimationControl.QuasarScreen(currentUser);
-                Console.WriteLine(message);
-                //InputOutputAnimationControl.CenterText(message);
+                Console.WriteLine(message);                
                 for (int option = 0; option < ListOfOptions.Count; option++)
                 {
-                    Console.ForegroundColor = (option == currentOption) ? ConsoleColor.Green : ConsoleColor.White;
-                    //InputOutputAnimationControl.CenterText(ListOfOptions[option] + "\t\t");
+                    Console.ForegroundColor = (option == currentOption) ? ConsoleColor.Green : ConsoleColor.White;                    
                     Console.Write(ListOfOptions[option] + "\t\t");
                 }
                 currentKeyPressed = Console.ReadKey();

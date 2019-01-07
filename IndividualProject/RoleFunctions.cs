@@ -6,12 +6,11 @@ using System.Linq;
 namespace IndividualProject
 {
     class RoleFunctions
-    {
-        static string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
-        static string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
-
+    {    
         public static void CreateNewUserFromRequestFunction()
         {
+            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
+            string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
             string pendingUsername = File.ReadLines(Globals.newUserRequestPath).First();
             if (pendingUsername == " ")
             {
@@ -54,6 +53,8 @@ namespace IndividualProject
 
         public static void DeleteUserFromDatabase()
         {
+            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
+            string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
             InputOutputAnimationControl.QuasarScreen(currentUsername);
             InputOutputAnimationControl.UniversalLoadingOuput("Loading");
             Console.WriteLine("\r\nChoose a User from the list and proceed to delete.");
@@ -87,6 +88,8 @@ namespace IndividualProject
 
         public static void ShowAvailableUsersFunction()
         {
+            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
+            string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
             InputOutputAnimationControl.QuasarScreen(currentUsername);
             InputOutputAnimationControl.UniversalLoadingOuput("Loading");
             ConnectToServer.ShowAvailableUsersFromDatabase();
@@ -98,6 +101,7 @@ namespace IndividualProject
         public static void CheckUserNotifications()
         {
             string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
+            string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
             InputOutputAnimationControl.QuasarScreen(currentUsername);
             InputOutputAnimationControl.UniversalLoadingOuput("Loading");
             
@@ -134,6 +138,8 @@ namespace IndividualProject
 
         public static void CheckAdminNotifications()
         {
+            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
+            string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
             InputOutputAnimationControl.QuasarScreen(currentUsername);
             InputOutputAnimationControl.UniversalLoadingOuput("Loading");
             string pendingUsernameCheck = File.ReadLines(Globals.newUserRequestPath).First();
@@ -162,6 +168,7 @@ namespace IndividualProject
 
         public static void AlterUserRoleStatus()
         {
+            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
             InputOutputAnimationControl.QuasarScreen(currentUsername);
             InputOutputAnimationControl.UniversalLoadingOuput("Loading");
             Dictionary<string, string> AvailableUsernamesDictionary = ConnectToServer.ShowAvailableUsersFromDatabase();
