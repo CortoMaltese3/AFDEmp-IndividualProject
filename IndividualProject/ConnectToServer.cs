@@ -136,7 +136,7 @@ namespace IndividualProject
             {
                 dbcon.Open();
                 SqlCommand checkUsername = new SqlCommand("CheckUniqueUsername", dbcon);
-                checkUsername.CommandType = System.Data.CommandType.StoredProcedure;
+                checkUsername.CommandType = CommandType.StoredProcedure;
                 checkUsername.Parameters.AddWithValue("@usernameCheck", usernameCheck);
                 int UserCount = (int)checkUsername.ExecuteScalar();
                 if (UserCount != 0)
@@ -533,7 +533,10 @@ namespace IndividualProject
 
         public static void TerminateQuasar()
         {
-            string yes = "Yes", no = "No", currentUsername = "Not Registered", exitMessage = "\r\nWould you like to exit Quasar?\r\n";
+            string yes = "Yes";
+            string no = "No";
+            string currentUsername = "Not Registered";
+            string exitMessage = "\r\nWould you like to exit Quasar?\r\n";
             string yesOrNoSelection = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, exitMessage).option;
 
             if (yesOrNoSelection == yes)
@@ -551,7 +554,10 @@ namespace IndividualProject
 
         public static void LoggingOffQuasar()
         {
-            string yes = "Yes", no = "No", logOffMessage = "Would you like to log out?\r\n", currentUsername = RetrieveCurrentUserFromDatabase();
+            string yes = "Yes";
+            string no = "No";
+            string logOffMessage = "Would you like to log out?\r\n";
+            string currentUsername = RetrieveCurrentUserFromDatabase();
             string yesOrNoSelection = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, logOffMessage).option;
 
             if (yesOrNoSelection == yes)

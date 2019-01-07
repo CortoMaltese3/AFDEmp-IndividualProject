@@ -7,9 +7,18 @@ namespace IndividualProject
         public static void UserFunctionMenuScreen(string currentUsernameRole)
         {
             string currentUser = ConnectToServer.RetrieveCurrentUserFromDatabase();
-            string notifications = "Check user notifications", requests = "Create new username/password from requests", viewUsers = "Show list of active users", modifyRole = "Upgrade/Downgrade user's role",
-                   deleteUser = "Delete an active username from Database", manageTickets = "Manage Customer Trouble Tickets", viewTickets = "View Trouble Tickets",
-                   editTicket = "Edit Trouble Tickets", deleteTicket = "Delete Trouble Tickets", logOut = "\nLog Out", message = "Choose one of the following functions\n";
+            int countTickets = ConnectToServer.CountOpenTicketsAssignedToUser(currentUser);
+            string notifications = $"Check user notifications [{countTickets}]";
+            string requests = "Create new username/password from requests";
+            string viewUsers = "Show list of active users";
+            string modifyRole = "Upgrade/Downgrade user's role";
+            string deleteUser = "Delete an active username from Database";
+            string manageTickets = "Manage Customer Trouble Tickets";
+            string viewTickets = "View Trouble Tickets";
+            string editTicket = "Edit Trouble Tickets";
+            string deleteTicket = "Delete Trouble Tickets";
+            string logOut = "\nLog Out";
+            string message = "\r\nChoose one of the following functions\n";
 
             switch (currentUsernameRole)
             {

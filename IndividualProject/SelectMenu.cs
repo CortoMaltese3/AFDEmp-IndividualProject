@@ -9,6 +9,7 @@ namespace IndividualProject
         public static UserOptionList MenuColumn(List<string> ListOfOptions, string currentUser, string message)
         {
             string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
+
             int currentOption = 0;
             ConsoleKeyInfo currentKeyPressed;
             do
