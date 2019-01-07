@@ -96,19 +96,15 @@ namespace IndividualProject
                 }
                 catch (Exception)
                 {
-                    Console.Write("\r\nInput needs to be a real number greater than 0. \r\nSelect the TicketID of the ticket you want to manage: ");
+                    Console.WriteLine("Input needs to be a real number greater than 0");
                 }
             }
         }
 
         public static string SelectUserRole()
         {
-            string administrator = "Administrator";
-            string moderator = "Moderator";
-            string user = "User";
-            string selectionMsg = "\r\nChoose one of the following User Roles:\r\n";
-            string currentUser = ConnectToServer.RetrieveCurrentUserFromDatabase();
-
+            string administrator = "Administrator", moderator = "Moderator", user = "User",
+                   selectionMsg = "\r\nChoose one of the following User Roles:\r\n", currentUser = ConnectToServer.RetrieveCurrentUserFromDatabase();
             while (true)
             {
                 string SelectUserRoleFromList = SelectMenu.MenuColumn(new List<string> { administrator, moderator, user }, currentUser, selectionMsg).option;
@@ -126,13 +122,6 @@ namespace IndividualProject
                     return user;
                 }
             }
-        }
-
-        public static string ChangeColor(string text, ConsoleColor color)
-        {
-            Console.ForegroundColor = color;
-            Console.ResetColor();
-            return text;
         }
 
         public static void UniversalLoadingOuput(string message)
@@ -185,7 +174,7 @@ namespace IndividualProject
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.DarkCyan;
-            CenterText("Quasar CRM Program - V2.4");
+            CenterText("Quasar CRM Program - V2.3");
             CenterText("-IT Crowd-");
             CenterText($"[{currentUser}]");
             WriteBottomLine("~CB6 Individual Project~");
