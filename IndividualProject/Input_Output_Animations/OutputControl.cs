@@ -3,64 +3,13 @@ using System.Collections.Generic;
 
 namespace IndividualProject
 {
-    class InputOutputAnimationControl
+    class OutputControl
     {
-        public static string UsernameInput()
-        {
-            Console.Write("\r\nusername: ");
-            string usernameInput = Console.ReadLine();
-            while (usernameInput.Length > 20)
-            {
-                QuasarScreen("Not registered");
-                Console.WriteLine("\r\nusername cannot be longer than 20 characters. Please try again");
-                Console.Write("username: ");
-                usernameInput = Console.ReadLine();
-            }
-            return usernameInput;
-        }
-
-        public static string PassphraseInput()
-        {
-            Console.Write("passphrase: ");
-            string passphrase = "";
-            do
-            {
-                ConsoleKeyInfo key = Console.ReadKey(true);
-                if (key.Key != ConsoleKey.Backspace && key.Key != ConsoleKey.Enter)
-                {
-                    passphrase += key.KeyChar;
-                    Console.Write("*");
-                }
-                else
-                {
-                    if (key.Key == ConsoleKey.Backspace && passphrase.Length > 0)
-                    {
-                        passphrase = passphrase.Substring(0, (passphrase.Length - 1));
-                        Console.Write("\b \b");
-                    }
-                    else if (key.Key == ConsoleKey.Enter)
-                    {
-                        break;
-                    }
-                }
-            } while (true);
-
-            while (passphrase.Length > 20)
-            {
-                QuasarScreen("Not registered");
-                Console.WriteLine("\r\npassphrase cannot be longer than 20 characters. Please try again");
-                Console.Write("passphrase: ");
-                passphrase = Console.ReadLine();
-
-            }
-            return passphrase;
-        }
-
         public static string TicketComment()
         {
             string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
             QuasarScreen(currentUsername);
-            UniversalLoadingOuput("Loading");
+            ColorAndAnimationControl.UniversalLoadingOuput("Loading");
             Console.Write("EDIT TECHNICAL TICKET");
             Console.WriteLine("\r\nCompile a summary of the Customer's issue (limit 500 characters):");
             string ticketComment = Console.ReadLine();
@@ -123,58 +72,11 @@ namespace IndividualProject
                 }
             }
         }
-
-        public static void UniversalLoadingOuput(string message)
-        {
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
-            Console.Write(message);
-            DotsBlinking();
-            Console.Write("\r" + new string(' ', Console.WindowWidth) + "\r");
-            Console.ResetColor();
-        }
-
-        protected static void DotsBlinking()
-        {
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
-            for (int blink = 0; blink < 5; blink++)
-            {
-                switch (blink)
-                {
-                    case 0: Console.Write("."); break;
-                    case 1: Console.Write("."); break;
-                    case 2: Console.Write("."); break;
-                    case 3: Console.Write("."); break;
-                    case 4: Console.Write("."); break;
-                }
-                System.Threading.Thread.Sleep(200);
-                Console.SetCursorPosition(Console.CursorLeft + 0, Console.CursorTop + 0);
-            }
-            Console.ResetColor();
-        }
-
-        public static void WriteBottomLine(string text)
-        {
-            int x = Console.CursorLeft;
-            int y = Console.CursorTop;
-            Console.CursorTop = Console.WindowTop + Console.WindowHeight - 2;
-            CenterText(text);
-        }
-        
-        private static void WriteAt(int column, int row)
-        {
-            Console.SetCursorPosition(column, row);            
-        }
-
-        public static void CenterText(string text)
-        {
-            Console.WriteLine(string.Format("{0," + (Console.WindowWidth + text.Length) / 2 + "}", text));
-        }
-
         public static void QuasarScreen(string currentUser)
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.DarkCyan;
-            CenterText("Quasar CRM Program - V2.3");
+            CenterText("Quasar CRM Program - V2.4.1");
             CenterText("-IT Crowd-");
             CenterText($"[{currentUser}]");
             WriteBottomLine("~CB6 Individual Project~");
@@ -200,6 +102,24 @@ namespace IndividualProject
                     System.Threading.Thread.Sleep(300);
                 }
             }
+        }
+
+        public static void WriteAt(int column, int row)
+        {
+            Console.SetCursorPosition(column, row);
+        }
+
+        public static void CenterText(string text)
+        {
+            Console.WriteLine(string.Format("{0," + (Console.WindowWidth + text.Length) / 2 + "}", text));
+        }
+
+        public static void WriteBottomLine(string text)
+        {
+            int x = Console.CursorLeft;
+            int y = Console.CursorTop;
+            Console.CursorTop = Console.WindowTop + Console.WindowHeight - 2;
+            CenterText(text);
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace IndividualProject
 {
@@ -11,8 +10,11 @@ namespace IndividualProject
         {
             string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
             string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
-            string open = "Open new Customer Ticket", close = "Close Customer Ticket", back = "\r\nBack",
-                manageTicketmsg = "\r\nChoose one of the following options to continue:\r\n";
+            string open = "Open new Customer Ticket";
+            string close = "Close Customer Ticket";
+            string back = "\r\nBack";
+            string manageTicketmsg = "\r\nChoose one of the following options to continue:\r\n";
+
             while (true)
             {
                 string openCloseTicket = SelectMenu.MenuColumn(new List<string> { open, close, back }, currentUsername, manageTicketmsg).option;
@@ -38,7 +40,10 @@ namespace IndividualProject
         {
             string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
             string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
-            string open = "Open new Customer Ticket", back = "\r\nBack", manageTicketmsg = "\r\nChoose one of the following options to continue:\r\n";
+            string open = "Open new Customer Ticket";
+            string back = "\r\nBack";
+            string manageTicketmsg = "\r\nChoose one of the following options to continue:\r\n";
+
             while (true)
             {
                 string openTicket = SelectMenu.MenuRow(new List<string> { open, back }, currentUsername, manageTicketmsg).option;
@@ -59,18 +64,18 @@ namespace IndividualProject
         {
             string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
             string assignTicket = "Would you like to assign the ticket to another user?\r\n";
-            string yes = "Yes", no = "No";
-
+            string yes = "Yes";
+            string no = "No";
             string yesOrNoSelection = SelectMenu.MenuRow(new List<string> { yes, no, }, currentUsername, assignTicket).option;
 
             if (yesOrNoSelection == yes)
             {
-                InputOutputAnimationControl.QuasarScreen(currentUsername);
-                InputOutputAnimationControl.UniversalLoadingOuput("Loading");
+                OutputControl.QuasarScreen(currentUsername);
+                ColorAndAnimationControl.UniversalLoadingOuput("Loading");
 
                 Dictionary<string, string> AvailableUsernamesDictionary = ConnectToServer.ShowAvailableUsersFromDatabase();
                 Console.Write("\r\nPlease select a user and proceed to assign: ");
-                string usernameAssignment = InputOutputAnimationControl.UsernameInput();
+                string usernameAssignment = InputControl.UsernameInput();
 
                 while (AvailableUsernamesDictionary.ContainsKey(usernameAssignment) == false || usernameAssignment == "admin")
                 {
@@ -78,22 +83,22 @@ namespace IndividualProject
                     {
                         Console.WriteLine($"Database does not contain a User {usernameAssignment}.\n\n(Press any key to continue)");
                         Console.ReadKey();
-                        InputOutputAnimationControl.QuasarScreen(currentUsername);
+                        OutputControl.QuasarScreen(currentUsername);
                         AvailableUsernamesDictionary = ConnectToServer.ShowAvailableUsersFromDatabase();
                         Console.Write("\r\n\nPlease select a user and proceed to assign: ");
-                        usernameAssignment = InputOutputAnimationControl.UsernameInput();
+                        usernameAssignment = InputControl.UsernameInput();
                     }
                     else
                     {
                         Console.WriteLine("Cannot assign ticket to super_admin! Please choose a different user.\n\n(Press any key to continue)");
                         Console.ReadKey();
-                        InputOutputAnimationControl.QuasarScreen(currentUsername);
+                        OutputControl.QuasarScreen(currentUsername);
                         AvailableUsernamesDictionary = ConnectToServer.ShowAvailableUsersFromDatabase();
                         Console.Write("\r\nPlease select a user and proceed to assign: ");
-                        usernameAssignment = InputOutputAnimationControl.UsernameInput();
+                        usernameAssignment = InputControl.UsernameInput();
                     }
                 }
-                AssignTicketToUserNotification(currentUsername, usernameAssignment);
+                DataToTextFile.AssignTicketToUserNotification(currentUsername, usernameAssignment);
                 return usernameAssignment;
             }
 
@@ -104,26 +109,10 @@ namespace IndividualProject
             return currentUsername;
         }
 
-        public static void AssignTicketToUserNotification(string currentUserAssigning, string UserAssigningTicketTo)
-        {
-            try
-            {
-                DateTime dateTimeAdded = DateTime.Now;
-                using (StreamWriter sw = File.AppendText(Globals.TTnotificationToUser + UserAssigningTicketTo + ".txt"))
-                {
-                    sw.WriteLine($"[{dateTimeAdded}] - User {currentUserAssigning} has assigned a new TT to you. Visit the View TT Section for more details");
-                }
-            }
-            catch (FileNotFoundException fileNotFound)
-            {
-                Console.WriteLine(fileNotFound.Message);
-            }
-        }
-
         public static void OpenNewCustomerTicket()
         {
             string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
-            string comment = InputOutputAnimationControl.TicketComment();
+            string comment = OutputControl.TicketComment();
             string userAssignedTo = AssignTicketToUser();
 
             ConnectToServer.OpenNewTechnicalTicket(currentUsername, userAssignedTo, comment);
@@ -135,11 +124,15 @@ namespace IndividualProject
         public static void CloseCustomerTicket()
         {
             string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
-            InputOutputAnimationControl.QuasarScreen(currentUsername);
-            InputOutputAnimationControl.UniversalLoadingOuput("Loading");
+            OutputControl.QuasarScreen(currentUsername);
+            ColorAndAnimationControl.UniversalLoadingOuput("Loading");
             Console.WriteLine("CLOSE EXISTING TECHNICAL TICKETS");
 
-            string viewList = "View List of Open Tickets", back = "\r\nBack" ,closeSpecific = "Close Specific Ticket", listOfTickets = "Choose one of the following functions\r\n";
+            string viewList = "View List of Open Tickets";
+            string back = "\r\nBack";
+            string closeSpecific = "Close Specific Ticket";
+            string listOfTickets = "Choose one of the following functions\r\n";
+
             while (true)
             {
                 string optionYesOrNo = SelectMenu.MenuColumn(new List<string> { viewList, closeSpecific, back }, currentUsername, listOfTickets).option;
@@ -162,7 +155,7 @@ namespace IndividualProject
         public static void CloseCustomerTicketFunction()
         {
             string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
-            int ticketID = InputOutputAnimationControl.SelectTicketID();
+            int ticketID = OutputControl.SelectTicketID();
             string previousUserAssignedTo = ConnectToServer.SelectUserAssignedToTicket(ticketID);
 
             if (ConnectToServer.CheckIfTicketIDWithStatusOpenExistsInList(ticketID) == false)
@@ -173,12 +166,15 @@ namespace IndividualProject
             }
             else
             {
-                string yes = "Yes", no = "No", closeTicket = $"Are you sure you want to mark ticket {ticketID} as closed?\r\n";
+                string yes = "Yes";
+                string no = "No";
+                string closeTicket = $"Are you sure you want to mark ticket {ticketID} as closed?\r\n";
                 string optionYesOrNo2 = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, closeTicket).option;
+
                 if (optionYesOrNo2 == yes)
                 {
                     ConnectToServer.SetTicketStatusToClosed(currentUsername, ticketID);
-                    CloseTicketToUserNotification(currentUsername, previousUserAssignedTo, ticketID);
+                    DataToTextFile.CloseTicketToUserNotification(currentUsername, previousUserAssignedTo, ticketID);
                     ManageCustomerTickets();
                 }
                 else if (optionYesOrNo2 == no)
@@ -192,11 +188,15 @@ namespace IndividualProject
         {
             string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
             string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
-            InputOutputAnimationControl.QuasarScreen(currentUsername);
-            InputOutputAnimationControl.UniversalLoadingOuput("Loading");
+            OutputControl.QuasarScreen(currentUsername);
+            ColorAndAnimationControl.UniversalLoadingOuput("Loading");
             Console.WriteLine("DELETE EXISTING TECHNICAL TICKETS");
 
-            string viewList = "View List of Tickets", back = "\r\nBack", closeSpecific = "Delete Specific Ticket", deleteTicketsMsg = "Choose one of the following functions\r\n";
+            string viewList = "View List of Tickets";
+            string back = "\r\nBack";
+            string closeSpecific = "Delete Specific Ticket";
+            string deleteTicketsMsg = "Choose one of the following functions\r\n";
+
             while (true)
             {
                 string deleteTickets = SelectMenu.MenuColumn(new List<string> { viewList, closeSpecific, back }, currentUsername, deleteTicketsMsg).option;
@@ -220,7 +220,7 @@ namespace IndividualProject
         {
             string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
             string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
-            int ticketID = InputOutputAnimationControl.SelectTicketID();
+            int ticketID = OutputControl.SelectTicketID();
             string previousTicketOwner = ConnectToServer.SelectUserAssignedToTicket(ticketID);
             if (ConnectToServer.CheckIfTicketIDWithStatusOpenOrClosedExistsInList(ticketID) == false)
             {
@@ -229,8 +229,11 @@ namespace IndividualProject
                 ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
             }
 
-            string yes = "Yes", no = "No", deleteTicketMsg = $"Are you sure you want to delete ticket {ticketID}? Action cannot be undone.\r\n";
+            string yes = "Yes";
+            string no = "No";
+            string deleteTicketMsg = $"Are you sure you want to delete ticket {ticketID}? Action cannot be undone.\r\n";
             string optionYesOrNo2 = SelectMenu.MenuColumn(new List<string> { yes, no }, currentUsername, deleteTicketMsg).option;
+
             if (optionYesOrNo2 == yes)
             {
                 ConnectToServer.DeleteCustomerTicket(currentUsername, ticketID);
@@ -247,11 +250,15 @@ namespace IndividualProject
         {
             string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
             string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
-            InputOutputAnimationControl.QuasarScreen(currentUsername);
-            InputOutputAnimationControl.UniversalLoadingOuput("Loading");
+            OutputControl.QuasarScreen(currentUsername);
+            ColorAndAnimationControl.UniversalLoadingOuput("Loading");
             Console.WriteLine("VIEW OPEN TECHNICAL TICKETS");
+
             string listTicketsMsg = "Choose one of the following options\r\n";
-            string viewList = "View Trouble Ticket List", viewSpecific = "View Specific Trouble Ticket" , back = "\r\nBack";
+            string viewList = "View Trouble Ticket List";
+            string viewSpecific = "View Specific Trouble Ticket";
+            string back = "\r\nBack";
+
             while (true)
             {
                 string viewTickets = SelectMenu.MenuColumn(new List<string> { viewList, viewSpecific, back }, currentUsername, listTicketsMsg).option;
@@ -266,7 +273,7 @@ namespace IndividualProject
                 }
                 else if (viewTickets == back)
                 {
-                    InputOutputAnimationControl.QuasarScreen(currentUsername);
+                    OutputControl.QuasarScreen(currentUsername);
                     ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
                 }
             }
@@ -275,7 +282,7 @@ namespace IndividualProject
         public static void ViewExistingOpenTicketsSubFunction()
         {
             string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
-            int TicketID = InputOutputAnimationControl.SelectTicketID();
+            int TicketID = OutputControl.SelectTicketID();
             if (ConnectToServer.CheckIfTicketIDWithStatusOpenExistsInList(TicketID) == false)
             {
                 Console.WriteLine($"There is no Customer Ticket with [ID = {TicketID}]\n\n(Press any key to go back to Main Menu)");
@@ -289,8 +296,8 @@ namespace IndividualProject
         private static void ViewSingleCustomerTicket(int ticketID)
         {
             string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
-            InputOutputAnimationControl.QuasarScreen(currentUsername);
-            InputOutputAnimationControl.UniversalLoadingOuput("Loading");
+            OutputControl.QuasarScreen(currentUsername);
+            ColorAndAnimationControl.UniversalLoadingOuput("Loading");
             Console.WriteLine($"VIEW TECHNICAL TICKET WITH [ID = {ticketID}]");
             ConnectToServer.SelectSingleCustomerTicket(ticketID);
             Console.Write("Press any key to return");
@@ -300,13 +307,17 @@ namespace IndividualProject
         public static void EditExistingOpenTicketFunction()
         {
             string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
-            InputOutputAnimationControl.QuasarScreen(currentUsername);
-            InputOutputAnimationControl.UniversalLoadingOuput("Loading");
-            Console.WriteLine("EDIT OPEN TECHNICAL TICKET");
-
             string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
+
+            OutputControl.QuasarScreen(currentUsername);
+            ColorAndAnimationControl.UniversalLoadingOuput("Loading");
+            Console.WriteLine("EDIT OPEN TECHNICAL TICKET");
+            
             string listTicketsMsg = "Choose one of the following options\r\n";
-            string viewList = "View Trouble Ticket List", viewSpecific = "Edit Specific Trouble Ticket", back = "\r\nBack";            
+            string viewList = "View Trouble Ticket List";
+            string viewSpecific = "Edit Specific Trouble Ticket";
+            string back = "\r\nBack";     
+            
             while (true)
             {
                 string editTicket = SelectMenu.MenuColumn(new List<string> { viewList, viewSpecific, back }, currentUsername, listTicketsMsg).option;
@@ -321,7 +332,7 @@ namespace IndividualProject
                 }
                 else if (editTicket == back)
                 {
-                    InputOutputAnimationControl.QuasarScreen(currentUsername);
+                    OutputControl.QuasarScreen(currentUsername);
                     ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
                 }
             }
@@ -330,7 +341,7 @@ namespace IndividualProject
         public static void EditExistingOpenTicketSubFunction()
         {
             string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
-            int TicketID = InputOutputAnimationControl.SelectTicketID();
+            int TicketID = OutputControl.SelectTicketID();
             if (ConnectToServer.CheckIfTicketIDWithStatusOpenExistsInList(TicketID) == false)
             {
                 Console.WriteLine($"There is no Customer Ticket with [ID = {TicketID}]\n\n(Press any key to continue)");
@@ -349,15 +360,19 @@ namespace IndividualProject
         {
             string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
             string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
-            string edit = "Edit Ticket Comment", assign = "Edit Ticket's User assignment", back = "\r\nBack",
-                editMsg = "\r\nChoose one of the following options to continue:\r\n";
+
+            string edit = "Edit Ticket Comment";            
+            string assign = "Edit Ticket's User assignment";
+            string back = "\r\nBack";
+            string editMsg = "\r\nChoose one of the following options to continue:\r\n";
+
             while (true)
             {
                 string EditCommentAndAssignment = SelectMenu.MenuColumn(new List<string> { edit, assign, back }, currentUsername, editMsg).option;
 
                 if (EditCommentAndAssignment == edit)
                 {
-                    string ticketComment = InputOutputAnimationControl.TicketComment();
+                    string ticketComment = OutputControl.TicketComment();
                     ConnectToServer.EditCommentOfOpenTicket(ID, ticketComment);
                 }
                 else if (EditCommentAndAssignment == assign)
@@ -367,7 +382,7 @@ namespace IndividualProject
                 }
                 else if (EditCommentAndAssignment == back)
                 {
-                    InputOutputAnimationControl.QuasarScreen(currentUsername);                    
+                    OutputControl.QuasarScreen(currentUsername);                    
                     ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
                 }
             }
@@ -380,58 +395,17 @@ namespace IndividualProject
 
             if (nextOwner == currentUsername)
             {
-                InputOutputAnimationControl.QuasarScreen(currentUsername);
-                InputOutputAnimationControl.UniversalLoadingOuput("Action in progress");
+                OutputControl.QuasarScreen(currentUsername);
+                ColorAndAnimationControl.UniversalLoadingOuput("Action in progress");
                 Console.WriteLine($"The ownership of the Customer Ticket with [ID = {ID}] remains to User: {nextOwner}\n\n(Press any key to continue)");
                 Console.ReadKey();
             }
             else
             {
-                InputOutputAnimationControl.QuasarScreen(currentUsername);
-                InputOutputAnimationControl.UniversalLoadingOuput("Action in progress");
+                OutputControl.QuasarScreen(currentUsername);
+                ColorAndAnimationControl.UniversalLoadingOuput("Action in progress");
                 Console.WriteLine($"The ownership of the Customer Ticket with [ID = {ID}] has been successfully transfered to User: {nextOwner}\n\n(Press any key to continue)");
                 Console.ReadKey();
-            }
-        }
-
-        public static void ViewUserNotificationsLog(string currentUser)
-        {
-            string[] lines = File.ReadAllLines(Globals.TTnotificationToUser + currentUser + ".txt");
-            int index = 1;
-            Console.WriteLine("NOTIFICATIONS LOG");            
-            foreach (string line in lines.Skip(1))
-            {
-                Console.WriteLine(index + ". " + line + "\n");
-                index++;                    
-            }
-        }
-
-        public static void DeleteUserNotificationsLog(string userToBeDeleted)
-        {
-            try
-            {                
-                File.Delete(Globals.TTnotificationToUser + userToBeDeleted + ".txt");
-            }
-            catch(FileNotFoundException dir)
-            {
-                Console.WriteLine(dir.Message);
-            }
-            Console.WriteLine($"{userToBeDeleted}'s notifications log has been successfully deleted");
-        }
-
-        public static void CloseTicketToUserNotification(string userClosingTheTicket, string previousTicketOwner, int ticketID)
-        {
-            try
-            {
-                DateTime dateTimeAdded = DateTime.Now;
-                using (StreamWriter sw = File.AppendText(Globals.TTnotificationToUser + previousTicketOwner + ".txt"))
-                {
-                    sw.WriteLine($"[{dateTimeAdded}] - User {userClosingTheTicket} has marked the TT with [ID = {ticketID}] that was assigned to you as closed. Visit the View TT Section for more details");
-                }
-            }
-            catch (FileNotFoundException fileNotFound)
-            {
-                Console.WriteLine(fileNotFound.Message);
             }
         }
 

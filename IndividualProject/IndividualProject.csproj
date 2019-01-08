@@ -63,6 +63,10 @@
     <Compile Include="ActiveUserFunctions.cs" />
     <Compile Include="ConnectToServer.cs" />
     <Compile Include="CreateNewAccount.cs" />
+    <Compile Include="DataToTextFile.cs" />
+    <Compile Include="Input_Output_Animations\InputControl.cs" />
+    <Compile Include="Input_Output_Animations\OutputControl.cs" />
+    <Compile Include="Parameters\Globals.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\ProjectSettings.Designer.cs">
@@ -71,7 +75,7 @@
       <DependentUpon>ProjectSettings.settings</DependentUpon>
     </Compile>
     <Compile Include="RoleFunctions.cs" />
-    <Compile Include="InputOutputAnimationControl.cs" />
+    <Compile Include="Input_Output_Animations\ColorAndAnimationControl.cs" />
     <Compile Include="SelectMenu.cs" />
     <Compile Include="TransactedData.cs" />
   </ItemGroup>
@@ -94,6 +98,8 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="UserFunctions\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

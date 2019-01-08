@@ -13,7 +13,7 @@ namespace IndividualProject
             ConsoleKeyInfo currentKeyPressed;
             do
             {
-                InputOutputAnimationControl.QuasarScreen(currentUser);                
+                OutputControl.QuasarScreen(currentUser);                
                 Console.WriteLine(message);
                 for (int option = 0; option < ListOfOptions.Count; option++)
                 {
@@ -46,7 +46,7 @@ namespace IndividualProject
                 }
             }
             while (currentKeyPressed.Key != ConsoleKey.Enter);
-            InputOutputAnimationControl.QuasarScreen(currentUser);
+            OutputControl.QuasarScreen(currentUser);
             
             Console.ForegroundColor = ConsoleColor.White;
 
@@ -64,7 +64,7 @@ namespace IndividualProject
 
             do
             {
-                InputOutputAnimationControl.QuasarScreen(currentUser);
+                OutputControl.QuasarScreen(currentUser);
                 Console.WriteLine(message);                
                 for (int option = 0; option < ListOfOptions.Count; option++)
                 {
@@ -97,7 +97,7 @@ namespace IndividualProject
                 }
             }
             while (currentKeyPressed.Key != ConsoleKey.Enter);
-            InputOutputAnimationControl.QuasarScreen(currentUser);
+            OutputControl.QuasarScreen(currentUser);
 
             Console.ForegroundColor = ConsoleColor.White;
 

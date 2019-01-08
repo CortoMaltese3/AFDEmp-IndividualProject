@@ -11,16 +11,16 @@ namespace IndividualProject
             string currentUsername = "Not Registered";
             try
             {
-                InputOutputAnimationControl.QuasarScreen(currentUsername);
-                InputOutputAnimationControl.UniversalLoadingOuput("Please wait");
+                OutputControl.QuasarScreen(currentUsername);
+                ColorAndAnimationControl.UniversalLoadingOuput("Please wait");
                 Console.Write("Registration Form:\r\nChoose your username and password. Both must be limited to 20 characters");
-                string username = InputOutputAnimationControl.UsernameInput();
-                string passphrase = InputOutputAnimationControl.PassphraseInput();
-                InputOutputAnimationControl.QuasarScreen(currentUsername);
-                InputOutputAnimationControl.UniversalLoadingOuput("Check in progress");
+                string username = InputControl.UsernameInput();
+                string passphrase = InputControl.PassphraseInput();
+                OutputControl.QuasarScreen(currentUsername);
+                ColorAndAnimationControl.UniversalLoadingOuput("Check in progress");
                 while (ConnectToServer.CheckUsernameAvailabilityInDatabase(username) == false)
                 {
-                    InputOutputAnimationControl.QuasarScreen(currentUsername);
+                    OutputControl.QuasarScreen(currentUsername);
                     Console.Write("\r\nThis username is already in use. Choose a different one.\r\n(Press any key to continue)");
                     Console.ReadKey();
                     CreateNewAccountRequest();
@@ -40,13 +40,13 @@ namespace IndividualProject
 
             if (pendingUsernameCheck == $"username: {usernameCheck}")
             {
-                InputOutputAnimationControl.QuasarScreen(currentUsername);
+                OutputControl.QuasarScreen(currentUsername);
                 Console.Write("\r\nYour Account Request is Pending. Please wait for the administrator to grant you access.\n\nPress any key to return to Login Screen");
             }
             else
             {
                 NewUsernameRequestToList(usernameCheck, passphraseCheck);
-                InputOutputAnimationControl.QuasarScreen(currentUsername);
+                OutputControl.QuasarScreen(currentUsername);
                 Console.WriteLine("\r\nNew account request is registered. Please wait for the administrator to grant you access.\n\nPress any key to return to Login Screen");
             }
             Console.ReadKey();            

@@ -5,20 +5,15 @@ using System.Data;
 
 namespace IndividualProject
 {
-    public static class Globals
-    {
-        public static readonly string connectionString = "Server=localhost; Database = Project1_Individual; User Id = admin; Password = admin";
-        public static readonly string newUserRequestPath = @"C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\CRMTickets\NewUserRequests\NewUserRequest.txt";
-        public static readonly string TTnotificationToUser = @"C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\CRMTickets\TechnicalIssues\TroubleTicketNotificationToUser_";
-    }
+
 
     static class ConnectToServer
     {
         public static void UserLoginCredentials()
         {
-            InputOutputAnimationControl.QuasarScreen("Not Registered");
-            string username = InputOutputAnimationControl.UsernameInput();
-            string passphrase = InputOutputAnimationControl.PassphraseInput();
+            OutputControl.QuasarScreen("Not Registered");
+            string username = InputControl.UsernameInput();
+            string passphrase = InputControl.PassphraseInput();
             var dbcon = new SqlConnection(Globals.connectionString);
 
             while (TestConnectionToSqlServer(dbcon))
@@ -26,16 +21,15 @@ namespace IndividualProject
                 if (CheckUsernameAndPasswordMatchInDatabase(username, passphrase))
                 {
                     SetCurrentUserStatusToActive(username);
-                    InputOutputAnimationControl.QuasarScreen(username);
-                    Console.ForegroundColor = ConsoleColor.DarkCyan;
-                    Console.WriteLine($"Connection Established! Welcome back {username}!");
+                    OutputControl.QuasarScreen(username);                    
+                    ColorAndAnimationControl.ColoredText($"Connection Established! Welcome back {username}!", ConsoleColor.DarkGreen);                    
                     System.Threading.Thread.Sleep(1500);
                     ActiveUserFunctions.UserFunctionMenuScreen(RetrieveCurrentUsernameRoleFromDatabase());
                 }
                 else
                 {
-                    InputOutputAnimationControl.QuasarScreen("Not Registered");
-                    Console.Write($"\r\nInvalid Username or Passphrase. Try again.\n\n(press any key to continue)");
+                    OutputControl.QuasarScreen("Not Registered");
+                    ColorAndAnimationControl.ColoredText($"\r\nInvalid Username or Passphrase. Try again.\n\n(press any key to continue)", ConsoleColor.DarkRed);                    
                     Console.ReadKey();
                     UserLoginCredentials();
                 }
@@ -136,7 +130,7 @@ namespace IndividualProject
             {
                 dbcon.Open();
                 SqlCommand checkUsername = new SqlCommand("CheckUniqueUsername", dbcon);
-                checkUsername.CommandType = System.Data.CommandType.StoredProcedure;
+                checkUsername.CommandType = CommandType.StoredProcedure;
                 checkUsername.Parameters.AddWithValue("@usernameCheck", usernameCheck);
                 int UserCount = (int)checkUsername.ExecuteScalar();
                 if (UserCount != 0)
@@ -259,13 +253,13 @@ namespace IndividualProject
                 string previousUserRole = (string)selectPreviousUserRole.ExecuteScalar();
                 while (previousUserRole == userRole)
                 {
-                    InputOutputAnimationControl.QuasarScreen(currentUsername);
+                    OutputControl.QuasarScreen(currentUsername);
                     Console.WriteLine();
                     Console.WriteLine($"User '{username}' already is {userRole}. Please proceed to choose a different Role Status\n\n(Press any key to continue)");
                     Console.ReadKey();
-                    InputOutputAnimationControl.QuasarScreen(currentUsername);
+                    OutputControl.QuasarScreen(currentUsername);
                     Console.WriteLine();
-                    userRole = InputOutputAnimationControl.SelectUserRole();
+                    userRole = OutputControl.SelectUserRole();
                     selectPreviousUserRole = new SqlCommand("SelectSingleUserRole", dbcon);
                     selectPreviousUserRole.CommandType = CommandType.StoredProcedure;
                     selectPreviousUserRole.Parameters.AddWithValue("@username", username);
@@ -281,8 +275,8 @@ namespace IndividualProject
                 selectUserRole.Parameters.AddWithValue("@username", username);
                 alterUserRole.ExecuteScalar();
                 string newUserRole = (string)selectUserRole.ExecuteScalar();
-                InputOutputAnimationControl.QuasarScreen(currentUsername);
-                InputOutputAnimationControl.UniversalLoadingOuput("Modifying User's role status in progress");
+                OutputControl.QuasarScreen(currentUsername);
+                ColorAndAnimationControl.UniversalLoadingOuput("Modifying User's role status in progress");
                 Console.WriteLine($"User {username} has been successfully modified as {newUserRole}\n\n(Press any key to continue)");
                 Console.ReadKey();
             }
@@ -302,8 +296,8 @@ namespace IndividualProject
 
                 SqlCommand fetchNewTicketID = new SqlCommand("EXECUTE fetchNewTicketID", dbcon);
                 int ticketID = (int)fetchNewTicketID.ExecuteScalar();
-                InputOutputAnimationControl.QuasarScreen(currentUsername);
-                InputOutputAnimationControl.UniversalLoadingOuput("Filing new customer ticket in progress");
+                OutputControl.QuasarScreen(currentUsername);
+                ColorAndAnimationControl.UniversalLoadingOuput("Filing new customer ticket in progress");
                 Console.WriteLine($"New Customer Ticket with ID: {ticketID} has been successfully created and assigned to {userAssignedTo}. Status: Open");
             }
         }
@@ -315,8 +309,8 @@ namespace IndividualProject
                 dbcon.Open();
                 SqlCommand closeCustomerTicket = new SqlCommand($"EXECUTE SetTicketStatusToClosed {ticketID}", dbcon);
                 closeCustomerTicket.ExecuteScalar();
-                InputOutputAnimationControl.QuasarScreen(currentUsername);
-                InputOutputAnimationControl.UniversalLoadingOuput("Action in progress");
+                OutputControl.QuasarScreen(currentUsername);
+                ColorAndAnimationControl.UniversalLoadingOuput("Action in progress");
                 Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully marked as closed.\n\n(Press any key to continue)");
                 Console.ReadKey();
             }
@@ -450,8 +444,8 @@ namespace IndividualProject
                 deleteCustomerTicket.CommandType = CommandType.StoredProcedure;
                 deleteCustomerTicket.Parameters.AddWithValue("@ticketID", ticketID);
                 deleteCustomerTicket.ExecuteScalar();
-                InputOutputAnimationControl.QuasarScreen(currentUsername);
-                InputOutputAnimationControl.UniversalLoadingOuput("Action in progress");
+                OutputControl.QuasarScreen(currentUsername);
+                ColorAndAnimationControl.UniversalLoadingOuput("Action in progress");
                 Console.WriteLine($"Customer ticket with ID = {ticketID} has been successfully deleted\n\n(Press any key to continue)");
                 Console.ReadKey();
             }
@@ -533,14 +527,17 @@ namespace IndividualProject
 
         public static void TerminateQuasar()
         {
-            string yes = "Yes", no = "No", currentUsername = "Not Registered", exitMessage = "\r\nWould you like to exit Quasar?\r\n";
+            string yes = "Yes";
+            string no = "No";
+            string currentUsername = "Not Registered";
+            string exitMessage = "\r\nWould you like to exit Quasar?\r\n";
             string yesOrNoSelection = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, exitMessage).option;
 
             if (yesOrNoSelection == yes)
             {
                 SetCurrentUserStatusToInactive(currentUsername);
-                InputOutputAnimationControl.UniversalLoadingOuput("Wait for Quasar to shut down");
-                InputOutputAnimationControl.SpecialThanksMessage();
+                ColorAndAnimationControl.UniversalLoadingOuput("Wait for Quasar to shut down");
+                OutputControl.SpecialThanksMessage();
                 Environment.Exit(0);
             }
             else if (yesOrNoSelection == no)
@@ -551,15 +548,17 @@ namespace IndividualProject
 
         public static void LoggingOffQuasar()
         {
-            string yes = "Yes", no = "No", logOffMessage = "Would you like to log out?\r\n", currentUsername = RetrieveCurrentUserFromDatabase();
+            string yes = "Yes";
+            string no = "No";
+            string logOffMessage = "Would you like to log out?\r\n";
+            string currentUsername = RetrieveCurrentUserFromDatabase();
             string yesOrNoSelection = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, logOffMessage).option;
 
             if (yesOrNoSelection == yes)
             {
-                InputOutputAnimationControl.QuasarScreen("Not Registered");
+                OutputControl.QuasarScreen("Not Registered");
                 SetCurrentUserStatusToInactive(currentUsername);
                 ApplicationMenu.LoginScreen();
-
             }
             else if (yesOrNoSelection == no)
             {
