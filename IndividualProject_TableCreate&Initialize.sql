@@ -240,13 +240,13 @@ END
 --Test users/TTs. Only admin-admin needs to be initialized
 
 EXECUTE InsertNewUserIntoDatabase 'admin', 'admin', 'super_admin'
-EXECUTE InsertNewUserIntoDatabase 'firstlevel', 'first', 'User'
-EXECUTE InsertNewUserIntoDatabase 'secondlevel', 'second', 'Moderator'
-EXECUTE InsertNewUserIntoDatabase 'thirdlevel', 'third', 'Administrator'
-EXECUTE OpenNewTechnicalTicket 'firstlevel', 'secondlevel', 'Customer complains about his internet connection being slow. Live port monitor reveals excessive accumulation of CRC/FEC errors. Procceed with Netword/Equipment check'
-EXECUTE OpenNewTechnicalTicket 'secondlevel', 'thirdlevel', 'Modem/Router not synching. Communication with device failed. Proceed with Network check'
-EXECUTE OpenNewTechnicalTicket 'firstlevel', 'firstlevel', 'Led Power indicator on UPS device, battery not charging.'
-EXECUTE OpenNewTechnicalTicket 'firstlevel', 'secondlevel', 'Led Power indicator on UPS device, battery not charging. Equipment replacement is imminent'
+EXECUTE InsertNewUserIntoDatabase 'agent', 'agent', 'User'
+EXECUTE InsertNewUserIntoDatabase 'secondLevel', 'secondLevel', 'Moderator'
+EXECUTE InsertNewUserIntoDatabase 'thirdLevel', 'thirdLevel', 'Administrator'
+EXECUTE OpenNewTechnicalTicket 'agent', 'secondLevel', 'Customer complains about his internet connection being slow. Live port monitor reveals excessive accumulation of CRC/FEC errors. Procceed with Netword/Equipment check'
+EXECUTE OpenNewTechnicalTicket 'secondLevel', 'thirdLevel', 'Modem/Router not synching. Communication with device failed. Proceed with Network check'
+EXECUTE OpenNewTechnicalTicket 'agent', 'agent', 'Led Power indicator on UPS device, battery not charging. Equipment replacement is imminent'
+EXECUTE OpenNewTechnicalTicket 'admin', 'giorgos', 'Led Power indicator on UPS device, battery not charging. Equipment replacement is imminent'
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 select * from UserCredentials
