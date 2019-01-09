@@ -37,7 +37,7 @@ namespace IndividualProject
             }
         }
 
-        public static void DeleteExistingOpenOrClosedTicketSubFunction()
+        private static void DeleteExistingOpenOrClosedTicketSubFunction()
         {
             string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
             string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();

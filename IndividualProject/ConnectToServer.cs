@@ -5,8 +5,6 @@ using System.Data;
 
 namespace IndividualProject
 {
-
-
     static class ConnectToServer
     {
         public static void UserLoginCredentials()

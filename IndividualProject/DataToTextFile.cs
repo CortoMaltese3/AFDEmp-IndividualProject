@@ -77,6 +77,11 @@ namespace IndividualProject
             return pendingUsername;
         }
 
+        public static void NewUsernameRequestToList(string usernameAdd, string passphraseAdd)
+        {
+            File.WriteAllLines(Globals.newUserRequestPath, new string[] { $"username: {usernameAdd}", $"passphrase: {passphraseAdd}" });
+        }
+
         //Clears the new user registrations List to be used from the next user registering
         public static void ClearNewUserRegistrationList()
         {

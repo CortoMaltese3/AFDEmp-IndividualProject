@@ -8,7 +8,7 @@ namespace IndividualProject
         {
             string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
             string comment = OutputControl.TicketComment();
-            string userAssignedTo = TransactedData.AssignTicketToUser();
+            string userAssignedTo = AssignTroubleTickets.AssignTicketToUser();
 
             ConnectToServer.OpenNewTechnicalTicket(currentUsername, userAssignedTo, comment);
             Console.WriteLine("\n\nPress any key to return");

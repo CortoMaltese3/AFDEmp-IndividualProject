@@ -33,27 +33,27 @@ namespace IndividualProject
 
                         if (SuperAdminFunctionMenu == notificationsAdmin)
                         {
-                            RoleFunctions.CheckAdminNotifications();
+                            CheckNotifications.CheckAdminNotifications();
                         }
 
                         else if (SuperAdminFunctionMenu == requests)
                         {
-                            RoleFunctions.CreateNewUserFromRequestFunction();
+                            SuperAdminFunctions.CreateNewUserFromRequestFunction();
                         }
 
                         else if (SuperAdminFunctionMenu == viewUsers)
                         {
-                            RoleFunctions.ShowAvailableUsersFunction();
+                            SuperAdminFunctions.ShowAvailableUsersFunction();
                         }
 
                         else if (SuperAdminFunctionMenu == modifyRole)
                         {
-                            RoleFunctions.AlterUserRoleStatus();
+                            SuperAdminFunctions.AlterUserRoleStatus();
                         }
 
                         else if (SuperAdminFunctionMenu == deleteUser)
                         {
-                            RoleFunctions.DeleteUserFromDatabase();
+                            SuperAdminFunctions.DeleteUserFromDatabase();
                         }
 
                         else if (SuperAdminFunctionMenu == manageTickets)
@@ -63,12 +63,12 @@ namespace IndividualProject
 
                         else if (SuperAdminFunctionMenu == viewTickets)
                         {
-                            TransactedData.ViewExistingOpenTicketsFunction();
+                            ViewExistingTickets.ViewExistingOpenTicketsFunction();
                         }
 
                         else if (SuperAdminFunctionMenu == editTicket)
                         {
-                            TransactedData.EditExistingOpenTicketFunction();
+                            EditExistingTroubleTickets.EditOpenTicket();
                         }
 
                         else if (SuperAdminFunctionMenu == deleteTicket)
@@ -91,7 +91,7 @@ namespace IndividualProject
 
                         if (AdminFunctionMenu == notificationsUser)
                         {
-                            RoleFunctions.CheckUserNotifications();
+                            CheckNotifications.CheckUserNotifications();
                         }
 
                         else if (AdminFunctionMenu == manageTickets)
@@ -101,12 +101,12 @@ namespace IndividualProject
 
                         else if (AdminFunctionMenu == viewTickets)
                         {
-                            TransactedData.ViewExistingOpenTicketsFunction();
+                            ViewExistingTickets.ViewExistingOpenTicketsFunction();
                         }
 
                         else if (AdminFunctionMenu == editTicket)
                         {
-                            TransactedData.EditExistingOpenTicketFunction();
+                            EditExistingTroubleTickets.EditOpenTicket();
                         }
 
                         else if (AdminFunctionMenu == deleteTicket)
@@ -129,7 +129,7 @@ namespace IndividualProject
 
                         if (ModeratorFunctionMenu == notificationsUser)
                         {
-                            RoleFunctions.CheckUserNotifications();
+                            CheckNotifications.CheckUserNotifications();
                         }
 
                         else if (ModeratorFunctionMenu == manageTickets)
@@ -139,12 +139,12 @@ namespace IndividualProject
 
                         else if (ModeratorFunctionMenu == viewTickets)
                         {
-                            TransactedData.ViewExistingOpenTicketsFunction();
+                            ViewExistingTickets.ViewExistingOpenTicketsFunction();
                         }
 
                         else if (ModeratorFunctionMenu == editTicket)
                         {
-                            TransactedData.EditExistingOpenTicketFunction();
+                            EditExistingTroubleTickets.EditOpenTicket();
                         }
 
                         else if (ModeratorFunctionMenu == logOut)
@@ -162,7 +162,7 @@ namespace IndividualProject
 
                         if (UserFunctionMenu == notificationsUser)
                         {
-                            RoleFunctions.CheckUserNotifications();
+                            CheckNotifications.CheckUserNotifications();
                         }
 
                         else if (UserFunctionMenu == manageTickets)
@@ -172,7 +172,7 @@ namespace IndividualProject
 
                         else if (UserFunctionMenu == viewTickets)
                         {
-                            TransactedData.ViewExistingOpenTicketsFunction();
+                            ViewExistingTickets.ViewExistingOpenTicketsFunction();
                         }
 
                         else if (UserFunctionMenu == logOut)

@@ -60,15 +60,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActiveUserFunctions.cs" />
+    <Compile Include="UserFunctions\ActiveUserFunctions.cs" />
     <Compile Include="ApplicationMenu.cs" />
-    <Compile Include="DeleteTroubleTickets.cs" />
-    <Compile Include="TroubleTickets\CloseExistingTroubleTickets.cs" />
+    <Compile Include="CheckNotifications.cs" />
+    <Compile Include="TroubleTickets\EditExistingTroubleTickets.cs" />
+    <Compile Include="TroubleTickets\DeleteTroubleTickets.cs" />
+    <Compile Include="TroubleTickets\CloseTroubleTickets.cs" />
     <Compile Include="ConnectToServer.cs" />
     <Compile Include="CreateNewAccount.cs" />
     <Compile Include="DataToTextFile.cs" />
-    <Compile Include="Input_Output_Animations\InputControl.cs" />
-    <Compile Include="Input_Output_Animations\OutputControl.cs" />
+    <Compile Include="InputOutputAnimations\InputControl.cs" />
+    <Compile Include="InputOutputAnimations\OutputControl.cs" />
     <Compile Include="TroubleTickets\OpenNewTroubleTicket.cs" />
     <Compile Include="Parameters\Globals.cs" />
     <Compile Include="Program.cs" />
@@ -78,11 +80,12 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>ProjectSettings.settings</DependentUpon>
     </Compile>
-    <Compile Include="RoleFunctions.cs" />
-    <Compile Include="Input_Output_Animations\ColorAndAnimationControl.cs" />
+    <Compile Include="UserFunctions\SuperAdminFunctions.cs" />
+    <Compile Include="InputOutputAnimations\ColorAndAnimationControl.cs" />
     <Compile Include="SelectMenu.cs" />
-    <Compile Include="TransactedData.cs" />
+    <Compile Include="TroubleTickets\AssignTroubleTickets.cs" />
     <Compile Include="TroubleTickets\ManageTroubleTickets.cs" />
+    <Compile Include="TroubleTickets\ViewTroubleTickets.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -103,8 +106,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UserFunctions\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
