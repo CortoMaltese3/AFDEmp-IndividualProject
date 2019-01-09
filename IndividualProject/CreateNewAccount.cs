@@ -6,21 +6,20 @@ namespace IndividualProject
 {
     class CreateNewAccount
     {              
-        internal static void CreateNewAccountRequest()
+        public static void CreateNewAccountRequest()
         {
-            string currentUsername = "Not Registered";
             try
             {
-                OutputControl.QuasarScreen(currentUsername);
+                OutputControl.QuasarScreen("Not Registered");
                 ColorAndAnimationControl.UniversalLoadingOuput("Please wait");
                 Console.Write("Registration Form:\r\nChoose your username and password. Both must be limited to 20 characters");
                 string username = InputControl.UsernameInput();
                 string passphrase = InputControl.PassphraseInput();
-                OutputControl.QuasarScreen(currentUsername);
+                OutputControl.QuasarScreen("Not Registered");
                 ColorAndAnimationControl.UniversalLoadingOuput("Check in progress");
                 while (ConnectToServer.CheckUsernameAvailabilityInDatabase(username) == false)
                 {
-                    OutputControl.QuasarScreen(currentUsername);
+                    OutputControl.QuasarScreen("Not Registered");
                     Console.Write("\r\nThis username is already in use. Choose a different one.\r\n(Press any key to continue)");
                     Console.ReadKey();
                     CreateNewAccountRequest();

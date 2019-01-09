@@ -5,7 +5,6 @@ namespace IndividualProject
 {
     class SelectMenu
     {        
-
         public static UserOptionList MenuColumn(List<string> ListOfOptions, string currentUser, string message)
         {
             string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
@@ -106,7 +105,6 @@ namespace IndividualProject
                 option = ListOfOptions[currentOption],
                 tempOption = currentOption
             };
-
         }
     }
 

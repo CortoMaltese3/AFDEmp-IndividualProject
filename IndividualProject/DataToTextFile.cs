@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IndividualProject
 {
+    // The DataToTextFile class deals with data stored/manipulated to/from text files. It manages the new user registrations and active users notifications log
+
     class DataToTextFile
     {
         public static void ViewUserNotificationsLog(string currentUser)
@@ -78,19 +77,46 @@ namespace IndividualProject
             return pendingUsername;
         }
 
+        //Clears the new user registrations List to be used from the next user registering
         public static void ClearNewUserRegistrationList()
         {
-            //Clears the new user registrations List
-            File.WriteAllLines(Globals.newUserRequestPath, new string[] { " " });            
+            try
+            {
+                File.WriteAllLines(Globals.newUserRequestPath, new string[] { " " });
+            }
+            catch (FileNotFoundException fileNotFound)
+            {
+                Console.WriteLine(fileNotFound.Message);
+            }                    
         }
 
+        //Creates a text file for the new user to be used as a notifications log
         public static void CreateNewUserLogFile(string pendingUsername)
         {
-            //Creates a file for the new user to check notifications
-            File.WriteAllLines(Globals.TTnotificationToUser + pendingUsername + ".txt", new string[] { "NOTIFICATIONS LOG" });
+            try
+            {
+                File.WriteAllLines(Globals.TTnotificationToUser + pendingUsername + ".txt", new string[] { "NOTIFICATIONS LOG" });
+            }
+            catch (DirectoryNotFoundException fileNotFound)
+            {
+                Console.WriteLine(fileNotFound.Message);
+            }            
         }
 
-
-
+        public static void DeleteTicketToUserNotification(string userDeletingTheTicket, string previousTicketOwner, int ticketID)
+        {
+            try
+            {
+                DateTime dateTimeAdded = DateTime.Now;
+                using (StreamWriter sw = File.AppendText(Globals.TTnotificationToUser + previousTicketOwner + ".txt"))
+                {
+                    sw.WriteLine($"[{dateTimeAdded}] - User {userDeletingTheTicket} has deleted the TT with [ID = {ticketID}] assigned to you. In case of emergency, contact the super_admin");
+                }
+            }
+            catch (FileNotFoundException fileNotFound)
+            {
+                Console.WriteLine(fileNotFound.Message);
+            }
+        }
     }
 }

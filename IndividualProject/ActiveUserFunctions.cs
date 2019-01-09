@@ -58,7 +58,7 @@ namespace IndividualProject
 
                         else if (SuperAdminFunctionMenu == manageTickets)
                         {
-                            TransactedData.ManageCustomerTickets();
+                            ManageTroubleTickets.OpenOrCloseTroubleTicket();
                         }
 
                         else if (SuperAdminFunctionMenu == viewTickets)
@@ -73,7 +73,7 @@ namespace IndividualProject
 
                         else if (SuperAdminFunctionMenu == deleteTicket)
                         {
-                            TransactedData.DeleteExistingOpenOrClosedTicketFunction();
+                            DeleteTroubleTickets.DeleteExistingOpenOrClosedTicketFunction();
                         }
 
                         else if (SuperAdminFunctionMenu == logOut)
@@ -96,7 +96,7 @@ namespace IndividualProject
 
                         else if (AdminFunctionMenu == manageTickets)
                         {
-                            TransactedData.ManageCustomerTickets();
+                            ManageTroubleTickets.OpenOrCloseTroubleTicket();
                         }
 
                         else if (AdminFunctionMenu == viewTickets)
@@ -111,7 +111,7 @@ namespace IndividualProject
 
                         else if (AdminFunctionMenu == deleteTicket)
                         {
-                            TransactedData.DeleteExistingOpenOrClosedTicketFunction();
+                            DeleteTroubleTickets.DeleteExistingOpenOrClosedTicketFunction();
                         }
 
                         else if (AdminFunctionMenu == logOut)
@@ -134,7 +134,7 @@ namespace IndividualProject
 
                         else if (ModeratorFunctionMenu == manageTickets)
                         {
-                            TransactedData.ManageCustomerTickets();
+                            ManageTroubleTickets.OpenOrCloseTroubleTicket();
                         }
 
                         else if (ModeratorFunctionMenu == viewTickets)
@@ -167,7 +167,7 @@ namespace IndividualProject
 
                         else if (UserFunctionMenu == manageTickets)
                         {
-                            TransactedData.ManageCustomerTickets();
+                            ManageTroubleTickets.OpenOrCloseTroubleTicket();
                         }
 
                         else if (UserFunctionMenu == viewTickets)

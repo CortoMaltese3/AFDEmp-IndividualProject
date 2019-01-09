@@ -61,11 +61,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActiveUserFunctions.cs" />
+    <Compile Include="ApplicationMenu.cs" />
+    <Compile Include="DeleteTroubleTickets.cs" />
+    <Compile Include="TroubleTickets\CloseExistingTroubleTickets.cs" />
     <Compile Include="ConnectToServer.cs" />
     <Compile Include="CreateNewAccount.cs" />
     <Compile Include="DataToTextFile.cs" />
     <Compile Include="Input_Output_Animations\InputControl.cs" />
     <Compile Include="Input_Output_Animations\OutputControl.cs" />
+    <Compile Include="TroubleTickets\OpenNewTroubleTicket.cs" />
     <Compile Include="Parameters\Globals.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -78,6 +82,7 @@
     <Compile Include="Input_Output_Animations\ColorAndAnimationControl.cs" />
     <Compile Include="SelectMenu.cs" />
     <Compile Include="TransactedData.cs" />
+    <Compile Include="TroubleTickets\ManageTroubleTickets.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

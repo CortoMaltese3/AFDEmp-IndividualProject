@@ -5,29 +5,78 @@ namespace IndividualProject
 {
     class OutputControl
     {
+        public static void QuasarScreen(string currentUser)
+        {
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            CenterText("Quasar CRM Program - V2.4.1");
+            CenterText("-IT Crowd-");
+            CenterText($"[{currentUser}]");
+            WriteBottomLine("~CB6 Individual Project~");
+            Console.ResetColor();
+            WriteAt(0, 3);
+        }
+
+        public static void WriteAt(int column, int row)
+        {
+            Console.SetCursorPosition(column, row);
+        }
+
+        public static void CenterText(string text)
+        {
+            Console.WriteLine(string.Format("{0," + (Console.WindowWidth + text.Length) / 2 + "}", text));
+        }
+
+        public static void WriteBottomLine(string text)
+        {
+            int x = Console.CursorLeft;
+            int y = Console.CursorTop;
+            Console.CursorTop = Console.WindowTop + Console.WindowHeight - 2;
+            CenterText(text);
+        }
+
+        public static void SpecialThanksMessage()
+        {
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            for (int blink = 0; blink < 6; blink++)
+            {
+                if (blink % 2 == 0)
+                {
+                    WriteBottomLine("~~~~~Special thanks to Afro~~~~~");
+                    Console.ForegroundColor = ConsoleColor.DarkCyan;
+                    System.Threading.Thread.Sleep(300);
+                }
+                else
+                {
+                    WriteBottomLine("~~~~~Special thanks to Afro~~~~~");
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    System.Threading.Thread.Sleep(300);
+                }
+            }
+        }
+
         public static string TicketComment()
         {
             string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
             QuasarScreen(currentUsername);
             ColorAndAnimationControl.UniversalLoadingOuput("Loading");
             Console.Write("EDIT TECHNICAL TICKET");
-            Console.WriteLine("\r\nCompile a summary of the Customer's issue (limit 500 characters):");
+            Console.WriteLine("\r\nCompile a summary of the Customer's issue (limit 250 characters):");
             string ticketComment = Console.ReadLine();
 
-            while (ticketComment.Length > 500 || ticketComment.Length < 20)
+            while (ticketComment.Length > 250 || ticketComment.Length < 20)
             {
-                if (ticketComment.Length > 500)
-                {
-                    QuasarScreen(currentUsername);
-                    Console.WriteLine("EDIT TECHNICAL TICKET COMMENT SECTION");
-                    Console.WriteLine("\r\nSummary cannot be longer than 500 characters. Compile a summary of the Customer's issue (limit 500 characters): ");
+                QuasarScreen(currentUsername);
+                if (ticketComment.Length > 250)
+                {                    
+                    Console.WriteLine("\r\nEDIT TECHNICAL TICKET COMMENT SECTION");
+                    Console.WriteLine("\r\nSummary cannot be longer than 250 characters. Compile a summary of the Customer's issue: ");
                     ticketComment = Console.ReadLine();
                 }
                 if (ticketComment.Length < 20)
-                {
-                    QuasarScreen(currentUsername);
-                    Console.WriteLine("FILE NEW TECHNICAL TICKET");
-                    Console.WriteLine("\r\nComment section cannot be shorter than 20 characters. Compile a more extensive summary of the Customer's issue (limit 500 characters): ");
+                {                    
+                    Console.WriteLine("\r\nFILE NEW TECHNICAL TICKET");
+                    Console.WriteLine("\r\nComment section cannot be shorter than 20 characters. Compile a more extensive summary of the Customer's issue (limit 250 characters): ");
                     ticketComment = Console.ReadLine();
                 }
             }
@@ -71,55 +120,6 @@ namespace IndividualProject
                     return user;
                 }
             }
-        }
-        public static void QuasarScreen(string currentUser)
-        {
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
-            CenterText("Quasar CRM Program - V2.4.1");
-            CenterText("-IT Crowd-");
-            CenterText($"[{currentUser}]");
-            WriteBottomLine("~CB6 Individual Project~");
-            Console.ResetColor();
-            WriteAt(0, 3);
-        }
-
-        public static void SpecialThanksMessage()
-        {
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            for (int blink = 0; blink < 6; blink++)
-            {
-                if (blink % 2 == 0)
-                {
-                    WriteBottomLine("~~~~~Special thanks to Afro~~~~~");
-                    Console.ForegroundColor = ConsoleColor.DarkCyan;
-                    System.Threading.Thread.Sleep(300);
-                }
-                else
-                {
-                    WriteBottomLine("~~~~~Special thanks to Afro~~~~~");
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    System.Threading.Thread.Sleep(300);
-                }
-            }
-        }
-
-        public static void WriteAt(int column, int row)
-        {
-            Console.SetCursorPosition(column, row);
-        }
-
-        public static void CenterText(string text)
-        {
-            Console.WriteLine(string.Format("{0," + (Console.WindowWidth + text.Length) / 2 + "}", text));
-        }
-
-        public static void WriteBottomLine(string text)
-        {
-            int x = Console.CursorLeft;
-            int y = Console.CursorTop;
-            Console.CursorTop = Console.WindowTop + Console.WindowHeight - 2;
-            CenterText(text);
         }
     }
 }
