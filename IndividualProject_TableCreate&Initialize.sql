@@ -1,13 +1,21 @@
+CREATE DATABASE Project1_Individual
+GO
+
+USE Project1_Individual
+GO
+
 --Table/procedure/trigger creation. Followed up by initializing values 
 
 CREATE TABLE UserCredentials
 (
 	username VARCHAR(20) NOT NULL PRIMARY KEY, 
 	passphrase VARCHAR(20) NOT NULL,
+	randomString UNIQUEIDENTIFIER NOT NULL,
 	userRole VARCHAR(20) NOT NULL,
 	currentStatus VARCHAR(10) NOT NULL,
 	lastLoginDateTime DATETIME
 );
+GO
 
 CREATE TABLE CustomerTickets
 (
@@ -18,6 +26,7 @@ CREATE TABLE CustomerTickets
 	ticketStatus VARCHAR(10) NOT NULL,
 	comments VARCHAR(500)
 );
+GO
 
 CREATE TABLE DeletedCustomerTickets
 (
@@ -28,7 +37,9 @@ CREATE TABLE DeletedCustomerTickets
 	ticketStatus VARCHAR(10) NOT NULL,
 	comments VARCHAR(500)
 );
+GO
 
+--For safety reasons when someone deletes a TroubleTicket the trigger fires and it stores it to a seperate table that isn't accessible from the program
 CREATE TRIGGER StoreDeletedTickets ON CustomerTickets
 FOR DELETE
 AS
@@ -43,6 +54,7 @@ BEGIN
 
 	INSERT INTO DeletedCustomerTickets VALUES(@ticketID, @dateCreated, @username, @userAssignedTo, @ticketStatus, @comments)
 END
+GO
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE RemoveUsernameFromDatabase
@@ -52,13 +64,20 @@ BEGIN
 	DELETE FROM UserCredentials WHERE username = @username
 	PRINT 'Username ' + CAST(@username AS VARCHAR(20)) + ' has been successfully removed from Database.'
 END
+GO
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE InsertNewUserIntoDatabase @username VARCHAR(20), @passphrase VARCHAR(20), @userRole VARCHAR(20)
 AS
 BEGIN
-	INSERT INTO UserCredentials VALUES (@username, @passphrase, @userRole, 'inactive', NULL)
+	DECLARE @randomString UNIQUEIDENTIFIER = NEWID()
+	DECLARE @saltPassphrase VARCHAR(MAX)
+	
+	SET @saltPassphrase = CAST(@passphrase AS VARCHAR(MAX)) + CAST(@randomString AS VARCHAR(MAX))
+
+	INSERT INTO UserCredentials VALUES (@username, HASHBYTES('SHA1', @saltPassphrase), @randomString, @userRole, 'inactive', NULL)
 END
+GO
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE SelectCurrentUserFromDatabase
@@ -66,6 +85,7 @@ AS
 BEGIN
 	SELECT TOP 1 username FROM UserCredentials ORDER BY lastLoginDateTime DESC
 END
+GO
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE SelectCurrentUserRoleFromDatabase
@@ -80,6 +100,7 @@ AS
 BEGIN
 	SELECT currentStatus FROM (SELECT TOP 1 * FROM UserCredentials ORDER BY lastLoginDateTime DESC) currentUser
 END
+GO
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE SetCurrentUserStatusToInactive
@@ -89,6 +110,7 @@ BEGIN
 	SET currentStatus = 'inactive'
 	FROM  (SELECT TOP 1 currentStatus FROM UserCredentials ORDER BY lastLoginDateTime DESC) currentUser
 END
+GO
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE SetCurrentUserStatusToActive @username VARCHAR(20)
@@ -98,6 +120,7 @@ BEGIN
 	SET currentStatus = 'active', lastLoginDateTime = GETDATE()
 	WHERE username = @username
 END
+GO
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE ViewAvailableUsersInDatabase
@@ -105,14 +128,23 @@ AS
 BEGIN
 	SELECT * from UserCredentials EXCEPT (SELECT * FROM UserCredentials WHERE username = 'admin')
 END
+GO
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE CheckUniqueCredentials @usernameCheck VARCHAR(20), @passphraseCheck VARCHAR(20)
 AS
 BEGIN
+	--DECLARE @passwordSalt VARBINARY(256)
+	--DECLARE @hash VARBINARY(MAX)
+	--SET @passphraseCheck = (SELECT CONVERT(VARBINARY(256), @passphraseCheck, 1))
+	
+	--SET @passwordSalt = (SELECT randomString FROM UserCredentials WHERE username = @usernameCheck)
+	--SET @hash = HASHBYTES('SHA1', CAST(@passwordSalt AS VARCHAR(MAX)) + CAST(@passphraseCheck AS VARCHAR(MAX)))
+	
 	SELECT COUNT(*) FROM UserCredentials
-	WHERE username = @usernameCheck AND passphrase = @passphraseCheck
+	WHERE username = @usernameCheck AND passphrase = HASHBYTES('SHA1', CAST(@passphraseCheck AS VARCHAR(MAX)) + CAST(randomString AS VARCHAR(MAX)))
 END	
+GO
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE CheckUniqueUsername @usernameCheck VARCHAR(20)
@@ -121,6 +153,7 @@ BEGIN
 	SELECT COUNT(*) FROM UserCredentials
 	WHERE username = @usernameCheck
 END	
+GO
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE OpenNewTechnicalTicket 
@@ -129,6 +162,7 @@ AS
 BEGIN
 	INSERT INTO CustomerTickets VALUES (GETDATE(), @username, @userAssignedTo, 'open', @comments)
 END	
+GO
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE fetchNewTicketID 
@@ -136,6 +170,7 @@ AS
 BEGIN
 	SELECT TOP 1 ticketID FROM CustomerTickets ORDER BY ticketID DESC
 END	
+GO
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE SetTicketStatusToClosed @ticketID INT
@@ -143,6 +178,7 @@ AS
 BEGIN
 	UPDATE CustomerTickets SET ticketStatus = 'closed' WHERE ticketID = @ticketID
 END	
+GO
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE DeleteCustomerTicket @ticketID INT
@@ -150,6 +186,7 @@ AS
 BEGIN
 	DELETE FROM CustomerTickets WHERE ticketID = @ticketID
 END	
+GO
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE SelectOpenCustomerTickets
@@ -157,6 +194,7 @@ AS
 BEGIN
 	SELECT * FROM CustomerTickets WHERE ticketStatus = 'open'
 END	
+GO
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE SelectSingleCustomerTicket @ticketID INT
@@ -164,6 +202,7 @@ AS
 BEGIN
 	SELECT * FROM CustomerTickets WHERE ticketID = @ticketID
 END	
+GO
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE EditCustomerTicketCommentSection @ticketComment VARCHAR (500), @ID INT
@@ -171,6 +210,7 @@ AS
 BEGIN
 	UPDATE CustomerTickets SET comments = @ticketComment WHERE ticketID = @ID
 END	
+GO
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE ChangeUserAssignedTo @username VARCHAR (500), @ID INT
@@ -178,6 +218,7 @@ AS
 BEGIN
 	UPDATE CustomerTickets SET userAssignedTo = @username WHERE ticketID = @ID
 END	
+GO
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE SelectTicketIDWithOpenStatus
@@ -185,6 +226,7 @@ AS
 BEGIN
 	SELECT ticketID FROM CustomerTickets WHERE ticketStatus = 'open'
 END	
+GO
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE SelectUsersAndRolesInDatabase
@@ -192,6 +234,7 @@ AS
 BEGIN
 	SELECT username, userRole FROM UserCredentials
 END	
+GO
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE SelectSingleUserRole @username VARCHAR(20)
@@ -199,6 +242,7 @@ AS
 BEGIN
 	SELECT userRole FROM UserCredentials WHERE username = @username
 END	
+GO
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE UpdateUserRole @username VARCHAR(20), @userRole VARCHAR(20)
@@ -206,6 +250,7 @@ AS
 BEGIN
 	UPDATE UserCredentials SET userRole = @userRole WHERE username = @username
 END	
+GO
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE CountOpenTicketsAssignedToUser @userAssignedTo VARCHAR(20)
@@ -214,6 +259,7 @@ BEGIN
 	SELECT COUNT(*) FROM CustomerTickets
 	WHERE userAssignedTo = @userAssignedTo AND ticketStatus = 'Open'
 END	
+GO
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE SelectOpenTicketsAssignedToUser 
@@ -235,6 +281,7 @@ BEGIN
 	SELECT * FROM @Temp 
 	WHERE userAssignedTo = @userAssignedTo
 END
+GO
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 --Test users/TTs. Only admin-admin needs to be initialized
@@ -250,5 +297,4 @@ EXECUTE OpenNewTechnicalTicket 'admin', 'giorgos', 'Led Power indicator on UPS d
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 select * from UserCredentials
-select * from CustomerTickets
-select * from DeletedCustomerTickets
+delete from UserCredentials where username = 'username: giorgos'

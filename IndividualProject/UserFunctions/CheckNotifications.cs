@@ -26,7 +26,8 @@ namespace IndividualProject
             {
                 if (countTickets == 0)
                 {
-                    Console.WriteLine("You do not have any Tickets assigned to you.\n\n(Press any key to continue)");
+                    Console.WriteLine("\r\nYou do not have any Tickets assigned to you.\n\n(Press any key to continue)");
+                    Console.ReadKey();
                 }
                 else
                 {

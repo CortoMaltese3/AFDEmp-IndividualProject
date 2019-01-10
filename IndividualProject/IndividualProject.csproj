@@ -62,7 +62,7 @@
   <ItemGroup>
     <Compile Include="UserFunctions\ActiveUserFunctions.cs" />
     <Compile Include="ApplicationMenu.cs" />
-    <Compile Include="CheckNotifications.cs" />
+    <Compile Include="UserFunctions\CheckNotifications.cs" />
     <Compile Include="TroubleTickets\EditExistingTroubleTickets.cs" />
     <Compile Include="TroubleTickets\DeleteTroubleTickets.cs" />
     <Compile Include="TroubleTickets\CloseTroubleTickets.cs" />

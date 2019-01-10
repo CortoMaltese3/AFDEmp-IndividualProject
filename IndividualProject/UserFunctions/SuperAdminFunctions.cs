@@ -20,10 +20,11 @@ namespace IndividualProject
             }
             else
             {
+                pendingUsername = pendingUsername.Remove(0, 10);
                 string pendingPassphrase = DataToTextFile.GetPendingPassphrase().Remove(0, 12);
                 string yes = "Yes";
                 string no = "No";
-                string createUserMsg = $"\r\nYou are about to create a new username-password entry : {pendingUsername.Remove(0, 10)} - {pendingPassphrase}.\r\nWould you like to proceed?\r\n";
+                string createUserMsg = $"\r\nYou are about to create a new username-password entry : {pendingUsername} - {pendingPassphrase}.\r\nWould you like to proceed?\r\n";
                 string yesOrNoSelection = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, createUserMsg).option;
 
                 if (yesOrNoSelection == yes)
