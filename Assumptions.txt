@@ -1,0 +1,59 @@
+Project 1 - Individual
+
+Company IT Crowd CRM Platform
+
+'Quasar' is a platform used by the IT Crowd Enterprise to register customer trouble tickets.
+
+GUIDELINE
+1) Login interface. Employees must login with their login Credentials. If they are new to Quasar they need to apply for a new username and password to the system's super admin by filing a request.
+2) super admin pulls the requests freqently and creates the new accounts accordingly. Once the account has been activated, user can login. Default User's role is User and one can be promoted to Moderator and Administrator by the super_admin.
+3) Users can create new tickets and view existing ones. Moderators can create new tickets, view and edit existing ones. Administrators can create new tickets, view, edit and delete existing ones. 
+4) After a user logins successfuly in Quasar, he/she may choose between the available functions. Use up-down-left-right keys to navigate to Quasar's menus.
+5) Note that noone can delete a Ticket permanently due to legal issues. Deleting a Ticket fires a trigger in the database that stores the deleted Ticket in a protected table.
+
+MANAGING A CUSTOMER TICKET
+1) Users, Moderators and Administrators cannot assign a ticket to the super-admin. Nevertheless, super-admin may choose to assign a ticket to himself/herself.
+2) Anytime a user assigns a ticket to another user, he/she will receive a notification. Note that there is no live feed, so a user must check his/her notifications freqently
+
+ROLES (FUNCTIONS)
+1) view transacted data between users (view opened Tickets)
+2) edit the transacted data between users (edit Ticket's commenting section, edit Ticket's User Assignment, change Ticket's status to Closed)
+3) delete the transacted data between users (delete a Ticket)
+*4) create new users from requests, remove users, change user's Role
+
+USER STATUS
+1) user (1)
+2) moderator (1-2)
+3) administrator (1-2-3)
+4) super admin (1-2-3-4 admin/admin)
+
+TICKET FORM
+TICKET ID:
+DATE:
+USER CREATED BY:
+USER ASSIGNED TO:
+STATUS:
+COMMENTS:
+
+########################################################################################################################
+Further Ideas for expanding
+
+1) create a list of forbidden words as usernames in order to protect from injection attacks DONE (updating)
+2) password must contain at least 5 characters (maybe 1 number)  (in progress for later updates)
+3) 3 wrong password guesses marks user as locked (in progress for later updates)
+4) select hashbytes('MD5', 'test') για να μετατρέψω το κωδικό για ασφάλεια (in progress for later updates)
+    (να δω και τη μεθοδο salting)
+5) make a user request to be promoted/demoted. Super admin can pull these requests (in progress for later updates)
+6) build status line DONE (planned to be improved in later updates)
+7) add user status next to username on QuasarScreen (in progress for later updates)
+8) replace user, moderator, admin with agent, secondLevel, thirdLevel (in progress for later updates)
+
+########################################################################################################################
+Matching Deliverables with Project
+
+A) Logical Units of the application
+    1. main application -> ApplicationMenu
+    2. login screen -> ConnectToServer
+    3. Application’s menus -> ActiveUserFunctions
+    4. Database’s access -> RoleFunctions & TransactedData
+    5. Files’ access -> CreateNewAccount & TransactedData
