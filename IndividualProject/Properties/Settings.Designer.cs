@@ -25,9 +25,8 @@ namespace IndividualProject.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("\"Server=localhost; Database = Project1_Individual; User Id = admin; Password = ad" +
-            "min\"")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Server=localhost; Database = Project1_Individual; User Id = admin; Password = adm" +
+            "in")]
         public string connectionString {
             get {
                 return ((string)(this["connectionString"]));

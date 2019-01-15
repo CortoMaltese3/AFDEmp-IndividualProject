@@ -133,14 +133,7 @@ GO
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE CheckUniqueCredentials @usernameCheck VARCHAR(20), @passphraseCheck VARCHAR(20)
 AS
-BEGIN
-	--DECLARE @passwordSalt VARBINARY(256)
-	--DECLARE @hash VARBINARY(MAX)
-	--SET @passphraseCheck = (SELECT CONVERT(VARBINARY(256), @passphraseCheck, 1))
-	
-	--SET @passwordSalt = (SELECT randomString FROM UserCredentials WHERE username = @usernameCheck)
-	--SET @hash = HASHBYTES('SHA1', CAST(@passwordSalt AS VARCHAR(MAX)) + CAST(@passphraseCheck AS VARCHAR(MAX)))
-	
+BEGIN	
 	SELECT COUNT(*) FROM UserCredentials
 	WHERE username = @usernameCheck AND passphrase = HASHBYTES('SHA1', CAST(@passphraseCheck AS VARCHAR(MAX)) + CAST(randomString AS VARCHAR(MAX)))
 END	
