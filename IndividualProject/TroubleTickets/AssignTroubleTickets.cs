@@ -5,6 +5,8 @@ namespace IndividualProject
 {
     class AssignTroubleTickets
     {       
+        //User selects whether to assign the ticket to himself or transfer ownership to another
+
         public static string AssignTicketToUser()
         {
             string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();

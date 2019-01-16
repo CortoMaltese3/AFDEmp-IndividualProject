@@ -22,7 +22,7 @@ namespace IndividualProject
             string logOut = "\nLog Out";
             string message = "Choose one of the following functions\n";
 
-
+            //Active User Functions. Control of actions is maintained by excluding a user from certain methods.
             switch (currentUsernameRole)
             {
                 #region Super Admin Functions

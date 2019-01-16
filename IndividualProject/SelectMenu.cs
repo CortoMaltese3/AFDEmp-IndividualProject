@@ -5,6 +5,7 @@ namespace IndividualProject
 {
     class SelectMenu
     {        
+        //Creates the Vertical options Menu
         public static UserOptionList MenuColumn(List<string> ListOfOptions, string currentUser, string message)
         {
             string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
@@ -12,6 +13,7 @@ namespace IndividualProject
             ConsoleKeyInfo currentKeyPressed;
             do
             {
+                //Resets the console when a key is pressed and the next option is highlighted
                 OutputControl.QuasarScreen(currentUser);                
                 Console.WriteLine(message);
                 for (int option = 0; option < ListOfOptions.Count; option++)
@@ -56,6 +58,7 @@ namespace IndividualProject
             };
         }
 
+        //Creates the Horizontal options Menu
         public static UserOptionList MenuRow(List<string> ListOfOptions, string currentUser, string message)
         {
             int currentOption = 0;

@@ -5,6 +5,7 @@ using System.Data;
 
 namespace IndividualProject
 {
+    //The ConnectToServer class handles the interactions with the Database
     static class ConnectToServer
     {
         public static void UserLoginCredentials()
@@ -19,15 +20,15 @@ namespace IndividualProject
                 if (CheckUsernameAndPasswordMatchInDatabase(username, passphrase))
                 {
                     SetCurrentUserStatusToActive(username);
-                    OutputControl.QuasarScreen(username);                    
-                    ColorAndAnimationControl.ColoredText($"Connection Established! Welcome back {username}!", ConsoleColor.DarkGreen);                    
+                    OutputControl.QuasarScreen(username);
+                    ColorAndAnimationControl.ColoredText($"Connection Established! Welcome back {username}!", ConsoleColor.DarkGreen);
                     System.Threading.Thread.Sleep(1500);
                     ActiveUserFunctions.UserFunctionMenuScreen(RetrieveCurrentUsernameRoleFromDatabase());
                 }
                 else
                 {
                     OutputControl.QuasarScreen("Not Registered");
-                    ColorAndAnimationControl.ColoredText($"\r\nInvalid Username or Passphrase. Try again.\n\n(press any key to continue)", ConsoleColor.DarkRed);                    
+                    ColorAndAnimationControl.ColoredText($"\r\nInvalid Username or Passphrase. Try again.\n\n(press any key to continue)", ConsoleColor.DarkRed);
                     Console.ReadKey();
                     UserLoginCredentials();
                 }
@@ -41,9 +42,9 @@ namespace IndividualProject
                 connectionString.Open();
                 connectionString.Close();
             }
-            catch (SqlException e)
+            catch (SqlException exc)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine(exc.Message);
                 return false;
             }
             return true;
@@ -53,15 +54,22 @@ namespace IndividualProject
         {
             using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
             {
-                dbcon.Open();
-                SqlCommand checkUsername = new SqlCommand("CheckUniqueCredentials", dbcon);
-                checkUsername.CommandType = CommandType.StoredProcedure;
-                checkUsername.Parameters.AddWithValue("@usernameCheck", usernameCheck);
-                checkUsername.Parameters.AddWithValue("@passphraseCheck", passphraseCheck);
-                int UserCount = (int)checkUsername.ExecuteScalar();
-                if (UserCount != 0)
+                try
                 {
-                    return true;
+                    dbcon.Open();
+                    SqlCommand checkUsername = new SqlCommand("CheckUniqueCredentials", dbcon);
+                    checkUsername.CommandType = CommandType.StoredProcedure;
+                    checkUsername.Parameters.AddWithValue("@usernameCheck", usernameCheck);
+                    checkUsername.Parameters.AddWithValue("@passphraseCheck", passphraseCheck);
+                    int UserCount = (int)checkUsername.ExecuteScalar();
+                    if (UserCount != 0)
+                    {
+                        return true;
+                    }
+                }
+                catch (SqlException exc)
+                {
+                    Console.WriteLine(exc.Message);
                 }
                 return false;
             }
@@ -69,99 +77,158 @@ namespace IndividualProject
 
         private static void SetCurrentUserStatusToActive(string currentUsername)
         {
-            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+            try
             {
-                dbcon.Open();
-                SqlCommand SetStatusToActive = new SqlCommand($"SetCurrentUserStatusToActive", dbcon);
-                SetStatusToActive.CommandType = CommandType.StoredProcedure;
-                SetStatusToActive.Parameters.AddWithValue("@username", currentUsername);
-                SetStatusToActive.ExecuteScalar();
+                using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+                {
+                    dbcon.Open();
+                    SqlCommand SetStatusToActive = new SqlCommand($"SetCurrentUserStatusToActive", dbcon);
+                    SetStatusToActive.CommandType = CommandType.StoredProcedure;
+                    SetStatusToActive.Parameters.AddWithValue("@username", currentUsername);
+                    SetStatusToActive.ExecuteScalar();
+                }
             }
+            catch (SqlException exc)
+            {
+                Console.WriteLine(exc.Message);
+            }
+
         }
 
         private static void SetCurrentUserStatusToInactive(string currentUsername)
         {
-            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+            try
             {
-                dbcon.Open();
-                SqlCommand SetStatusToInactive = new SqlCommand("EXECUTE SetCurrentUserStatusToInactive", dbcon);
-                SetStatusToInactive.ExecuteScalar();
+                using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+                {
+                    dbcon.Open();
+                    SqlCommand SetStatusToInactive = new SqlCommand("EXECUTE SetCurrentUserStatusToInactive", dbcon);
+                    SetStatusToInactive.ExecuteScalar();
+                }
+            }
+            catch (SqlException exc)
+            {
+                Console.WriteLine(exc.Message);
             }
         }
 
         public static string RetrieveCurrentUserFromDatabase()
         {
-            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+            try
             {
-                dbcon.Open();
-                SqlCommand RetrieveLoginCredentials = new SqlCommand($"EXECUTE SelectCurrentUserFromDatabase", dbcon);
-                string currentUsername = (string)RetrieveLoginCredentials.ExecuteScalar();
-                return currentUsername;
+                using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+                {
+                    dbcon.Open();
+                    SqlCommand RetrieveLoginCredentials = new SqlCommand($"EXECUTE SelectCurrentUserFromDatabase", dbcon);
+                    string currentUsername = (string)RetrieveLoginCredentials.ExecuteScalar();
+                    return currentUsername;
+                }
             }
+            catch (SqlException)
+            {
+                return "There has been an unexpected error while trying to connect to the DataBase";
+            }
+
         }
 
         public static string RetrieveCurrentUsernameRoleFromDatabase()
         {
-            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+            try
             {
-                dbcon.Open();
-                SqlCommand RetrieveCurrentUsernameRole = new SqlCommand("EXECUTE SelectCurrentUserRoleFromDatabase", dbcon);
-                string currentRole = (string)RetrieveCurrentUsernameRole.ExecuteScalar();
-                return currentRole;
+                using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+                {
+                    dbcon.Open();
+                    SqlCommand RetrieveCurrentUsernameRole = new SqlCommand("EXECUTE SelectCurrentUserRoleFromDatabase", dbcon);
+                    string currentRole = (string)RetrieveCurrentUsernameRole.ExecuteScalar();
+                    return currentRole;
+                }
+            }
+
+            catch (SqlException)
+            {
+                return "There has been an unexpected error while trying to connect to the DataBase";
             }
         }
 
         private static string RetrieveCurrentUserStatusFromDatabase()
         {
-            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+            try
             {
-                dbcon.Open();
-                SqlCommand RetrieveCurrentUserStatus = new SqlCommand("EXECUTE SelectCurrentUserStatusFromDatabase", dbcon);
-                string currentUserStatus = (string)RetrieveCurrentUserStatus.ExecuteScalar();
-                return currentUserStatus;
+                using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+                {
+                    dbcon.Open();
+                    SqlCommand RetrieveCurrentUserStatus = new SqlCommand("EXECUTE SelectCurrentUserStatusFromDatabase", dbcon);
+                    string currentUserStatus = (string)RetrieveCurrentUserStatus.ExecuteScalar();
+                    return currentUserStatus;
+                }
+            }
+            catch (SqlException)
+            {
+                return "There has been an unexpected error while trying to connect to the DataBase";
             }
         }
 
         public static bool CheckUsernameAvailabilityInDatabase(string usernameCheck)
         {
-            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+            try
             {
-                dbcon.Open();
-                SqlCommand checkUsername = new SqlCommand("CheckUniqueUsername", dbcon);
-                checkUsername.CommandType = CommandType.StoredProcedure;
-                checkUsername.Parameters.AddWithValue("@usernameCheck", usernameCheck);
-                int UserCount = (int)checkUsername.ExecuteScalar();
-                if (UserCount != 0)
+                using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
                 {
-                    return false;
+                    dbcon.Open();
+                    SqlCommand checkUsername = new SqlCommand("CheckUniqueUsername", dbcon);
+                    checkUsername.CommandType = CommandType.StoredProcedure;
+                    checkUsername.Parameters.AddWithValue("@usernameCheck", usernameCheck);
+                    int UserCount = (int)checkUsername.ExecuteScalar();
+                    if (UserCount != 0)
+                    {
+                        return false;
+                    }
                 }
-                return true;
             }
+            catch (SqlException exc)
+            {
+                Console.WriteLine(exc.Message);
+            }
+            return true;
         }
 
         public static void InsertNewUserIntoDatabase(string pendingUsername, string pendingPassphrase, string pendingRole)
         {
-            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+            try
             {
-                dbcon.Open();
-                SqlCommand appendUserToDatabase = new SqlCommand("InsertNewUserIntoDatabase", dbcon);
-                appendUserToDatabase.CommandType = CommandType.StoredProcedure;
-                appendUserToDatabase.Parameters.AddWithValue("@username", pendingUsername);
-                appendUserToDatabase.Parameters.AddWithValue("@passphrase", pendingPassphrase);
-                appendUserToDatabase.Parameters.AddWithValue("@userRole", pendingRole);
-                appendUserToDatabase.ExecuteScalar();
+                using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+                {
+                    dbcon.Open();
+                    SqlCommand appendUserToDatabase = new SqlCommand("InsertNewUserIntoDatabase", dbcon);
+                    appendUserToDatabase.CommandType = CommandType.StoredProcedure;
+                    appendUserToDatabase.Parameters.AddWithValue("@username", pendingUsername);
+                    appendUserToDatabase.Parameters.AddWithValue("@passphrase", pendingPassphrase);
+                    appendUserToDatabase.Parameters.AddWithValue("@userRole", pendingRole);
+                    appendUserToDatabase.ExecuteScalar();
+                }
+            }
+            catch (SqlException exc)
+            {
+                Console.WriteLine(exc.Message);
             }
         }
 
         public static void RemoveUsernameFromDatabase(string username)
         {
-            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+            try
             {
-                dbcon.Open();
-                SqlCommand deleteUsername = new SqlCommand("RemoveUsernameFromDatabase", dbcon);
-                deleteUsername.CommandType = CommandType.StoredProcedure;
-                deleteUsername.Parameters.AddWithValue("@username", username);
-                deleteUsername.ExecuteNonQuery();
+                using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+                {
+                    dbcon.Open();
+                    SqlCommand deleteUsername = new SqlCommand("RemoveUsernameFromDatabase", dbcon);
+                    deleteUsername.CommandType = CommandType.StoredProcedure;
+                    deleteUsername.Parameters.AddWithValue("@username", username);
+                    deleteUsername.ExecuteNonQuery();
+                }
+            }
+            catch (SqlException exc)
+            {
+                Console.WriteLine(exc.Message);
             }
         }
 
@@ -203,322 +270,413 @@ namespace IndividualProject
 
         public static void SelectOpenTicketsAssignedToUser(string currentUsername)
         {
-            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+            try
             {
-                dbcon.Open();
-                SqlCommand OpenListOfTicketsAssignedToUser = new SqlCommand("SelectOpenTicketsAssignedToUser", dbcon);
-                OpenListOfTicketsAssignedToUser.CommandType = CommandType.StoredProcedure;
-                OpenListOfTicketsAssignedToUser.Parameters.AddWithValue("@userAssignedTo", currentUsername);
-
-                using (var reader = OpenListOfTicketsAssignedToUser.ExecuteReader())
+                using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
                 {
-                    List<string> ShowtTicketsList = new List<string>();
-                    while (reader.Read())
+                    dbcon.Open();
+                    SqlCommand OpenListOfTicketsAssignedToUser = new SqlCommand("SelectOpenTicketsAssignedToUser", dbcon);
+                    OpenListOfTicketsAssignedToUser.CommandType = CommandType.StoredProcedure;
+                    OpenListOfTicketsAssignedToUser.Parameters.AddWithValue("@userAssignedTo", currentUsername);
+
+                    using (var reader = OpenListOfTicketsAssignedToUser.ExecuteReader())
                     {
-                        int ticketID = (int)reader[0];
-                        DateTime dateCreated = (DateTime)reader[1];
-                        string username = (string)reader[2];
-                        string userAssignedTo = (string)reader[3];
-                        string ticketStatus = (string)reader[4];
-                        string comments = (string)reader[5];
-                        var stringLength = comments.Length;
-                        if (stringLength > 60)
+                        List<string> ShowtTicketsList = new List<string>();
+                        while (reader.Read())
                         {
-                            comments = comments.Substring(0, 60) + "...";
+                            int ticketID = (int)reader[0];
+                            DateTime dateCreated = (DateTime)reader[1];
+                            string username = (string)reader[2];
+                            string userAssignedTo = (string)reader[3];
+                            string ticketStatus = (string)reader[4];
+                            string comments = (string)reader[5];
+                            var stringLength = comments.Length;
+                            if (stringLength > 60)
+                            {
+                                comments = comments.Substring(0, 60) + "...";
+                            }
+                            ShowtTicketsList.Add(ticketID.ToString());
+                            ShowtTicketsList.Add(dateCreated.ToString());
+                            ShowtTicketsList.Add(username);
+                            ShowtTicketsList.Add(userAssignedTo);
+                            ShowtTicketsList.Add(ticketStatus);
+                            ShowtTicketsList.Add(comments);
+                            Console.WriteLine($"TicketID: {ticketID} \r\nDate created: {dateCreated} \r\nCreated By: {username} \r\nAssigned To: {userAssignedTo} \r\nTicket status: {ticketStatus} \r\bComment preview: {comments}");
+                            Console.WriteLine(new string('#', Console.WindowWidth));
+                            Console.WriteLine();
                         }
-                        ShowtTicketsList.Add(ticketID.ToString());
-                        ShowtTicketsList.Add(dateCreated.ToString());
-                        ShowtTicketsList.Add(username);
-                        ShowtTicketsList.Add(userAssignedTo);
-                        ShowtTicketsList.Add(ticketStatus);
-                        ShowtTicketsList.Add(comments);
-                        Console.WriteLine($"TicketID: {ticketID} \r\nDate created: {dateCreated} \r\nCreated By: {username} \r\nAssigned To: {userAssignedTo} \r\nTicket status: {ticketStatus} \r\bComment preview: {comments}");
-                        Console.WriteLine(new string('#', Console.WindowWidth));
-                        Console.WriteLine();
                     }
                 }
             }
+            catch(SqlException exc)
+            {
+                Console.WriteLine(exc.Message);
+            }            
         }
 
         public static void SelectSingleUserRole(string username, string currentUsername, string userRole)
         {
-            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+            try
             {
-                dbcon.Open();
-                SqlCommand selectPreviousUserRole = new SqlCommand("SelectSingleUserRole", dbcon);
-                selectPreviousUserRole.CommandType = CommandType.StoredProcedure;
-                selectPreviousUserRole.Parameters.AddWithValue("@username", username);
-                string previousUserRole = (string)selectPreviousUserRole.ExecuteScalar();
-                while (previousUserRole == userRole)
+                using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
                 {
-                    OutputControl.QuasarScreen(currentUsername);
-                    Console.WriteLine();
-                    Console.WriteLine($"User '{username}' already is {userRole}. Please proceed to choose a different Role Status\n\n(Press any key to continue)");
-                    Console.ReadKey();
-                    OutputControl.QuasarScreen(currentUsername);
-                    Console.WriteLine();
-                    userRole = OutputControl.SelectUserRole();
-                    selectPreviousUserRole = new SqlCommand("SelectSingleUserRole", dbcon);
+                    dbcon.Open();
+                    SqlCommand selectPreviousUserRole = new SqlCommand("SelectSingleUserRole", dbcon);
                     selectPreviousUserRole.CommandType = CommandType.StoredProcedure;
                     selectPreviousUserRole.Parameters.AddWithValue("@username", username);
-                    previousUserRole = (string)selectPreviousUserRole.ExecuteScalar();
-                }
+                    string previousUserRole = (string)selectPreviousUserRole.ExecuteScalar();
+                    while (previousUserRole == userRole)
+                    {
+                        OutputControl.QuasarScreen(currentUsername);
+                        Console.WriteLine();
+                        Console.WriteLine($"User '{username}' already is {userRole}. Please proceed to choose a different Role Status\n\n(Press any key to continue)");
+                        Console.ReadKey();
+                        OutputControl.QuasarScreen(currentUsername);
+                        Console.WriteLine();
+                        userRole = OutputControl.SelectUserRole();
+                        selectPreviousUserRole = new SqlCommand("SelectSingleUserRole", dbcon);
+                        selectPreviousUserRole.CommandType = CommandType.StoredProcedure;
+                        selectPreviousUserRole.Parameters.AddWithValue("@username", username);
+                        previousUserRole = (string)selectPreviousUserRole.ExecuteScalar();
+                    }
 
-                SqlCommand alterUserRole = new SqlCommand("UpdateUserRole", dbcon);
-                alterUserRole.CommandType = CommandType.StoredProcedure;
-                alterUserRole.Parameters.AddWithValue("@username", username);
-                alterUserRole.Parameters.AddWithValue("@userRole", userRole);
-                SqlCommand selectUserRole = new SqlCommand("SelectSingleUserRole", dbcon);
-                selectUserRole.CommandType = CommandType.StoredProcedure;
-                selectUserRole.Parameters.AddWithValue("@username", username);
-                alterUserRole.ExecuteScalar();
-                string newUserRole = (string)selectUserRole.ExecuteScalar();
-                OutputControl.QuasarScreen(currentUsername);
-                ColorAndAnimationControl.UniversalLoadingOuput("Modifying User's role status in progress");
-                Console.WriteLine($"User {username} has been successfully modified as {newUserRole}\n\n(Press any key to continue)");
-                Console.ReadKey();
+                    SqlCommand alterUserRole = new SqlCommand("UpdateUserRole", dbcon);
+                    alterUserRole.CommandType = CommandType.StoredProcedure;
+                    alterUserRole.Parameters.AddWithValue("@username", username);
+                    alterUserRole.Parameters.AddWithValue("@userRole", userRole);
+                    SqlCommand selectUserRole = new SqlCommand("SelectSingleUserRole", dbcon);
+                    selectUserRole.CommandType = CommandType.StoredProcedure;
+                    selectUserRole.Parameters.AddWithValue("@username", username);
+                    alterUserRole.ExecuteScalar();
+                    string newUserRole = (string)selectUserRole.ExecuteScalar();
+                    OutputControl.QuasarScreen(currentUsername);
+                    ColorAndAnimationControl.UniversalLoadingOuput("Modifying User's role status in progress");
+                    Console.WriteLine($"User {username} has been successfully modified as {newUserRole}\n\n(Press any key to continue)");
+                    Console.ReadKey();
+                }
             }
+            catch (SqlException exc)
+            {
+                Console.WriteLine(exc.Message);
+            }            
         }
 
         public static void OpenNewTechnicalTicket(string currentUsername, string userAssignedTo, string comment)
         {
-            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+            try
             {
-                dbcon.Open();
-                SqlCommand openNewTechnicalTicket = new SqlCommand("OpenNewTechnicalTicket", dbcon);
-                openNewTechnicalTicket.CommandType = CommandType.StoredProcedure;
-                openNewTechnicalTicket.Parameters.AddWithValue("@username", currentUsername);
-                openNewTechnicalTicket.Parameters.AddWithValue("@userAssignedTo", userAssignedTo);
-                openNewTechnicalTicket.Parameters.AddWithValue("@comments", comment);
-                openNewTechnicalTicket.ExecuteNonQuery();
+                using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+                {
+                    dbcon.Open();
+                    SqlCommand openNewTechnicalTicket = new SqlCommand("OpenNewTechnicalTicket", dbcon);
+                    openNewTechnicalTicket.CommandType = CommandType.StoredProcedure;
+                    openNewTechnicalTicket.Parameters.AddWithValue("@username", currentUsername);
+                    openNewTechnicalTicket.Parameters.AddWithValue("@userAssignedTo", userAssignedTo);
+                    openNewTechnicalTicket.Parameters.AddWithValue("@comments", comment);
+                    openNewTechnicalTicket.ExecuteNonQuery();
 
-                SqlCommand fetchNewTicketID = new SqlCommand("EXECUTE fetchNewTicketID", dbcon);
-                int ticketID = (int)fetchNewTicketID.ExecuteScalar();
-                OutputControl.QuasarScreen(currentUsername);
-                ColorAndAnimationControl.UniversalLoadingOuput("Filing new customer ticket in progress");
-                Console.WriteLine($"New Customer Ticket with ID: {ticketID} has been successfully created and assigned to {userAssignedTo}. Status: Open");
+                    SqlCommand fetchNewTicketID = new SqlCommand("EXECUTE fetchNewTicketID", dbcon);
+                    int ticketID = (int)fetchNewTicketID.ExecuteScalar();
+                    OutputControl.QuasarScreen(currentUsername);
+                    ColorAndAnimationControl.UniversalLoadingOuput("Filing new customer ticket in progress");
+                    Console.WriteLine($"New Customer Ticket with ID: {ticketID} has been successfully created and assigned to {userAssignedTo}. Status: Open");
+                }
+            }
+            catch(SqlException exc)
+            {
+                Console.WriteLine(exc.Message);
             }
         }
 
         public static void SetTicketStatusToClosed(string currentUsername, int ticketID)
         {
-            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+            try
             {
-                dbcon.Open();
-                SqlCommand closeCustomerTicket = new SqlCommand($"EXECUTE SetTicketStatusToClosed {ticketID}", dbcon);
-                closeCustomerTicket.ExecuteScalar();
-                OutputControl.QuasarScreen(currentUsername);
-                ColorAndAnimationControl.UniversalLoadingOuput("Action in progress");
-                Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully marked as closed.\n\n(Press any key to continue)");
-                Console.ReadKey();
+                using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+                {
+                    dbcon.Open();
+                    SqlCommand closeCustomerTicket = new SqlCommand($"EXECUTE SetTicketStatusToClosed {ticketID}", dbcon);
+                    closeCustomerTicket.ExecuteScalar();
+                    OutputControl.QuasarScreen(currentUsername);
+                    ColorAndAnimationControl.UniversalLoadingOuput("Action in progress");
+                    Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully marked as closed.\n\n(Press any key to continue)");
+                    Console.ReadKey();
+                }
+            }
+            catch(SqlException exc)
+            {
+                Console.WriteLine(exc.Message);
             }
         }
 
         public static void EditCommentOfOpenTicket(int ID, string ticketComment)
         {
-            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+            try
             {
-                dbcon.Open();
-                SqlCommand EditTicketCommendInDatabase = new SqlCommand($"EditCustomerTicketCommentSection '{ticketComment}', {ID}", dbcon);
-                EditTicketCommendInDatabase.ExecuteScalar();
+                using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+                {
+                    dbcon.Open();
+                    SqlCommand EditTicketCommendInDatabase = new SqlCommand($"EditCustomerTicketCommentSection '{ticketComment}', {ID}", dbcon);
+                    EditTicketCommendInDatabase.ExecuteScalar();
+                }
+                Console.WriteLine($"The comment section of the Customer Ticket with [ID = {ID}] has been successfully edited\n\n(Press any key yo continue)");
+                Console.ReadKey();
             }
-            Console.WriteLine($"The comment section of the Customer Ticket with [ID = {ID}] has been successfully edited\n\n(Press any key yo continue)");
-            Console.ReadKey();
+            catch(SqlException exc)
+            {
+                Console.WriteLine(exc.Message);
+            }
         }
 
         public static void SelectSingleCustomerTicket(int ticketID)
         {
-            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+            try
             {
-                dbcon.Open();
-                SqlCommand ShowTicketsFromDatabase = new SqlCommand("SelectSingleCustomerTicket", dbcon);
-                ShowTicketsFromDatabase.CommandType = CommandType.StoredProcedure;
-                ShowTicketsFromDatabase.Parameters.AddWithValue("@ticketID", ticketID);
-                using (var reader = ShowTicketsFromDatabase.ExecuteReader())
+                using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
                 {
-                    List<string> ShowtTicketToList = new List<string>();
-                    while (reader.Read())
+                    dbcon.Open();
+                    SqlCommand ShowTicketsFromDatabase = new SqlCommand("SelectSingleCustomerTicket", dbcon);
+                    ShowTicketsFromDatabase.CommandType = CommandType.StoredProcedure;
+                    ShowTicketsFromDatabase.Parameters.AddWithValue("@ticketID", ticketID);
+                    using (var reader = ShowTicketsFromDatabase.ExecuteReader())
                     {
-                        int ID = (int)reader[0];
-                        DateTime dateCreated = (DateTime)reader[1];
-                        string username = (string)reader[2];
-                        string userAssignedTo = (string)reader[3];
-                        string ticketStatus = (string)reader[4];
-                        string comments = (string)reader[5];
+                        List<string> ShowtTicketToList = new List<string>();
+                        while (reader.Read())
+                        {
+                            int ID = (int)reader[0];
+                            DateTime dateCreated = (DateTime)reader[1];
+                            string username = (string)reader[2];
+                            string userAssignedTo = (string)reader[3];
+                            string ticketStatus = (string)reader[4];
+                            string comments = (string)reader[5];
 
-                        ShowtTicketToList.Add(ticketID.ToString());
-                        ShowtTicketToList.Add(dateCreated.ToString());
-                        ShowtTicketToList.Add(username);
-                        ShowtTicketToList.Add(userAssignedTo);
-                        ShowtTicketToList.Add(ticketStatus);
-                        ShowtTicketToList.Add(comments);
-                        Console.WriteLine($"TicketID: {ticketID} \r\nDate created: {dateCreated} \r\nCreated By: {username} \r\nAssigned To: {userAssignedTo} \r\nTicket status: {ticketStatus} \r\bComment preview: {comments}");
-                        Console.WriteLine(new string('#', Console.WindowWidth));
+                            ShowtTicketToList.Add(ticketID.ToString());
+                            ShowtTicketToList.Add(dateCreated.ToString());
+                            ShowtTicketToList.Add(username);
+                            ShowtTicketToList.Add(userAssignedTo);
+                            ShowtTicketToList.Add(ticketStatus);
+                            ShowtTicketToList.Add(comments);
+                            Console.WriteLine($"TicketID: {ticketID} \r\nDate created: {dateCreated} \r\nCreated By: {username} \r\nAssigned To: {userAssignedTo} \r\nTicket status: {ticketStatus} \r\bComment preview: {comments}");
+                            Console.WriteLine(new string('#', Console.WindowWidth));
+                        }
                     }
                 }
+            }
+            catch(SqlException exc)
+            {
+                Console.WriteLine(exc.Message);
             }
         }
 
         public static void ViewListOfOpenCustomerTickets()
         {
-            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+            try
             {
-                dbcon.Open();
-                SqlCommand ShowTicketsFromDatabase = new SqlCommand("EXECUTE SelectOpenCustomerTickets", dbcon);
-                using (var reader = ShowTicketsFromDatabase.ExecuteReader())
+                using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
                 {
-                    List<string> ShowtTicketsList = new List<string>();
-                    while (reader.Read())
+                    dbcon.Open();
+                    SqlCommand ShowTicketsFromDatabase = new SqlCommand("EXECUTE SelectOpenCustomerTickets", dbcon);
+                    using (var reader = ShowTicketsFromDatabase.ExecuteReader())
                     {
-                        int ticketID = (int)reader[0];
-                        DateTime dateCreated = (DateTime)reader[1];
-                        string username = (string)reader[2];
-                        string userAssignedTo = (string)reader[3];
-                        string ticketStatus = (string)reader[4];
-                        string comments = (string)reader[5];
-                        var stringLength = comments.Length;
-                        if (stringLength > 60)
+                        List<string> ShowtTicketsList = new List<string>();
+                        while (reader.Read())
                         {
-                            comments = comments.Substring(0, 60) + "...";
-                        }
+                            int ticketID = (int)reader[0];
+                            DateTime dateCreated = (DateTime)reader[1];
+                            string username = (string)reader[2];
+                            string userAssignedTo = (string)reader[3];
+                            string ticketStatus = (string)reader[4];
+                            string comments = (string)reader[5];
+                            var stringLength = comments.Length;
+                            if (stringLength > 60)
+                            {
+                                comments = comments.Substring(0, 60) + "...";
+                            }
 
-                        ShowtTicketsList.Add(ticketID.ToString());
-                        ShowtTicketsList.Add(dateCreated.ToString());
-                        ShowtTicketsList.Add(username);
-                        ShowtTicketsList.Add(userAssignedTo);
-                        ShowtTicketsList.Add(ticketStatus);
-                        ShowtTicketsList.Add(comments);
-                        Console.WriteLine($"TicketID: {ticketID} \r\nDate created: {dateCreated} \r\nCreated By: {username} \r\nAssigned To: {userAssignedTo} \r\nTicket status: {ticketStatus} \r\bComment preview: {comments}");
-                        Console.WriteLine(new string('#', Console.WindowWidth));
-                        Console.WriteLine();
+                            ShowtTicketsList.Add(ticketID.ToString());
+                            ShowtTicketsList.Add(dateCreated.ToString());
+                            ShowtTicketsList.Add(username);
+                            ShowtTicketsList.Add(userAssignedTo);
+                            ShowtTicketsList.Add(ticketStatus);
+                            ShowtTicketsList.Add(comments);
+                            Console.WriteLine($"TicketID: {ticketID} \r\nDate created: {dateCreated} \r\nCreated By: {username} \r\nAssigned To: {userAssignedTo} \r\nTicket status: {ticketStatus} \r\bComment preview: {comments}");
+                            Console.WriteLine(new string('#', Console.WindowWidth));
+                            Console.WriteLine();
+                        }
                     }
                 }
+            }
+            catch(SqlException exc)
+            {
+                Console.WriteLine(exc.Message);
             }
         }
 
         public static void ViewListOfAllCustomerTickets()
         {
-            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+            try
             {
-                dbcon.Open();
-                SqlCommand ShowTicketsFromDatabase = new SqlCommand("SELECT * FROM CustomerTickets", dbcon);
-                using (var reader = ShowTicketsFromDatabase.ExecuteReader())
+                using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
                 {
-                    List<string> ShowtTicketsList = new List<string>();
-                    while (reader.Read())
+                    dbcon.Open();
+                    SqlCommand ShowTicketsFromDatabase = new SqlCommand("SELECT * FROM CustomerTickets", dbcon);
+                    using (var reader = ShowTicketsFromDatabase.ExecuteReader())
                     {
-                        int ticketID = (int)reader[0];
-                        DateTime dateCreated = (DateTime)reader[1];
-                        string username = (string)reader[2];
-                        string userAssignedTo = (string)reader[3];
-                        string ticketStatus = (string)reader[4];
-                        string comments = (string)reader[5];
-                        var stringLength = comments.Length;
-                        if (stringLength > 40)
+                        List<string> ShowtTicketsList = new List<string>();
+                        while (reader.Read())
                         {
-                            comments = comments.Substring(0, 40) + "...";
-                        }
+                            int ticketID = (int)reader[0];
+                            DateTime dateCreated = (DateTime)reader[1];
+                            string username = (string)reader[2];
+                            string userAssignedTo = (string)reader[3];
+                            string ticketStatus = (string)reader[4];
+                            string comments = (string)reader[5];
+                            var stringLength = comments.Length;
+                            if (stringLength > 40)
+                            {
+                                comments = comments.Substring(0, 40) + "...";
+                            }
 
-                        ShowtTicketsList.Add(ticketID.ToString());
-                        ShowtTicketsList.Add(dateCreated.ToString());
-                        ShowtTicketsList.Add(username);
-                        ShowtTicketsList.Add(userAssignedTo);
-                        ShowtTicketsList.Add(ticketStatus);
-                        ShowtTicketsList.Add(comments);
-                        Console.WriteLine($"TicketID: {ticketID} \r\nDate created: {dateCreated} \r\nCreated By: {username} \r\nAssigned To: {userAssignedTo} \r\nTicket status: {ticketStatus} \r\bComment preview: {comments}");
-                        Console.WriteLine(new string('#', Console.WindowWidth));
-                        Console.WriteLine();
+                            ShowtTicketsList.Add(ticketID.ToString());
+                            ShowtTicketsList.Add(dateCreated.ToString());
+                            ShowtTicketsList.Add(username);
+                            ShowtTicketsList.Add(userAssignedTo);
+                            ShowtTicketsList.Add(ticketStatus);
+                            ShowtTicketsList.Add(comments);
+                            Console.WriteLine($"TicketID: {ticketID} \r\nDate created: {dateCreated} \r\nCreated By: {username} \r\nAssigned To: {userAssignedTo} \r\nTicket status: {ticketStatus} \r\bComment preview: {comments}");
+                            Console.WriteLine(new string('#', Console.WindowWidth));
+                            Console.WriteLine();
+                        }
                     }
                 }
+            }
+            catch(SqlException exc)
+            {
+                Console.WriteLine(exc.Message);
             }
         }
 
         public static void DeleteCustomerTicket(string currentUsername, int ticketID)
         {
-            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+            try
             {
-                dbcon.Open();
-                SqlCommand deleteCustomerTicket = new SqlCommand("DeleteCustomerTicket", dbcon);
-                deleteCustomerTicket.CommandType = CommandType.StoredProcedure;
-                deleteCustomerTicket.Parameters.AddWithValue("@ticketID", ticketID);
-                deleteCustomerTicket.ExecuteScalar();
-                OutputControl.QuasarScreen(currentUsername);
-                ColorAndAnimationControl.UniversalLoadingOuput("Action in progress");
-                Console.WriteLine($"Customer ticket with ID = {ticketID} has been successfully deleted\n\n(Press any key to continue)");
-                Console.ReadKey();
+                using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+                {
+                    dbcon.Open();
+                    SqlCommand deleteCustomerTicket = new SqlCommand("DeleteCustomerTicket", dbcon);
+                    deleteCustomerTicket.CommandType = CommandType.StoredProcedure;
+                    deleteCustomerTicket.Parameters.AddWithValue("@ticketID", ticketID);
+                    deleteCustomerTicket.ExecuteScalar();
+                    OutputControl.QuasarScreen(currentUsername);
+                    ColorAndAnimationControl.UniversalLoadingOuput("Action in progress");
+                    Console.WriteLine($"Customer ticket with ID = {ticketID} has been successfully deleted\n\n(Press any key to continue)");
+                    Console.ReadKey();
+                }
+            }
+            catch(SqlException exc)
+            {
+                Console.WriteLine(exc.Message);
             }
         }
 
         public static bool CheckIfTicketIDWithStatusOpenExistsInList(int ID)
         {
-            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+            try
             {
-                dbcon.Open();
-                SqlCommand ShowTicketsFromDatabase = new SqlCommand("EXECUTE SelectTicketIDWithOpenStatus", dbcon);
-                using (var reader = ShowTicketsFromDatabase.ExecuteReader())
+                using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
                 {
-                    List<string> ShowtTicketsList = new List<string>();
-                    while (reader.Read())
+                    dbcon.Open();
+                    SqlCommand ShowTicketsFromDatabase = new SqlCommand("EXECUTE SelectTicketIDWithOpenStatus", dbcon);
+                    using (var reader = ShowTicketsFromDatabase.ExecuteReader())
                     {
-                        int ticketID = (int)reader[0];
-                        ShowtTicketsList.Add(ticketID.ToString());
-                    }
-                    if (ShowtTicketsList.Contains(ID.ToString()) == false)
-                    {
-                        return false;
+                        List<string> ShowtTicketsList = new List<string>();
+                        while (reader.Read())
+                        {
+                            int ticketID = (int)reader[0];
+                            ShowtTicketsList.Add(ticketID.ToString());
+                        }
+                        if (ShowtTicketsList.Contains(ID.ToString()) == false)
+                        {
+                            return false;
+                        }
                     }
                 }
             }
+            catch(SqlException exc)
+            {
+                Console.WriteLine(exc.Message);
+            }            
             return true;
         }
 
         public static void ChangeUserAssignedTo(string nextOwner, int ID)
         {
-            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+            try
             {
-                dbcon.Open();
-                SqlCommand EditTicketUserOwnerInDatabase = new SqlCommand("ChangeUserAssignedTo", dbcon);
-                EditTicketUserOwnerInDatabase.CommandType = CommandType.StoredProcedure;
-                EditTicketUserOwnerInDatabase.Parameters.AddWithValue("@username", nextOwner);
-                EditTicketUserOwnerInDatabase.Parameters.AddWithValue("@ID", ID);
-                EditTicketUserOwnerInDatabase.ExecuteScalar();
+                using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+                {
+                    dbcon.Open();
+                    SqlCommand EditTicketUserOwnerInDatabase = new SqlCommand("ChangeUserAssignedTo", dbcon);
+                    EditTicketUserOwnerInDatabase.CommandType = CommandType.StoredProcedure;
+                    EditTicketUserOwnerInDatabase.Parameters.AddWithValue("@username", nextOwner);
+                    EditTicketUserOwnerInDatabase.Parameters.AddWithValue("@ID", ID);
+                    EditTicketUserOwnerInDatabase.ExecuteScalar();
+                }
+            }
+            catch (SqlException exc)
+            {
+                Console.WriteLine(exc.Message);
             }
         }
 
         public static string SelectUserAssignedToTicket(int ticketID)
         {
-            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+            try
             {
-                dbcon.Open();
-                SqlCommand SelectUserAssignedToTicketInDatabase = new SqlCommand("SelectUserAssignedToTicket", dbcon);
-                SelectUserAssignedToTicketInDatabase.CommandType = CommandType.StoredProcedure;
-                SelectUserAssignedToTicketInDatabase.Parameters.AddWithValue("@ID", ticketID);
-                string user = (string)SelectUserAssignedToTicketInDatabase.ExecuteScalar();
-                return user;
-            }           
+                using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+                {
+                    dbcon.Open();
+                    SqlCommand SelectUserAssignedToTicketInDatabase = new SqlCommand("SelectUserAssignedToTicket", dbcon);
+                    SelectUserAssignedToTicketInDatabase.CommandType = CommandType.StoredProcedure;
+                    SelectUserAssignedToTicketInDatabase.Parameters.AddWithValue("@ID", ticketID);
+                    string user = (string)SelectUserAssignedToTicketInDatabase.ExecuteScalar();
+                    return user;
+                }
+            }
+            catch (SqlException)
+            {
+                return "There has been an unexpected error while trying to connect to the DataBase";
+            }            
         }
 
 
 
         public static bool CheckIfTicketIDWithStatusOpenOrClosedExistsInList(int ID)
         {
-            using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
+            try
             {
-                dbcon.Open();
-                SqlCommand ShowTicketsFromDatabase = new SqlCommand("SELECT ticketID FROM CustomerTickets", dbcon);
-                using (var reader = ShowTicketsFromDatabase.ExecuteReader())
+                using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
                 {
-                    List<string> ShowtTicketsList = new List<string>();
-                    while (reader.Read())
+                    dbcon.Open();
+                    SqlCommand ShowTicketsFromDatabase = new SqlCommand("SELECT ticketID FROM CustomerTickets", dbcon);
+                    using (var reader = ShowTicketsFromDatabase.ExecuteReader())
                     {
-                        int ticketID = (int)reader[0];
-                        ShowtTicketsList.Add(ticketID.ToString());
-                    }
-                    if (ShowtTicketsList.Contains(ID.ToString()) == false)
-                    {
-                        return false;
+                        List<string> ShowtTicketsList = new List<string>();
+                        while (reader.Read())
+                        {
+                            int ticketID = (int)reader[0];
+                            ShowtTicketsList.Add(ticketID.ToString());
+                        }
+                        if (ShowtTicketsList.Contains(ID.ToString()) == false)
+                        {
+                            return false;
+                        }
                     }
                 }
+            }
+            catch (SqlException exc)
+            {
+                Console.WriteLine(exc.Message);
             }
             return true;
         }

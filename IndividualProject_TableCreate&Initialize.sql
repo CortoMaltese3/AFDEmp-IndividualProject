@@ -6,6 +6,7 @@ GO
 
 --Table/procedure/trigger creation. Followed up by initializing values 
 
+--TABLES
 CREATE TABLE UserCredentials
 (
 	username VARCHAR(20) NOT NULL PRIMARY KEY, 
@@ -39,7 +40,9 @@ CREATE TABLE DeletedCustomerTickets
 );
 GO
 
---For safety reasons when someone deletes a TroubleTicket the trigger fires and it stores it to a seperate table that isn't accessible from the program
+--For safety reasons when someone deletes a TroubleTicket the trigger fires and it stores it to a seperate 
+--table that isn't accessible from the program
+
 CREATE TRIGGER StoreDeletedTickets ON CustomerTickets
 FOR DELETE
 AS
@@ -56,6 +59,7 @@ BEGIN
 END
 GO
 
+--PROCEDURES
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE RemoveUsernameFromDatabase
 @username VARCHAR(20)

@@ -35,8 +35,8 @@ namespace IndividualProject.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("@\"C:\\Users\\giorg\\Documents\\Coding\\AFDEmp\\C#\\Individual Project 1\\CRMTickets\\NewUs" +
-            "erRequests\\NewUserRequest.txt\"")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\giorg\\Documents\\Coding\\AFDEmp\\C#\\Individual Project 1\\CRMTickets\\NewUser" +
+            "Requests\\NewUserRequest.txt")]
         public string newUserRequestPath {
             get {
                 return ((string)(this["newUserRequestPath"]));
@@ -45,8 +45,8 @@ namespace IndividualProject.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("@\"C:\\Users\\giorg\\Documents\\Coding\\AFDEmp\\C#\\Individual Project 1\\CRMTickets\\Techn" +
-            "icalIssues\\TroubleTicketNotificationToUser_\"")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\giorg\\Documents\\Coding\\AFDEmp\\C#\\Individual Project 1\\CRMTickets\\Technic" +
+            "alIssues\\TroubleTicketNotificationToUser_")]
         public string TTnotificationToUser {
             get {
                 return ((string)(this["TTnotificationToUser"]));

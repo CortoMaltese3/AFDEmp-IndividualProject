@@ -5,6 +5,7 @@ namespace IndividualProject
 {
     class SuperAdminFunctions
     {
+        //Handles creation/deleting/viewing/editing of users by super_admin
         public static void CreateNewUserFromRequestFunction()
         {
             string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
