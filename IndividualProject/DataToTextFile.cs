@@ -23,9 +23,9 @@ namespace IndividualProject
                     index++;
                 }
             }
-            catch (FileLoadException exc)
+            catch (IOException exc)
             {
-                Console.WriteLine($"There has been an unexpected error while trying to access the file {exc.FileName}." +
+                Console.WriteLine($"There has been an unexpected error while trying to access the file. " +
                                   $"Make sure that you have access to the specific folder.\n{exc.Message}");
             }
 
@@ -38,9 +38,9 @@ namespace IndividualProject
                 File.Delete(Globals.TTnotificationToUser + userToBeDeleted + ".txt");
                 Console.WriteLine($"{userToBeDeleted}'s notifications log has been successfully deleted");
             }
-            catch (FileNotFoundException exc)
+            catch (IOException exc)
             {
-                Console.WriteLine($"There has been an unexpected error while trying to access the file {exc.FileName}." +
+                Console.WriteLine($"There has been an unexpected error while trying to access the file. " +
                   $"Make sure that you have access to the specific folder and the File exists.\n{exc.Message}");
             }
 
@@ -56,9 +56,9 @@ namespace IndividualProject
                     sw.WriteLine($"[{dateTimeAdded}] - User {userClosingTheTicket} has marked the TT with [ID = {ticketID}] that was assigned to you as closed. Visit the View TT Section for more details");
                 }
             }
-            catch (FileNotFoundException exc)
+            catch (IOException exc)
             {
-                Console.WriteLine($"There has been an unexpected error while trying to access the file {exc.FileName}." +
+                Console.WriteLine($"There has been an unexpected error while trying to access the file. " +
                                   $"Make sure that you have access to the specific folder and the File exists.\n{exc.Message}");
             }
         }
@@ -73,9 +73,9 @@ namespace IndividualProject
                     sw.WriteLine($"[{dateTimeAdded}] - User {currentUserAssigning} has assigned a new TT to you. Visit the View TT Section for more details");
                 }
             }
-            catch (FileNotFoundException exc)
+            catch (IOException exc)
             {
-                Console.WriteLine($"There has been an unexpected error while trying to access the file {exc.FileName}." +
+                Console.WriteLine($"There has been an unexpected error while trying to access the file. " +
                                   $"Make sure that you have access to the specific folder and the File exists.\n{exc.Message}");
             }
         }
@@ -83,15 +83,49 @@ namespace IndividualProject
         //Gets the passphrase requested from the new user registrations list
         public static string GetPendingPassphrase()
         {
-            string pendingPassphrase = File.ReadLines(Globals.newUserRequestPath).Skip(1).Take(1).First();
-            return pendingPassphrase;
+            try
+            {
+                string pendingPassphrase = File.ReadLines(Globals.newUserRequestPath).Skip(1).Take(1).First();
+                return pendingPassphrase;
+            }
+            catch(IOException exc)
+            {
+                Console.WriteLine(exc.Message);
+                return null;
+            }
+         
         }
 
         //Gets the username requested from the new user registrations list
         public static string GetPendingUsername()
         {
-            string pendingUsername = File.ReadLines(Globals.newUserRequestPath).First();
-            return pendingUsername;
+            try
+            {
+                if (!Directory.Exists(Globals.newUserRequestFolderPath))
+                {
+                    CreateDirectoryAndFile(Globals.newUserRequestFolderPath, Globals.newUserRequestPath);
+                }
+                string pendingUsername = File.ReadLines(Globals.newUserRequestPath).First();
+                return pendingUsername;
+            }
+            catch(IOException exc)
+            {
+                Console.WriteLine(exc.Message);
+                return null;
+            }
+        }
+
+        //Creates a folder path in which a text file will be created
+        public static void CreateDirectoryAndFile(string folderPath, string filePath)
+        {
+            Directory.CreateDirectory(folderPath);
+            if (!File.Exists(Globals.newUserRequestPath))
+            {
+                using (StreamWriter sw = File.CreateText(filePath))
+                {
+                    sw.WriteLine(" ");
+                }
+            }
         }
 
         public static void NewUsernameRequestToList(string usernameAdd, string passphraseAdd)
@@ -100,9 +134,9 @@ namespace IndividualProject
             {
                 File.WriteAllLines(Globals.newUserRequestPath, new string[] { $"username: {usernameAdd}", $"passphrase: {passphraseAdd}" });
             }
-            catch(FileNotFoundException exc)
+            catch(IOException exc)
             {
-                Console.WriteLine($"There has been an unexpected error while trying to access the file {exc.FileName}." +
+                Console.WriteLine($"There has been an unexpected error while trying to access the file. " +
                                   $"Make sure that you have access to the specific folder and the File exists.\n{exc.Message}");
             }
         }
@@ -114,9 +148,9 @@ namespace IndividualProject
             {
                 File.WriteAllLines(Globals.newUserRequestPath, new string[] { " " });
             }
-            catch (FileNotFoundException exc)
+            catch (IOException exc)
             {
-                Console.WriteLine($"There has been an unexpected error while trying to access the file {exc.FileName}." +
+                Console.WriteLine($"There has been an unexpected error while trying to access the file. " +
                                   $"Make sure that you have access to the specific folder and the File exists.\n{exc.Message}");
             }
         }
@@ -126,11 +160,15 @@ namespace IndividualProject
         {
             try
             {
+                if (!Directory.Exists(Globals.TTnotificationToUserFolder))
+                {
+                    CreateDirectoryAndFile(Globals.TTnotificationToUserFolder, Globals.TTnotificationToUser + pendingUsername + ".txt");
+                }
                 File.WriteAllLines(Globals.TTnotificationToUser + pendingUsername + ".txt", new string[] { "NOTIFICATIONS LOG" });
             }
-            catch (DirectoryNotFoundException dir)
+            catch (IOException dir)
             {
-                Console.WriteLine($"There has been an unexpected error while trying to create the file." +
+                Console.WriteLine($"There has been an unexpected error while trying to create the file. " +
                                   $"Make sure that you have access to the specific folder.\n{dir.Message}");
             }
         }
@@ -146,9 +184,9 @@ namespace IndividualProject
                     sw.WriteLine($"[{dateTimeAdded}] - User {userDeletingTheTicket} has deleted the TT with [ID = {ticketID}] assigned to you. In case of emergency, contact the super_admin");
                 }
             }
-            catch (FileNotFoundException exc)
+            catch (IOException exc)
             {
-                Console.WriteLine($"There has been an unexpected error while trying to access the file {exc.FileName}." +
+                Console.WriteLine($"There has been an unexpected error while trying to access the file. " +
                   $"Make sure that you have access to the specific folder and the File exists.\n{exc.Message}");
             }
         }

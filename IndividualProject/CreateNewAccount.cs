@@ -4,7 +4,7 @@ using System.IO;
 namespace IndividualProject
 {
     class CreateNewAccount
-    {              
+    {
         public static void CreateNewAccountRequest()
         {
             try
@@ -23,9 +23,9 @@ namespace IndividualProject
                 }
                 CheckUsernameAvailabilityInPendingList(username, passphrase);
             }
-            catch (FileNotFoundException d)
+            catch (IOException exc)
             {
-                Console.WriteLine(d.Message);
+                Console.WriteLine(exc.Message);
             }
         }
 
@@ -44,7 +44,7 @@ namespace IndividualProject
                 OutputControl.QuasarScreen("Not Registered");
                 Console.WriteLine("\r\nNew account request is registered. Please wait for the administrator to grant you access.\n\nPress any key to return to Login Screen");
             }
-            Console.ReadKey();            
+            Console.ReadKey();
             ApplicationMenu.LoginScreen();
         }
     }

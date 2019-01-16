@@ -11,5 +11,11 @@
     <Setting Name="TTnotificationToUser" Type="System.String" Scope="Application">
       <Value Profile="(Default)">C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\CRMTickets\TechnicalIssues\TroubleTicketNotificationToUser_</Value>
     </Setting>
+    <Setting Name="newUserRequestFolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\CRMTickets\NewUserRequests</Value>
+    </Setting>
+    <Setting Name="TTnotificationToUserFolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\giorg\Documents\Coding\AFDEmp\C#\Individual Project 1\CRMTickets\TechnicalIssues</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

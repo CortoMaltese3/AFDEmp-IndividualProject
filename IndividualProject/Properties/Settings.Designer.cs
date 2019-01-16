@@ -52,5 +52,25 @@ namespace IndividualProject.Properties {
                 return ((string)(this["TTnotificationToUser"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\giorg\\Documents\\Coding\\AFDEmp\\C#\\Individual Project 1\\CRMTickets\\NewUser" +
+            "Requests")]
+        public string newUserRequestFolder {
+            get {
+                return ((string)(this["newUserRequestFolder"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\giorg\\Documents\\Coding\\AFDEmp\\C#\\Individual Project 1\\CRMTickets\\Technic" +
+            "alIssues")]
+        public string TTnotificationToUserFolder {
+            get {
+                return ((string)(this["TTnotificationToUserFolder"]));
+            }
+        }
     }
 }

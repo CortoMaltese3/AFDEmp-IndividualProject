@@ -6,6 +6,10 @@
 
         public static readonly string newUserRequestPath = Properties.Settings.Default.newUserRequestPath;
 
-        public static readonly string TTnotificationToUser = Properties.Settings.Default.TTnotificationToUser;        
+        public static readonly string newUserRequestFolderPath = Properties.Settings.Default.newUserRequestFolder;
+
+        public static readonly string TTnotificationToUser = Properties.Settings.Default.TTnotificationToUser;   
+        
+        public static readonly string TTnotificationToUserFolder = Properties.Settings.Default.TTnotificationToUserFolder;        
     }
 }
