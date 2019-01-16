@@ -292,6 +292,3 @@ EXECUTE OpenNewTechnicalTicket 'secondLevel', 'thirdLevel', 'Modem/Router not sy
 EXECUTE OpenNewTechnicalTicket 'agent', 'agent', 'Led Power indicator on UPS device, battery not charging. Equipment replacement is imminent'
 EXECUTE OpenNewTechnicalTicket 'admin', 'giorgos', 'Led Power indicator on UPS device, battery not charging. Equipment replacement is imminent'
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
-
-select * from UserCredentials
-delete from UserCredentials where username = 'username: giorgos'
