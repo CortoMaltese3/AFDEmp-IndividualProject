@@ -29,7 +29,7 @@ namespace IndividualProject
                 string pendingPassphrase = _text.GetPendingPassphrase().Remove(0, 12);
                 string yes = "Yes";
                 string no = "No";
-                string createUserMsg = $"\r\nYou are about to create a new username-password entry : {pendingUsername} - {pendingPassphrase}.\r\nWould you like to proceed?\r\n";
+                string createUserMsg = $"\r\nYou are about to create a new entry :\nUsername: {pendingUsername} - Password: {pendingPassphrase}\n\nWould you like to proceed?\n\n";
                 string yesOrNoSelection = SelectMenu.MenuRow(new List<string> { yes, no }, currentUsername, createUserMsg).option;
 
                 if (yesOrNoSelection == yes)
@@ -70,11 +70,11 @@ namespace IndividualProject
                 print.QuasarScreen(currentUsername);
                 if (AvailableUsernamesDictionary.ContainsKey(username) == false)
                 {
-                    print.ColoredText($"Database does not contain a User {username}. Please select a different user.", ConsoleColor.DarkRed);
+                    print.ColoredText($"\nDatabase does not contain a User {username}. Please select a different user.", ConsoleColor.DarkRed);
                 }
                 else
                 {
-                    print.ColoredText("Cannot delete super_admin! Please choose a different user.", ConsoleColor.DarkRed);
+                    print.ColoredText("\nCannot delete super_admin! Please choose a different user.", ConsoleColor.DarkRed);
                 }
                 Console.WriteLine("\r\nChoose a User from the list and proceed to delete.");
                 AvailableUsernamesDictionary = _db.ShowAvailableUsersFromDatabase();
@@ -84,7 +84,7 @@ namespace IndividualProject
             print.QuasarScreen(currentUsername);
             print.UniversalLoadingOutput("Deleting existing user in progress");
             _text.DeleteUserNotificationsLog(username);
-            print.ColoredText($"Username {username} has been successfully deleted from database.\n\n(Press any key to continue)", ConsoleColor.DarkGreen);
+            print.ColoredText($"\nUsername {username} has been successfully deleted from database.\n\n(Press any key to continue)", ConsoleColor.DarkGreen);
             Console.ReadKey();
             ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
         }
@@ -116,11 +116,11 @@ namespace IndividualProject
                 print.QuasarScreen(currentUsername);
                 if (AvailableUsernamesDictionary.ContainsKey(username) == false)
                 {
-                    print.ColoredText($"Database does not contain a User {username}\n\n(Press any key to continue)", ConsoleColor.DarkRed);
+                    print.ColoredText($"\nDatabase does not contain a User {username}\n\n(Press any key to continue)", ConsoleColor.DarkRed);
                 }
                 else
                 {
-                    print.ColoredText("Cannot alter super_admin's Status! Please choose a different user\n\n(Press any key to continue)", ConsoleColor.DarkRed);
+                    print.ColoredText("\nCannot alter super_admin's Status! Please choose a different user\n\n(Press any key to continue)", ConsoleColor.DarkRed);
                 }
                 Console.ReadKey();
                 print.QuasarScreen(currentUsername);

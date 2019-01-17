@@ -41,12 +41,12 @@ Further Ideas for expanding
 1) create a list of forbidden words as usernames in order to protect from injection attacks DONE (updating)
 2) password must contain at least 5 characters (maybe 1 number)  (in progress for later updates)
 3) 3 wrong password guesses marks user as locked (in progress for later updates)
-4) select hashbytes('MD5', 'test') για να μετατρέψω το κωδικό για ασφάλεια (in progress for later updates)
-    (να δω και τη μεθοδο salting)
+4) select hashbytes('MD5', 'test') για να μετατρέψω το κωδικό για ασφάλεια (DONE)
 5) make a user request to be promoted/demoted. Super admin can pull these requests (in progress for later updates)
 6) build status line DONE (planned to be improved in later updates)
 7) add user status next to username on QuasarScreen (in progress for later updates)
 8) replace user, moderator, admin with agent, secondLevel, thirdLevel (in progress for later updates)
+9)User is notified if he/she is promoted/demoted.
 
 ########################################################################################################################
 Matching Deliverables with Project

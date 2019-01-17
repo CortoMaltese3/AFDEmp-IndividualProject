@@ -38,7 +38,7 @@ namespace IndividualProject
             try
             {
                 File.Delete(Globals.TTnotificationToUser + userToBeDeleted + ".txt");
-                Console.WriteLine($"{userToBeDeleted}'s notifications log has been successfully deleted");
+                print.ColoredText($"{userToBeDeleted}'s notifications log has been deleted", ConsoleColor.DarkRed);
             }
             catch (IOException exc)
             {
@@ -94,8 +94,7 @@ namespace IndividualProject
             {
                 print.ColoredText(exc.Message, ConsoleColor.DarkRed);
                 return null;
-            }
-         
+            }         
         }
 
         //Gets the username requested from the new user registrations list

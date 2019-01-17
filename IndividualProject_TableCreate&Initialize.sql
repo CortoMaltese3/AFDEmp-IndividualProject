@@ -97,7 +97,7 @@ AS
 BEGIN
 	SELECT userRole FROM (SELECT TOP 1 * FROM UserCredentials ORDER BY lastLoginDateTime DESC) currentUser
 END
-
+GO
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE SelectCurrentUserStatusFromDatabase
 AS
@@ -285,10 +285,6 @@ GO
 
 EXECUTE InsertNewUserIntoDatabase 'admin', 'admin', 'super_admin'
 EXECUTE InsertNewUserIntoDatabase 'agent', 'agent', 'User'
-EXECUTE InsertNewUserIntoDatabase 'secondLevel', 'secondLevel', 'Moderator'
-EXECUTE InsertNewUserIntoDatabase 'thirdLevel', 'thirdLevel', 'Administrator'
-EXECUTE OpenNewTechnicalTicket 'agent', 'secondLevel', 'Customer complains about his internet connection being slow. Live port monitor reveals excessive accumulation of CRC/FEC errors. Procceed with Netword/Equipment check'
-EXECUTE OpenNewTechnicalTicket 'secondLevel', 'thirdLevel', 'Modem/Router not synching. Communication with device failed. Proceed with Network check'
-EXECUTE OpenNewTechnicalTicket 'agent', 'agent', 'Led Power indicator on UPS device, battery not charging. Equipment replacement is imminent'
-EXECUTE OpenNewTechnicalTicket 'admin', 'giorgos', 'Led Power indicator on UPS device, battery not charging. Equipment replacement is imminent'
+EXECUTE OpenNewTechnicalTicket 'admin', 'agent', 'Customer complains about his internet connection being slow. Live port monitor reveals excessive accumulation of CRC/FEC errors. Procceed with Netword/Equipment check'
+EXECUTE OpenNewTechnicalTicket 'admin', 'agent', 'Modem/Router not synching. Communication with device failed. Proceed with Network check'
 ---------------------------------------------------------------------------------------------------------------------------------------------------------

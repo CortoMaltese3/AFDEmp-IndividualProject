@@ -5,7 +5,6 @@ using System.Data;
 
 namespace IndividualProject
 {
-    
     //The ConnectToServer class handles the interactions with the Database
     public class ConnectToServer
     {

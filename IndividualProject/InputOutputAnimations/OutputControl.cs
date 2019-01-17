@@ -9,7 +9,7 @@ namespace IndividualProject
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.DarkCyan;
-            CenterText("Quasar CRM Program - V2.7.1");
+            CenterText("Quasar CRM Program - V2.7.2");
             CenterText("-IT Crowd-");
             CenterText($"[{currentUser}]");
             WriteBottomLine("~CB6 Individual Project~");

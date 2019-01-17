@@ -13,7 +13,7 @@ namespace IndividualProject
             {
                 print.QuasarScreen("Not Registered");
                 print.UniversalLoadingOutput("Please wait");
-                Console.Write("Registration Form:\r\nChoose your username and password. Both must be limited to 20 characters");
+                Console.Write("Registration Form:\r\nChoose your username and password. Both must be limited to 20 characters\r\n");
                 string username = InputControl.UsernameInput();
                 string passphrase = InputControl.PassphraseInput();                
                 var _db = new ConnectToServer();
@@ -47,7 +47,7 @@ namespace IndividualProject
             {
                 _text.NewUsernameRequestToList(usernameCheck, passphraseCheck);
                 print.QuasarScreen("Not Registered");
-                print.ColoredText("\r\nNew account request is registered. Please wait for the administrator to grant you access.\n\nPress any key to return to Login Screen", ConsoleColor.DarkRed);
+                print.ColoredText("\r\nNew account request is registered. Please wait for the administrator to grant you access.\n\nPress any key to return to Login Screen", ConsoleColor.DarkGreen);
             }
             Console.ReadKey();
             ApplicationMenu.LoginScreen();

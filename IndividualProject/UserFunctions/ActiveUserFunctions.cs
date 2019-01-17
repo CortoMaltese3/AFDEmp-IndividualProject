@@ -21,7 +21,7 @@ namespace IndividualProject
             string editTicket = "Edit Trouble Tickets";
             string deleteTicket = "Delete Trouble Tickets";
             string logOut = "\nLog Out";
-            string message = "Choose one of the following functions\n";
+            string message = "\nChoose one of the following functions\n";
 
             //Active User Functions. Control of actions is maintained by excluding a user from certain methods.
             switch (currentUsernameRole)
