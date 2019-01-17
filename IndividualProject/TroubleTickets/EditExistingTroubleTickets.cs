@@ -14,7 +14,7 @@ namespace IndividualProject
             string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
 
             print.QuasarScreen(currentUsername);
-            ColorAndAnimationControl.UniversalLoadingOuput("Loading");
+            print.UniversalLoadingOutput("Loading");
             Console.WriteLine("EDIT OPEN TECHNICAL TICKET");
 
             string listTicketsMsg = "Choose one of the following options\r\n";
@@ -45,10 +45,10 @@ namespace IndividualProject
         private static void EditOpenTicketSubFunction()
         {
             string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
-            int TicketID = OutputControl.SelectTicketID();
+            int TicketID = print.SelectTicketID();
             if (_db.CheckIfTicketIDWithStatusOpenExistsInList(TicketID) == false)
             {
-                Console.WriteLine($"There is no Customer Ticket with [ID = {TicketID}]\n\n(Press any key to continue)");
+                print.ColoredText($"There is no Customer Ticket with [ID = {TicketID}]\n\n(Press any key to continue)", ConsoleColor.DarkRed);
                 Console.ReadKey();
                 ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
             }
@@ -76,7 +76,7 @@ namespace IndividualProject
 
                 if (EditCommentAndAssignment == edit)
                 {
-                    string ticketComment = OutputControl.TicketComment();
+                    string ticketComment = print.TicketComment();
                     _db.EditCommentOfOpenTicket(ID, ticketComment);
                 }
                 else if (EditCommentAndAssignment == assign)

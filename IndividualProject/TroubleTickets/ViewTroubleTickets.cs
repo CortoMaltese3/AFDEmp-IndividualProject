@@ -13,7 +13,7 @@ namespace IndividualProject
             string currentUsername = _db.RetrieveCurrentUserFromDatabase();
             string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
             print.QuasarScreen(currentUsername);
-            ColorAndAnimationControl.UniversalLoadingOuput("Loading");
+            print.UniversalLoadingOutput("Loading");
             Console.WriteLine("VIEW OPEN TECHNICAL TICKETS");
 
             string listTicketsMsg = "Choose one of the following options\r\n";
@@ -44,10 +44,10 @@ namespace IndividualProject
         private static void ViewExistingOpenTicketsSubFunction()
         {            
             string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
-            int TicketID = OutputControl.SelectTicketID();
+            int TicketID = print.SelectTicketID();
             if (_db.CheckIfTicketIDWithStatusOpenExistsInList(TicketID) == false)
             {
-                Console.WriteLine($"There is no Customer Ticket with [ID = {TicketID}]\n\n(Press any key to go back to Main Menu)");
+                print.ColoredText($"There is no Customer Ticket with [ID = {TicketID}]\n\n(Press any key to go back to Main Menu)", ConsoleColor.DarkRed);
                 Console.ReadKey();
                 ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
             }
@@ -59,7 +59,7 @@ namespace IndividualProject
         {            
             string currentUsername = _db.RetrieveCurrentUserFromDatabase();
             print.QuasarScreen(currentUsername);
-            ColorAndAnimationControl.UniversalLoadingOuput("Loading");
+            print.UniversalLoadingOutput("Loading");
             Console.WriteLine($"VIEW TECHNICAL TICKET WITH [ID = {ticketID}]");
             _db.SelectSingleCustomerTicket(ticketID);
             Console.Write("Press any key to return");

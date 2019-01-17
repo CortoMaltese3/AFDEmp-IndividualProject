@@ -9,6 +9,8 @@ namespace IndividualProject
 
     class DataToTextFile
     {
+        private static OutputControl print = new OutputControl();
+
         //The NotificationsLog is Log History of the user's actions plus other user actions that involves the previous user.
         public void ViewUserNotificationsLog(string currentUser)
         {
@@ -25,8 +27,8 @@ namespace IndividualProject
             }
             catch (IOException exc)
             {
-                Console.WriteLine($"There has been an unexpected error while trying to access the file. " +
-                                  $"Make sure that you have access to the specific folder.\n{exc.Message}");
+                print.ColoredText($"There has been an unexpected error while trying to access the file. " +
+                                  $"Make sure that you have access to the specific folder.\n{exc.Message}", ConsoleColor.DarkRed);
             }
 
         }
@@ -40,8 +42,8 @@ namespace IndividualProject
             }
             catch (IOException exc)
             {
-                Console.WriteLine($"There has been an unexpected error while trying to access the file. " +
-                  $"Make sure that you have access to the specific folder and the File exists.\n{exc.Message}");
+                print.ColoredText($"There has been an unexpected error while trying to access the file. " +
+                  $"Make sure that you have access to the specific folder and the File exists.\n{exc.Message}", ConsoleColor.DarkRed);
             }
 
         }
@@ -58,8 +60,8 @@ namespace IndividualProject
             }
             catch (IOException exc)
             {
-                Console.WriteLine($"There has been an unexpected error while trying to access the file. " +
-                                  $"Make sure that you have access to the specific folder and the File exists.\n{exc.Message}");
+                print.ColoredText($"There has been an unexpected error while trying to access the file. " +
+                                  $"Make sure that you have access to the specific folder and the File exists.\n{exc.Message}", ConsoleColor.DarkRed);
             }
         }
 
@@ -75,8 +77,8 @@ namespace IndividualProject
             }
             catch (IOException exc)
             {
-                Console.WriteLine($"There has been an unexpected error while trying to access the file. " +
-                                  $"Make sure that you have access to the specific folder and the File exists.\n{exc.Message}");
+                print.ColoredText($"There has been an unexpected error while trying to access the file. " +
+                                  $"Make sure that you have access to the specific folder and the File exists.\n{exc.Message}", ConsoleColor.DarkRed);
             }
         }
 
@@ -90,7 +92,7 @@ namespace IndividualProject
             }
             catch(IOException exc)
             {
-                Console.WriteLine(exc.Message);
+                print.ColoredText(exc.Message, ConsoleColor.DarkRed);
                 return null;
             }
          
@@ -110,12 +112,12 @@ namespace IndividualProject
             }
             catch(IOException exc)
             {
-                Console.WriteLine(exc.Message);
+                print.ColoredText(exc.Message, ConsoleColor.DarkRed);
                 return null;
             }
         }
 
-        //Creates a folder path in which a text file will be created
+        //Creates a folder path, if not existing, in which a text file will be created
         public void CreateDirectoryAndFile(string folderPath, string filePath)
         {
             Directory.CreateDirectory(folderPath);
@@ -136,8 +138,8 @@ namespace IndividualProject
             }
             catch(IOException exc)
             {
-                Console.WriteLine($"There has been an unexpected error while trying to access the file. " +
-                                  $"Make sure that you have access to the specific folder and the File exists.\n{exc.Message}");
+                print.ColoredText($"There has been an unexpected error while trying to access the file. " +
+                                  $"Make sure that you have access to the specific folder and the File exists.\n{exc.Message}", ConsoleColor.DarkRed);
             }
         }
 
@@ -150,8 +152,8 @@ namespace IndividualProject
             }
             catch (IOException exc)
             {
-                Console.WriteLine($"There has been an unexpected error while trying to access the file. " +
-                                  $"Make sure that you have access to the specific folder and the File exists.\n{exc.Message}");
+                print.ColoredText($"There has been an unexpected error while trying to access the file. " +
+                                  $"Make sure that you have access to the specific folder and the File exists.\n{exc.Message}", ConsoleColor.DarkRed);
             }
         }
 
@@ -168,8 +170,8 @@ namespace IndividualProject
             }
             catch (IOException dir)
             {
-                Console.WriteLine($"There has been an unexpected error while trying to create the file. " +
-                                  $"Make sure that you have access to the specific folder.\n{dir.Message}");
+                print.ColoredText($"There has been an unexpected error while trying to create the file. " +
+                                  $"Make sure that you have access to the specific folder.\n{dir.Message}", ConsoleColor.DarkRed);
             }
         }
 
@@ -186,8 +188,8 @@ namespace IndividualProject
             }
             catch (IOException exc)
             {
-                Console.WriteLine($"There has been an unexpected error while trying to access the file. " +
-                  $"Make sure that you have access to the specific folder and the File exists.\n{exc.Message}");
+                print.ColoredText($"There has been an unexpected error while trying to access the file. " +
+                  $"Make sure that you have access to the specific folder and the File exists.\n{exc.Message}", ConsoleColor.DarkRed);
             }
         }
     }

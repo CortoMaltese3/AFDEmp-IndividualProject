@@ -13,7 +13,7 @@ namespace IndividualProject
             while (usernameInput.Length > 20)
             {
                 print.QuasarScreen("Not registered");
-                Console.WriteLine("\r\nusername cannot be longer than 20 characters. Please try again");
+                print.ColoredText("\r\nusername cannot be longer than 20 characters. Please try again", ConsoleColor.DarkRed);
                 Console.Write("username: ");
                 usernameInput = Console.ReadLine();
             }
@@ -49,7 +49,7 @@ namespace IndividualProject
             while (passphrase.Length > 20)
             {
                 print.QuasarScreen("Not registered");
-                Console.WriteLine("\r\npassphrase cannot be longer than 20 characters. Please try again");
+                print.ColoredText("\r\npassphrase cannot be longer than 20 characters. Please try again", ConsoleColor.DarkRed);
                 Console.Write("passphrase: ");
                 passphrase = Console.ReadLine();
             }

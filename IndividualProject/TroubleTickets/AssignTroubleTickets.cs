@@ -22,7 +22,7 @@ namespace IndividualProject
             if (yesOrNoSelection == yes)
             {
                 print.QuasarScreen(currentUsername);
-                ColorAndAnimationControl.UniversalLoadingOuput("Loading");
+                print.UniversalLoadingOutput("Loading");
 
                 Dictionary<string, string> AvailableUsernamesDictionary = _db.ShowAvailableUsersFromDatabase();
                 Console.Write("\r\nPlease select a user and proceed to assign: ");
@@ -32,7 +32,7 @@ namespace IndividualProject
                 {
                     if (AvailableUsernamesDictionary.ContainsKey(usernameAssignment) == false)
                     {
-                        Console.WriteLine($"Database does not contain a User {usernameAssignment}.\n\n(Press any key to continue)");
+                        print.ColoredText($"Database does not contain a User {usernameAssignment}.\n\n(Press any key to continue)", ConsoleColor.DarkRed);
                         Console.ReadKey();
                         print.QuasarScreen(currentUsername);
                         AvailableUsernamesDictionary = _db.ShowAvailableUsersFromDatabase();
@@ -41,7 +41,7 @@ namespace IndividualProject
                     }
                     else
                     {
-                        Console.WriteLine("Cannot assign ticket to super_admin! Please choose a different user.\n\n(Press any key to continue)");
+                        print.ColoredText("Cannot assign ticket to super_admin! Please choose a different user.\n\n(Press any key to continue)", ConsoleColor.DarkRed);
                         Console.ReadKey();
                         print.QuasarScreen(currentUsername);
                         AvailableUsernamesDictionary = _db.ShowAvailableUsersFromDatabase();
@@ -68,15 +68,15 @@ namespace IndividualProject
             if (nextOwner == currentUsername)
             {
                 print.QuasarScreen(currentUsername);
-                ColorAndAnimationControl.UniversalLoadingOuput("Action in progress");
-                Console.WriteLine($"The ownership of the Customer Ticket with [ID = {ID}] remains to User: {nextOwner}\n\n(Press any key to continue)");
+                print.UniversalLoadingOutput("Action in progress");
+                print.ColoredText($"The ownership of the Customer Ticket with [ID = {ID}] remains to User: {nextOwner}\n\n(Press any key to continue)", ConsoleColor.DarkGreen);
                 Console.ReadKey();
             }
             else
             {
                 print.QuasarScreen(currentUsername);
-                ColorAndAnimationControl.UniversalLoadingOuput("Action in progress");
-                Console.WriteLine($"The ownership of the Customer Ticket with [ID = {ID}] has been successfully transfered to User: {nextOwner}\n\n(Press any key to continue)");
+                print.UniversalLoadingOutput("Action in progress");
+                print.ColoredText($"The ownership of the Customer Ticket with [ID = {ID}] has been successfully transfered to User: {nextOwner}\n\n(Press any key to continue)", ConsoleColor.DarkGreen);
                 Console.ReadKey();
             }
         }

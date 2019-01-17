@@ -7,8 +7,10 @@ namespace IndividualProject
         public static void OpenTicket()
         {
             var _db = new ConnectToServer();
+            var print = new OutputControl();
+
             string currentUsername = _db.RetrieveCurrentUserFromDatabase();
-            string comment = OutputControl.TicketComment();
+            string comment = print.TicketComment();
             string userAssignedTo = AssignTroubleTickets.AssignTicketToUser();
 
             _db.OpenNewTechnicalTicket(currentUsername, userAssignedTo, comment);

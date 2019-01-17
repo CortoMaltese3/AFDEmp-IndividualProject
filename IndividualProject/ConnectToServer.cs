@@ -24,14 +24,14 @@ namespace IndividualProject
                 {
                     SetCurrentUserStatusToActive(username);
                     print.QuasarScreen(username);
-                    ColorAndAnimationControl.ColoredText($"Connection Established! Welcome back {username}!", ConsoleColor.DarkGreen);
+                    print.ColoredText($"Connection Established! Welcome back {username}!", ConsoleColor.DarkGreen);
                     System.Threading.Thread.Sleep(1500);
                     ActiveUserFunctions.UserFunctionMenuScreen(RetrieveCurrentUsernameRoleFromDatabase());
                 }
                 else
                 {
                     print.QuasarScreen("Not Registered");
-                    ColorAndAnimationControl.ColoredText($"\r\nInvalid Username or Passphrase. Try again.\n\n(press any key to continue)", ConsoleColor.DarkRed);
+                    print.ColoredText($"\r\nInvalid Username or Passphrase. Try again.\n\n(press any key to continue)", ConsoleColor.DarkRed);
                     Console.ReadKey();
                     UserLoginCredentials();
                 }
@@ -336,7 +336,7 @@ namespace IndividualProject
                         Console.ReadKey();
                         print.QuasarScreen(currentUsername);
                         Console.WriteLine();
-                        userRole = OutputControl.SelectUserRole();
+                        userRole = print.SelectUserRole();
                         selectPreviousUserRole = new SqlCommand("SelectSingleUserRole", dbcon);
                         selectPreviousUserRole.CommandType = CommandType.StoredProcedure;
                         selectPreviousUserRole.Parameters.AddWithValue("@username", username);
@@ -353,7 +353,7 @@ namespace IndividualProject
                     alterUserRole.ExecuteScalar();
                     string newUserRole = (string)selectUserRole.ExecuteScalar();
                     print.QuasarScreen(currentUsername);
-                    ColorAndAnimationControl.UniversalLoadingOuput("Modifying User's role status in progress");
+                    print.UniversalLoadingOutput("Modifying User's role status in progress");
                     Console.WriteLine($"User {username} has been successfully modified as {newUserRole}\n\n(Press any key to continue)");
                     Console.ReadKey();
                 }
@@ -381,7 +381,7 @@ namespace IndividualProject
                     SqlCommand fetchNewTicketID = new SqlCommand("EXECUTE fetchNewTicketID", dbcon);
                     int ticketID = (int)fetchNewTicketID.ExecuteScalar();
                     print.QuasarScreen(currentUsername);
-                    ColorAndAnimationControl.UniversalLoadingOuput("Filing new customer ticket in progress");
+                    print.UniversalLoadingOutput("Filing new customer ticket in progress");
                     Console.WriteLine($"New Customer Ticket with ID: {ticketID} has been successfully created and assigned to {userAssignedTo}. Status: Open");
                 }
             }
@@ -401,7 +401,7 @@ namespace IndividualProject
                     SqlCommand closeCustomerTicket = new SqlCommand($"EXECUTE SetTicketStatusToClosed {ticketID}", dbcon);
                     closeCustomerTicket.ExecuteScalar();
                     print.QuasarScreen(currentUsername);
-                    ColorAndAnimationControl.UniversalLoadingOuput("Action in progress");
+                    print.UniversalLoadingOutput("Action in progress");
                     Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully marked as closed.\n\n(Press any key to continue)");
                     Console.ReadKey();
                 }
@@ -571,7 +571,7 @@ namespace IndividualProject
                     deleteCustomerTicket.Parameters.AddWithValue("@ticketID", ticketID);
                     deleteCustomerTicket.ExecuteScalar();
                     print.QuasarScreen(currentUsername);
-                    ColorAndAnimationControl.UniversalLoadingOuput("Action in progress");
+                    print.UniversalLoadingOutput("Action in progress");
                     Console.WriteLine($"Customer ticket with ID = {ticketID} has been successfully deleted\n\n(Press any key to continue)");
                     Console.ReadKey();
                 }
@@ -686,6 +686,7 @@ namespace IndividualProject
 
         public void TerminateQuasar()
         {
+            var print = new OutputControl();
             string yes = "Yes";
             string no = "No";
             string currentUsername = "Not Registered";
@@ -695,8 +696,8 @@ namespace IndividualProject
             if (yesOrNoSelection == yes)
             {
                 SetCurrentUserStatusToInactive(currentUsername);
-                ColorAndAnimationControl.UniversalLoadingOuput("Wait for Quasar to shut down");
-                OutputControl.SpecialThanksMessage();
+                print.UniversalLoadingOutput("Wait for Quasar to shut down");
+                print.SpecialThanksMessage();
                 Environment.Exit(0);
             }
             else if (yesOrNoSelection == no)

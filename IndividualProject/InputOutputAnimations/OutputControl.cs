@@ -5,13 +5,11 @@ namespace IndividualProject
 {
     class OutputControl
     {
-        private static ConnectToServer _db = new ConnectToServer();
-        
         public void QuasarScreen(string currentUser)
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.DarkCyan;
-            CenterText("Quasar CRM Program - V2.7.0");
+            CenterText("Quasar CRM Program - V2.7.1");
             CenterText("-IT Crowd-");
             CenterText($"[{currentUser}]");
             WriteBottomLine("~CB6 Individual Project~");
@@ -19,17 +17,52 @@ namespace IndividualProject
             WriteAt(0, 3);
         }
 
-        public static void WriteAt(int column, int row)
+        public void UniversalLoadingOutput(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.Write(message);
+            DotsBlinking();
+            Console.Write("\r" + new string(' ', Console.WindowWidth) + "\r");
+            Console.ResetColor();
+        }
+
+        public static void DotsBlinking()
+        {
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            for (int blink = 0; blink < 5; blink++)
+            {
+                switch (blink)
+                {
+                    case 0: Console.Write("."); break;
+                    case 1: Console.Write("."); break;
+                    case 2: Console.Write("."); break;
+                    case 3: Console.Write("."); break;
+                    case 4: Console.Write("."); break;
+                }
+                System.Threading.Thread.Sleep(200);
+                Console.SetCursorPosition(Console.CursorLeft + 0, Console.CursorTop + 0);
+            }
+            Console.ResetColor();
+        }
+
+        public void ColoredText(string text, ConsoleColor frontColor)
+        {
+            Console.ForegroundColor = frontColor;
+            Console.Write(text);
+            Console.ForegroundColor = ConsoleColor.Black;
+        }
+
+        private static void WriteAt(int column, int row)
         {
             Console.SetCursorPosition(column, row);
         }
 
-        public static void CenterText(string text)
+        private static void CenterText(string text)
         {
             Console.WriteLine(string.Format("{0," + (Console.WindowWidth + text.Length) / 2 + "}", text));
         }
 
-        public static void WriteBottomLine(string text)
+        private static void WriteBottomLine(string text)
         {
             int x = Console.CursorLeft;
             int y = Console.CursorTop;
@@ -37,7 +70,7 @@ namespace IndividualProject
             CenterText(text);
         }
 
-        public static void SpecialThanksMessage()
+        public void SpecialThanksMessage()
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
             for (int blink = 0; blink < 6; blink++)
@@ -57,12 +90,13 @@ namespace IndividualProject
             }
         }
 
-        public static string TicketComment()
+        public string TicketComment()
         {
+            var _db = new ConnectToServer();
             var print = new OutputControl();
             string currentUsername = _db.RetrieveCurrentUserFromDatabase();
             print.QuasarScreen(currentUsername);
-            ColorAndAnimationControl.UniversalLoadingOuput("Loading");
+            print.UniversalLoadingOutput("Loading");
             Console.Write("EDIT TECHNICAL TICKET");
             Console.WriteLine("\r\nCompile a summary of the Customer's issue (limit 250 characters):");
             string ticketComment = Console.ReadLine();
@@ -73,21 +107,22 @@ namespace IndividualProject
                 if (ticketComment.Length > 250)
                 {                    
                     Console.WriteLine("\r\nEDIT TECHNICAL TICKET COMMENT SECTION");
-                    Console.WriteLine("\r\nSummary cannot be longer than 250 characters. Compile a summary of the Customer's issue: ");
+                    print.ColoredText("\r\nSummary cannot be longer than 250 characters. Compile a summary of the Customer's issue: ", ConsoleColor.DarkRed);
                     ticketComment = Console.ReadLine();
                 }
                 if (ticketComment.Length < 20)
                 {                    
                     Console.WriteLine("\r\nFILE NEW TECHNICAL TICKET");
-                    Console.WriteLine("\r\nComment section cannot be shorter than 20 characters. Compile a more extensive summary of the Customer's issue (limit 250 characters): ");
+                    print.ColoredText("\r\nComment section cannot be shorter than 20 characters. Compile a more extensive summary of the Customer's issue (limit 250 characters): " ,ConsoleColor.DarkRed);
                     ticketComment = Console.ReadLine();
                 }
             }
             return ticketComment;
         }
 
-        public static int SelectTicketID()
+        public int SelectTicketID()
         {
+            var print = new OutputControl();
             Console.Write("Select the TicketID of the ticket you want to manage: ");
             while (true)
             {
@@ -97,13 +132,15 @@ namespace IndividualProject
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine("Input needs to be a real number greater than 0");
+                    print.ColoredText("Please choose the ID of one of the Trouble Tickets listed.", ConsoleColor.DarkRed);
                 }
             }
         }
 
-        public static string SelectUserRole()
-        {            
+        public string SelectUserRole()
+        {          
+            var _db = new ConnectToServer();
+
             string administrator = "Administrator";
             string moderator = "Moderator";
             string user = "User";

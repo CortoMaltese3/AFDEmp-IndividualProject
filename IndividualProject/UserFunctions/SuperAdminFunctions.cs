@@ -18,7 +18,7 @@ namespace IndividualProject
 
             if (pendingUsername == " ")
             {
-                ColorAndAnimationControl.UniversalLoadingOuput("Action in progress");
+                print.UniversalLoadingOutput("Action in progress");
                 Console.Write("There are no pending requests.\n\n(Press any key to continue)");
                 Console.ReadKey();
                 ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
@@ -34,16 +34,16 @@ namespace IndividualProject
 
                 if (yesOrNoSelection == yes)
                 {
-                    string pendingRole = OutputControl.SelectUserRole();
+                    string pendingRole = print.SelectUserRole();
 
                     _db.InsertNewUserIntoDatabase(pendingUsername, pendingPassphrase, pendingRole);
                     print.QuasarScreen(currentUsername);
-                    ColorAndAnimationControl.UniversalLoadingOuput("Creating new user in progress");
+                    print.UniversalLoadingOutput("Creating new user in progress");
 
                     _text.ClearNewUserRegistrationList();
                     _text.CreateNewUserLogFile(pendingUsername);
 
-                    Console.WriteLine($"User {pendingUsername} has been created successfully. Status : {pendingRole}.\n\n(Press any key to continue)");
+                    print.ColoredText($"User {pendingUsername} has been created successfully. Status : {pendingRole}.\n\n(Press any key to continue)", ConsoleColor.DarkGreen);
                     Console.ReadKey();
                     ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
                 }
@@ -59,7 +59,7 @@ namespace IndividualProject
             string currentUsername = _db.RetrieveCurrentUserFromDatabase();
             string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
             print.QuasarScreen(currentUsername);
-            ColorAndAnimationControl.UniversalLoadingOuput("Loading");
+            print.UniversalLoadingOutput("Loading");
             Console.WriteLine("\r\nChoose a User from the list and proceed to delete.");
             Dictionary<string, string> AvailableUsernamesDictionary = _db.ShowAvailableUsersFromDatabase();
 
@@ -70,11 +70,11 @@ namespace IndividualProject
                 print.QuasarScreen(currentUsername);
                 if (AvailableUsernamesDictionary.ContainsKey(username) == false)
                 {
-                    Console.WriteLine($"Database does not contain a User {username}. Please select a different user.");
+                    print.ColoredText($"Database does not contain a User {username}. Please select a different user.", ConsoleColor.DarkRed);
                 }
                 else
                 {
-                    Console.WriteLine("Cannot delete super_admin! Please choose a different user.");
+                    print.ColoredText("Cannot delete super_admin! Please choose a different user.", ConsoleColor.DarkRed);
                 }
                 Console.WriteLine("\r\nChoose a User from the list and proceed to delete.");
                 AvailableUsernamesDictionary = _db.ShowAvailableUsersFromDatabase();
@@ -82,9 +82,9 @@ namespace IndividualProject
             }
             _db.RemoveUsernameFromDatabase(username);
             print.QuasarScreen(currentUsername);
-            ColorAndAnimationControl.UniversalLoadingOuput("Deleting existing user in progress");
+            print.UniversalLoadingOutput("Deleting existing user in progress");
             _text.DeleteUserNotificationsLog(username);
-            Console.WriteLine($"Username {username} has been successfully deleted from database.\n\n(Press any key to continue)");
+            print.ColoredText($"Username {username} has been successfully deleted from database.\n\n(Press any key to continue)", ConsoleColor.DarkGreen);
             Console.ReadKey();
             ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
         }
@@ -94,7 +94,7 @@ namespace IndividualProject
             string currentUsername = _db.RetrieveCurrentUserFromDatabase();
             string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
             print.QuasarScreen(currentUsername);
-            ColorAndAnimationControl.UniversalLoadingOuput("Loading");
+            print.UniversalLoadingOutput("Loading");
             _db.ShowAvailableUsersFromDatabase();
             Console.Write("\r\nPress any key to return to Functions menu");
             Console.ReadKey();
@@ -106,7 +106,7 @@ namespace IndividualProject
         {
             string currentUsername = _db.RetrieveCurrentUserFromDatabase();
             print.QuasarScreen(currentUsername);
-            ColorAndAnimationControl.UniversalLoadingOuput("Loading");
+            print.UniversalLoadingOutput("Loading");
             Dictionary<string, string> AvailableUsernamesDictionary = _db.ShowAvailableUsersFromDatabase();
             Console.WriteLine("\r\nChoose a User from the list and proceed to upgrade/downgrade Role Status");
             string username = InputControl.UsernameInput();
@@ -116,11 +116,11 @@ namespace IndividualProject
                 print.QuasarScreen(currentUsername);
                 if (AvailableUsernamesDictionary.ContainsKey(username) == false)
                 {
-                    Console.WriteLine($"Database does not contain a User {username}\n\n(Press any key to continue)");
+                    print.ColoredText($"Database does not contain a User {username}\n\n(Press any key to continue)", ConsoleColor.DarkRed);
                 }
                 else
                 {
-                    Console.WriteLine("Cannot alter super_admin's Status! Please choose a different user\n\n(Press any key to continue)");
+                    print.ColoredText("Cannot alter super_admin's Status! Please choose a different user\n\n(Press any key to continue)", ConsoleColor.DarkRed);
                 }
                 Console.ReadKey();
                 print.QuasarScreen(currentUsername);
@@ -128,7 +128,7 @@ namespace IndividualProject
                 Console.WriteLine("\r\nChoose a User from the list and proceed to upgrade/downgrade Role Status");
                 username = InputControl.UsernameInput();
             }
-            string userRole = OutputControl.SelectUserRole();
+            string userRole = print.SelectUserRole();
             _db.SelectSingleUserRole(username, currentUsername, userRole);
         }
     }

@@ -13,7 +13,7 @@ namespace IndividualProject
         {
             string currentUsername = _db.RetrieveCurrentUserFromDatabase();
             print.QuasarScreen(currentUsername);
-            ColorAndAnimationControl.UniversalLoadingOuput("Loading");
+            print.UniversalLoadingOutput("Loading");
             Console.WriteLine("CLOSE EXISTING TECHNICAL TICKETS");
 
             string viewList = "View List of Open Tickets";
@@ -43,12 +43,12 @@ namespace IndividualProject
         public static void CloseCustomerTicketFunction()
         {
             string currentUsername = _db.RetrieveCurrentUserFromDatabase();
-            int ticketID = OutputControl.SelectTicketID();
+            int ticketID = print.SelectTicketID();
             string previousUserAssignedTo = _db.SelectUserAssignedToTicket(ticketID);
 
             if (_db.CheckIfTicketIDWithStatusOpenExistsInList(ticketID) == false)
             {
-                Console.WriteLine($"There is no Customer Ticket with [ID = {ticketID}]\n\n(Press any key to continue)");
+                print.ColoredText($"There is no Customer Ticket with [ID = {ticketID}]\n\n(Press any key to continue)", ConsoleColor.DarkRed);
                 Console.ReadKey();
                 ManageTroubleTickets.OpenOrCloseTroubleTicket();
             }

@@ -89,7 +89,6 @@
       <DependentUpon>ProjectSettings.settings</DependentUpon>
     </Compile>
     <Compile Include="UserFunctions\SuperAdminFunctions.cs" />
-    <Compile Include="InputOutputAnimations\ColorAndAnimationControl.cs" />
     <Compile Include="SelectMenu.cs" />
     <Compile Include="TroubleTickets\AssignTroubleTickets.cs" />
     <Compile Include="TroubleTickets\ManageTroubleTickets.cs" />

@@ -16,7 +16,7 @@ namespace IndividualProject
             string currentUsername = _db.RetrieveCurrentUserFromDatabase();
             string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
             print.QuasarScreen(currentUsername);
-            ColorAndAnimationControl.UniversalLoadingOuput("Loading");
+            print.UniversalLoadingOutput("Loading");
 
             int countTickets = _db.CountOpenTicketsAssignedToUser(currentUsername);
             string showListOfTickets = "Show List of Tickets";
@@ -59,7 +59,7 @@ namespace IndividualProject
             string currentUsername = _db.RetrieveCurrentUserFromDatabase();
             string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
             print.QuasarScreen(currentUsername);
-            ColorAndAnimationControl.UniversalLoadingOuput("Loading");
+            print.UniversalLoadingOutput("Loading");
             string pendingUsernameCheck = _text.GetPendingUsername();            
 
             if (pendingUsernameCheck == " ")

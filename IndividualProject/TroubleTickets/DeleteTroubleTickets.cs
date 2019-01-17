@@ -14,7 +14,7 @@ namespace IndividualProject
             string currentUsername = _db.RetrieveCurrentUserFromDatabase();
             string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
             print.QuasarScreen(currentUsername);
-            ColorAndAnimationControl.UniversalLoadingOuput("Loading");
+            print.UniversalLoadingOutput("Loading");
             Console.WriteLine("DELETE EXISTING TECHNICAL TICKETS");
 
             string viewList = "View List of Tickets";
@@ -45,12 +45,12 @@ namespace IndividualProject
         {
             string currentUsername = _db.RetrieveCurrentUserFromDatabase();
             string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
-            int ticketID = OutputControl.SelectTicketID();
+            int ticketID = print.SelectTicketID();
             string previousTicketOwner = _db.SelectUserAssignedToTicket(ticketID);
 
             if (_db.CheckIfTicketIDWithStatusOpenOrClosedExistsInList(ticketID) == false)
             {
-                Console.WriteLine($"There is no Customer Ticket with [ID = {ticketID}]\n\n(Press any key to continue)");
+                print.ColoredText($"There is no Customer Ticket with [ID = {ticketID}]\n\n(Press any key to continue)", ConsoleColor.DarkRed);
                 Console.ReadKey();
                 ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
             }
