@@ -4,13 +4,15 @@ using System.Collections.Generic;
 namespace IndividualProject
 {
     class AssignTroubleTickets
-    {       
+    {
         //User selects whether to assign the ticket to himself or transfer ownership to another
+
+        private static ConnectToServer _db = new ConnectToServer();
+        private static DataToTextFile _text = new DataToTextFile();
+        private static OutputControl print = new OutputControl();
 
         public static string AssignTicketToUser()
         {
-            var _text = new DataToTextFile();
-            var _db = new ConnectToServer();
             string currentUsername = _db.RetrieveCurrentUserFromDatabase();
             string assignTicket = "Would you like to assign the ticket to another user?\r\n";
             string yes = "Yes";
@@ -19,7 +21,7 @@ namespace IndividualProject
 
             if (yesOrNoSelection == yes)
             {
-                OutputControl.QuasarScreen(currentUsername);
+                print.QuasarScreen(currentUsername);
                 ColorAndAnimationControl.UniversalLoadingOuput("Loading");
 
                 Dictionary<string, string> AvailableUsernamesDictionary = _db.ShowAvailableUsersFromDatabase();
@@ -32,7 +34,7 @@ namespace IndividualProject
                     {
                         Console.WriteLine($"Database does not contain a User {usernameAssignment}.\n\n(Press any key to continue)");
                         Console.ReadKey();
-                        OutputControl.QuasarScreen(currentUsername);
+                        print.QuasarScreen(currentUsername);
                         AvailableUsernamesDictionary = _db.ShowAvailableUsersFromDatabase();
                         Console.Write("\r\n\nPlease select a user and proceed to assign: ");
                         usernameAssignment = InputControl.UsernameInput();
@@ -41,7 +43,7 @@ namespace IndividualProject
                     {
                         Console.WriteLine("Cannot assign ticket to super_admin! Please choose a different user.\n\n(Press any key to continue)");
                         Console.ReadKey();
-                        OutputControl.QuasarScreen(currentUsername);
+                        print.QuasarScreen(currentUsername);
                         AvailableUsernamesDictionary = _db.ShowAvailableUsersFromDatabase();
                         Console.Write("\r\nPlease select a user and proceed to assign: ");
                         usernameAssignment = InputControl.UsernameInput();
@@ -60,20 +62,19 @@ namespace IndividualProject
 
         public static void ChangeUserAssignmentToOpenTicket(int ID, string nextOwner)
         {
-            var _db = new ConnectToServer();
             string currentUsername = _db.RetrieveCurrentUserFromDatabase();
             _db.ChangeUserAssignedTo(nextOwner, ID);
 
             if (nextOwner == currentUsername)
             {
-                OutputControl.QuasarScreen(currentUsername);
+                print.QuasarScreen(currentUsername);
                 ColorAndAnimationControl.UniversalLoadingOuput("Action in progress");
                 Console.WriteLine($"The ownership of the Customer Ticket with [ID = {ID}] remains to User: {nextOwner}\n\n(Press any key to continue)");
                 Console.ReadKey();
             }
             else
             {
-                OutputControl.QuasarScreen(currentUsername);
+                print.QuasarScreen(currentUsername);
                 ColorAndAnimationControl.UniversalLoadingOuput("Action in progress");
                 Console.WriteLine($"The ownership of the Customer Ticket with [ID = {ID}] has been successfully transfered to User: {nextOwner}\n\n(Press any key to continue)");
                 Console.ReadKey();

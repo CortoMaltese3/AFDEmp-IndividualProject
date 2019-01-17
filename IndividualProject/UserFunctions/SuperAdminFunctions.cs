@@ -5,8 +5,9 @@ namespace IndividualProject
 {
     class SuperAdminFunctions
     {
-        static ConnectToServer _db = new ConnectToServer();
-        static DataToTextFile _text = new DataToTextFile();
+        private static ConnectToServer _db = new ConnectToServer();
+        private static DataToTextFile _text = new DataToTextFile();
+        private static OutputControl print = new OutputControl();
 
         //Handles creation/deleting/viewing/editing of users by super_admin
         public static void CreateNewUserFromRequestFunction()
@@ -36,7 +37,7 @@ namespace IndividualProject
                     string pendingRole = OutputControl.SelectUserRole();
 
                     _db.InsertNewUserIntoDatabase(pendingUsername, pendingPassphrase, pendingRole);
-                    OutputControl.QuasarScreen(currentUsername);
+                    print.QuasarScreen(currentUsername);
                     ColorAndAnimationControl.UniversalLoadingOuput("Creating new user in progress");
 
                     _text.ClearNewUserRegistrationList();
@@ -57,7 +58,7 @@ namespace IndividualProject
         {
             string currentUsername = _db.RetrieveCurrentUserFromDatabase();
             string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
-            OutputControl.QuasarScreen(currentUsername);
+            print.QuasarScreen(currentUsername);
             ColorAndAnimationControl.UniversalLoadingOuput("Loading");
             Console.WriteLine("\r\nChoose a User from the list and proceed to delete.");
             Dictionary<string, string> AvailableUsernamesDictionary = _db.ShowAvailableUsersFromDatabase();
@@ -66,7 +67,7 @@ namespace IndividualProject
 
             while (AvailableUsernamesDictionary.ContainsKey(username) == false || username == "admin")
             {
-                OutputControl.QuasarScreen(currentUsername);
+                print.QuasarScreen(currentUsername);
                 if (AvailableUsernamesDictionary.ContainsKey(username) == false)
                 {
                     Console.WriteLine($"Database does not contain a User {username}. Please select a different user.");
@@ -80,7 +81,7 @@ namespace IndividualProject
                 username = InputControl.UsernameInput();
             }
             _db.RemoveUsernameFromDatabase(username);
-            OutputControl.QuasarScreen(currentUsername);
+            print.QuasarScreen(currentUsername);
             ColorAndAnimationControl.UniversalLoadingOuput("Deleting existing user in progress");
             _text.DeleteUserNotificationsLog(username);
             Console.WriteLine($"Username {username} has been successfully deleted from database.\n\n(Press any key to continue)");
@@ -92,7 +93,7 @@ namespace IndividualProject
         {
             string currentUsername = _db.RetrieveCurrentUserFromDatabase();
             string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
-            OutputControl.QuasarScreen(currentUsername);
+            print.QuasarScreen(currentUsername);
             ColorAndAnimationControl.UniversalLoadingOuput("Loading");
             _db.ShowAvailableUsersFromDatabase();
             Console.Write("\r\nPress any key to return to Functions menu");
@@ -104,7 +105,7 @@ namespace IndividualProject
         public static void AlterUserRoleStatus()
         {
             string currentUsername = _db.RetrieveCurrentUserFromDatabase();
-            OutputControl.QuasarScreen(currentUsername);
+            print.QuasarScreen(currentUsername);
             ColorAndAnimationControl.UniversalLoadingOuput("Loading");
             Dictionary<string, string> AvailableUsernamesDictionary = _db.ShowAvailableUsersFromDatabase();
             Console.WriteLine("\r\nChoose a User from the list and proceed to upgrade/downgrade Role Status");
@@ -112,7 +113,7 @@ namespace IndividualProject
 
             while (AvailableUsernamesDictionary.ContainsKey(username) == false || username == "admin")
             {
-                OutputControl.QuasarScreen(currentUsername);
+                print.QuasarScreen(currentUsername);
                 if (AvailableUsernamesDictionary.ContainsKey(username) == false)
                 {
                     Console.WriteLine($"Database does not contain a User {username}\n\n(Press any key to continue)");
@@ -122,7 +123,7 @@ namespace IndividualProject
                     Console.WriteLine("Cannot alter super_admin's Status! Please choose a different user\n\n(Press any key to continue)");
                 }
                 Console.ReadKey();
-                OutputControl.QuasarScreen(currentUsername);
+                print.QuasarScreen(currentUsername);
                 AvailableUsernamesDictionary = _db.ShowAvailableUsersFromDatabase();
                 Console.WriteLine("\r\nChoose a User from the list and proceed to upgrade/downgrade Role Status");
                 username = InputControl.UsernameInput();

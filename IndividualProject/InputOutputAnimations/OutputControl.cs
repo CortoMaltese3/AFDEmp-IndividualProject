@@ -5,11 +5,13 @@ namespace IndividualProject
 {
     class OutputControl
     {
-        public static void QuasarScreen(string currentUser)
+        private static ConnectToServer _db = new ConnectToServer();
+        
+        public void QuasarScreen(string currentUser)
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.DarkCyan;
-            CenterText("Quasar CRM Program - V2.5.1");
+            CenterText("Quasar CRM Program - V2.7.0");
             CenterText("-IT Crowd-");
             CenterText($"[{currentUser}]");
             WriteBottomLine("~CB6 Individual Project~");
@@ -57,9 +59,9 @@ namespace IndividualProject
 
         public static string TicketComment()
         {
-            var _db = new ConnectToServer();
+            var print = new OutputControl();
             string currentUsername = _db.RetrieveCurrentUserFromDatabase();
-            QuasarScreen(currentUsername);
+            print.QuasarScreen(currentUsername);
             ColorAndAnimationControl.UniversalLoadingOuput("Loading");
             Console.Write("EDIT TECHNICAL TICKET");
             Console.WriteLine("\r\nCompile a summary of the Customer's issue (limit 250 characters):");
@@ -67,7 +69,7 @@ namespace IndividualProject
 
             while (ticketComment.Length > 250 || ticketComment.Length < 20)
             {
-                QuasarScreen(currentUsername);
+                print.QuasarScreen(currentUsername);
                 if (ticketComment.Length > 250)
                 {                    
                     Console.WriteLine("\r\nEDIT TECHNICAL TICKET COMMENT SECTION");
@@ -101,8 +103,7 @@ namespace IndividualProject
         }
 
         public static string SelectUserRole()
-        {
-            var _db = new ConnectToServer();
+        {            
             string administrator = "Administrator";
             string moderator = "Moderator";
             string user = "User";

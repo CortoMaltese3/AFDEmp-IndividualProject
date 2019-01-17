@@ -4,18 +4,20 @@ using System.Collections.Generic;
 namespace IndividualProject
 {
     class SelectMenu
-    {        
+    {
+        private static ConnectToServer _db = new ConnectToServer();
+        private static OutputControl print = new OutputControl();
+
         //Creates the Vertical options Menu
         public static UserOptionList MenuColumn(List<string> ListOfOptions, string currentUser, string message)
-        {
-            var _db = new ConnectToServer();
+        {            
             string currentUsername = _db.RetrieveCurrentUserFromDatabase();
             int currentOption = 0;
             ConsoleKeyInfo currentKeyPressed;
             do
             {
                 //Resets the console when a key is pressed and the next option is highlighted
-                OutputControl.QuasarScreen(currentUser);                
+                print.QuasarScreen(currentUser);                
                 Console.WriteLine(message);
                 for (int option = 0; option < ListOfOptions.Count; option++)
                 {
@@ -48,7 +50,7 @@ namespace IndividualProject
                 }
             }
             while (currentKeyPressed.Key != ConsoleKey.Enter);
-            OutputControl.QuasarScreen(currentUser);
+            print.QuasarScreen(currentUser);
             
             Console.ForegroundColor = ConsoleColor.White;
 
@@ -67,7 +69,7 @@ namespace IndividualProject
 
             do
             {
-                OutputControl.QuasarScreen(currentUser);
+                print.QuasarScreen(currentUser);
                 Console.WriteLine(message);                
                 for (int option = 0; option < ListOfOptions.Count; option++)
                 {
@@ -100,7 +102,7 @@ namespace IndividualProject
                 }
             }
             while (currentKeyPressed.Key != ConsoleKey.Enter);
-            OutputControl.QuasarScreen(currentUser);
+            print.QuasarScreen(currentUser);
 
             Console.ForegroundColor = ConsoleColor.White;
 

@@ -5,11 +5,14 @@ namespace IndividualProject
 {
     class CloseExistingTroubleTickets
     {
+        private static ConnectToServer _db = new ConnectToServer();
+        private static DataToTextFile _text = new DataToTextFile();
+        private static OutputControl print = new OutputControl();
+
         public static void CloseTicket()
         {
-            var _db = new ConnectToServer();
             string currentUsername = _db.RetrieveCurrentUserFromDatabase();
-            OutputControl.QuasarScreen(currentUsername);
+            print.QuasarScreen(currentUsername);
             ColorAndAnimationControl.UniversalLoadingOuput("Loading");
             Console.WriteLine("CLOSE EXISTING TECHNICAL TICKETS");
 
@@ -39,8 +42,6 @@ namespace IndividualProject
 
         public static void CloseCustomerTicketFunction()
         {
-            var _db = new ConnectToServer();
-            var _text = new DataToTextFile();
             string currentUsername = _db.RetrieveCurrentUserFromDatabase();
             int ticketID = OutputControl.SelectTicketID();
             string previousUserAssignedTo = _db.SelectUserAssignedToTicket(ticketID);

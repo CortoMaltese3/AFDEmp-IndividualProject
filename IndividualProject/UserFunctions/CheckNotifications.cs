@@ -7,14 +7,15 @@ namespace IndividualProject
 {
     public class CheckNotifications
     {
+        private static ConnectToServer _db = new ConnectToServer();
+        private static DataToTextFile _text = new DataToTextFile();
+        private static OutputControl print = new OutputControl();
+
         public static void CheckUserNotifications()
         {
-            var _db = new ConnectToServer();
-            var _text = new DataToTextFile();
-
             string currentUsername = _db.RetrieveCurrentUserFromDatabase();
             string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
-            OutputControl.QuasarScreen(currentUsername);
+            print.QuasarScreen(currentUsername);
             ColorAndAnimationControl.UniversalLoadingOuput("Loading");
 
             int countTickets = _db.CountOpenTicketsAssignedToUser(currentUsername);
@@ -55,12 +56,9 @@ namespace IndividualProject
 
         public static void CheckAdminNotifications()
         {
-            var _db = new ConnectToServer();
-            var _text = new DataToTextFile();
-
             string currentUsername = _db.RetrieveCurrentUserFromDatabase();
             string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
-            OutputControl.QuasarScreen(currentUsername);
+            print.QuasarScreen(currentUsername);
             ColorAndAnimationControl.UniversalLoadingOuput("Loading");
             string pendingUsernameCheck = _text.GetPendingUsername();            
 

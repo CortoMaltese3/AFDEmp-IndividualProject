@@ -5,12 +5,15 @@ using System.Data;
 
 namespace IndividualProject
 {
+    
     //The ConnectToServer class handles the interactions with the Database
     public class ConnectToServer
     {
+        static OutputControl print = new OutputControl();
+
         public void UserLoginCredentials()
         {
-            OutputControl.QuasarScreen("Not Registered");
+            print.QuasarScreen("Not Registered");
             string username = InputControl.UsernameInput();
             string passphrase = InputControl.PassphraseInput();
             var dbcon = new SqlConnection(Globals.connectionString);
@@ -20,14 +23,14 @@ namespace IndividualProject
                 if (CheckUsernameAndPasswordMatchInDatabase(username, passphrase))
                 {
                     SetCurrentUserStatusToActive(username);
-                    OutputControl.QuasarScreen(username);
+                    print.QuasarScreen(username);
                     ColorAndAnimationControl.ColoredText($"Connection Established! Welcome back {username}!", ConsoleColor.DarkGreen);
                     System.Threading.Thread.Sleep(1500);
                     ActiveUserFunctions.UserFunctionMenuScreen(RetrieveCurrentUsernameRoleFromDatabase());
                 }
                 else
                 {
-                    OutputControl.QuasarScreen("Not Registered");
+                    print.QuasarScreen("Not Registered");
                     ColorAndAnimationControl.ColoredText($"\r\nInvalid Username or Passphrase. Try again.\n\n(press any key to continue)", ConsoleColor.DarkRed);
                     Console.ReadKey();
                     UserLoginCredentials();
@@ -327,11 +330,11 @@ namespace IndividualProject
                     string previousUserRole = (string)selectPreviousUserRole.ExecuteScalar();
                     while (previousUserRole == userRole)
                     {
-                        OutputControl.QuasarScreen(currentUsername);
+                        print.QuasarScreen(currentUsername);
                         Console.WriteLine();
                         Console.WriteLine($"User '{username}' already is {userRole}. Please proceed to choose a different Role Status\n\n(Press any key to continue)");
                         Console.ReadKey();
-                        OutputControl.QuasarScreen(currentUsername);
+                        print.QuasarScreen(currentUsername);
                         Console.WriteLine();
                         userRole = OutputControl.SelectUserRole();
                         selectPreviousUserRole = new SqlCommand("SelectSingleUserRole", dbcon);
@@ -349,7 +352,7 @@ namespace IndividualProject
                     selectUserRole.Parameters.AddWithValue("@username", username);
                     alterUserRole.ExecuteScalar();
                     string newUserRole = (string)selectUserRole.ExecuteScalar();
-                    OutputControl.QuasarScreen(currentUsername);
+                    print.QuasarScreen(currentUsername);
                     ColorAndAnimationControl.UniversalLoadingOuput("Modifying User's role status in progress");
                     Console.WriteLine($"User {username} has been successfully modified as {newUserRole}\n\n(Press any key to continue)");
                     Console.ReadKey();
@@ -377,7 +380,7 @@ namespace IndividualProject
 
                     SqlCommand fetchNewTicketID = new SqlCommand("EXECUTE fetchNewTicketID", dbcon);
                     int ticketID = (int)fetchNewTicketID.ExecuteScalar();
-                    OutputControl.QuasarScreen(currentUsername);
+                    print.QuasarScreen(currentUsername);
                     ColorAndAnimationControl.UniversalLoadingOuput("Filing new customer ticket in progress");
                     Console.WriteLine($"New Customer Ticket with ID: {ticketID} has been successfully created and assigned to {userAssignedTo}. Status: Open");
                 }
@@ -397,7 +400,7 @@ namespace IndividualProject
                     dbcon.Open();
                     SqlCommand closeCustomerTicket = new SqlCommand($"EXECUTE SetTicketStatusToClosed {ticketID}", dbcon);
                     closeCustomerTicket.ExecuteScalar();
-                    OutputControl.QuasarScreen(currentUsername);
+                    print.QuasarScreen(currentUsername);
                     ColorAndAnimationControl.UniversalLoadingOuput("Action in progress");
                     Console.WriteLine($"Customer ticket with CustomerID = {ticketID} has been successfully marked as closed.\n\n(Press any key to continue)");
                     Console.ReadKey();
@@ -567,7 +570,7 @@ namespace IndividualProject
                     deleteCustomerTicket.CommandType = CommandType.StoredProcedure;
                     deleteCustomerTicket.Parameters.AddWithValue("@ticketID", ticketID);
                     deleteCustomerTicket.ExecuteScalar();
-                    OutputControl.QuasarScreen(currentUsername);
+                    print.QuasarScreen(currentUsername);
                     ColorAndAnimationControl.UniversalLoadingOuput("Action in progress");
                     Console.WriteLine($"Customer ticket with ID = {ticketID} has been successfully deleted\n\n(Press any key to continue)");
                     Console.ReadKey();
@@ -712,7 +715,7 @@ namespace IndividualProject
 
             if (yesOrNoSelection == yes)
             {
-                OutputControl.QuasarScreen("Not Registered");
+                print.QuasarScreen("Not Registered");
                 SetCurrentUserStatusToInactive(currentUsername);
                 ApplicationMenu.LoginScreen();
             }

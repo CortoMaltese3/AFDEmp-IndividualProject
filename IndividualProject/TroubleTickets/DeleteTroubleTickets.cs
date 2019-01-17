@@ -5,12 +5,15 @@ namespace IndividualProject
 {
     class DeleteTroubleTickets
     {
+        private static ConnectToServer _db = new ConnectToServer();
+        private static DataToTextFile _text = new DataToTextFile();
+        private static OutputControl print = new OutputControl();
+
         public static void DeleteExistingOpenOrClosedTicketFunction()
-        {
-            var _db = new ConnectToServer();            
+        {           
             string currentUsername = _db.RetrieveCurrentUserFromDatabase();
             string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
-            OutputControl.QuasarScreen(currentUsername);
+            print.QuasarScreen(currentUsername);
             ColorAndAnimationControl.UniversalLoadingOuput("Loading");
             Console.WriteLine("DELETE EXISTING TECHNICAL TICKETS");
 
@@ -40,9 +43,6 @@ namespace IndividualProject
 
         private static void DeleteExistingOpenOrClosedTicketSubFunction()
         {
-            var _db = new ConnectToServer();
-            var _text = new DataToTextFile();
-
             string currentUsername = _db.RetrieveCurrentUserFromDatabase();
             string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
             int ticketID = OutputControl.SelectTicketID();

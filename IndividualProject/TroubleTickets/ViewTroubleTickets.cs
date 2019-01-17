@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IndividualProject
 {
     class ViewExistingTickets
     {
+        private static ConnectToServer _db = new ConnectToServer();
+        private static OutputControl print = new OutputControl();
+
         public static void ViewExistingOpenTicketsFunction()
-        {
-            var _db = new ConnectToServer();
+        {            
             string currentUsername = _db.RetrieveCurrentUserFromDatabase();
             string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
-            OutputControl.QuasarScreen(currentUsername);
+            print.QuasarScreen(currentUsername);
             ColorAndAnimationControl.UniversalLoadingOuput("Loading");
             Console.WriteLine("VIEW OPEN TECHNICAL TICKETS");
 
@@ -36,15 +35,14 @@ namespace IndividualProject
                 }
                 else if (viewTickets == back)
                 {
-                    OutputControl.QuasarScreen(currentUsername);
+                    print.QuasarScreen(currentUsername);
                     ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
                 }
             }
         }
 
         private static void ViewExistingOpenTicketsSubFunction()
-        {
-            var _db = new ConnectToServer();
+        {            
             string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
             int TicketID = OutputControl.SelectTicketID();
             if (_db.CheckIfTicketIDWithStatusOpenExistsInList(TicketID) == false)
@@ -58,10 +56,9 @@ namespace IndividualProject
         }
 
         public static void ViewSingleCustomerTicket(int ticketID)
-        {
-            var _db = new ConnectToServer();
+        {            
             string currentUsername = _db.RetrieveCurrentUserFromDatabase();
-            OutputControl.QuasarScreen(currentUsername);
+            print.QuasarScreen(currentUsername);
             ColorAndAnimationControl.UniversalLoadingOuput("Loading");
             Console.WriteLine($"VIEW TECHNICAL TICKET WITH [ID = {ticketID}]");
             _db.SelectSingleCustomerTicket(ticketID);

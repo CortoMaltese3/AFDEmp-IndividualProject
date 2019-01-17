@@ -4,13 +4,15 @@ namespace IndividualProject
 {
     class InputControl
     {
+        private static OutputControl print = new OutputControl();
+
         public static string UsernameInput()
         {
             Console.Write("\r\nusername: ");
             string usernameInput = Console.ReadLine();
             while (usernameInput.Length > 20)
             {
-                OutputControl.QuasarScreen("Not registered");
+                print.QuasarScreen("Not registered");
                 Console.WriteLine("\r\nusername cannot be longer than 20 characters. Please try again");
                 Console.Write("username: ");
                 usernameInput = Console.ReadLine();
@@ -46,7 +48,7 @@ namespace IndividualProject
 
             while (passphrase.Length > 20)
             {
-                OutputControl.QuasarScreen("Not registered");
+                print.QuasarScreen("Not registered");
                 Console.WriteLine("\r\npassphrase cannot be longer than 20 characters. Please try again");
                 Console.Write("passphrase: ");
                 passphrase = Console.ReadLine();

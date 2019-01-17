@@ -5,13 +5,15 @@ namespace IndividualProject
 {
     class EditExistingTroubleTickets
     {
+        private static ConnectToServer _db = new ConnectToServer();
+        private static OutputControl print = new OutputControl();
+
         public static void EditOpenTicket()
         {
-            var _db = new ConnectToServer();
             string currentUsername = _db.RetrieveCurrentUserFromDatabase();
             string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
 
-            OutputControl.QuasarScreen(currentUsername);
+            print.QuasarScreen(currentUsername);
             ColorAndAnimationControl.UniversalLoadingOuput("Loading");
             Console.WriteLine("EDIT OPEN TECHNICAL TICKET");
 
@@ -34,7 +36,7 @@ namespace IndividualProject
                 }
                 else if (editTicket == back)
                 {
-                    OutputControl.QuasarScreen(currentUsername);
+                    print.QuasarScreen(currentUsername);
                     ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
                 }
             }
@@ -42,7 +44,6 @@ namespace IndividualProject
 
         private static void EditOpenTicketSubFunction()
         {
-            var _db = new ConnectToServer();
             string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
             int TicketID = OutputControl.SelectTicketID();
             if (_db.CheckIfTicketIDWithStatusOpenExistsInList(TicketID) == false)
@@ -61,7 +62,6 @@ namespace IndividualProject
 
         private static void EditTicketOptions(int ID)
         {
-            var _db = new ConnectToServer();
             string currentUsername = _db.RetrieveCurrentUserFromDatabase();
             string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
 
@@ -86,7 +86,7 @@ namespace IndividualProject
                 }
                 else if (EditCommentAndAssignment == back)
                 {
-                    OutputControl.QuasarScreen(currentUsername);
+                    print.QuasarScreen(currentUsername);
                     ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
                 }
             }
