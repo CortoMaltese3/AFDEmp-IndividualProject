@@ -7,8 +7,9 @@ namespace IndividualProject
     {
         public static void DeleteExistingOpenOrClosedTicketFunction()
         {
-            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
-            string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
+            var _db = new ConnectToServer();            
+            string currentUsername = _db.RetrieveCurrentUserFromDatabase();
+            string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
             OutputControl.QuasarScreen(currentUsername);
             ColorAndAnimationControl.UniversalLoadingOuput("Loading");
             Console.WriteLine("DELETE EXISTING TECHNICAL TICKETS");
@@ -23,7 +24,7 @@ namespace IndividualProject
                 string deleteTickets = SelectMenu.MenuColumn(new List<string> { viewList, closeSpecific, back }, currentUsername, deleteTicketsMsg).option;
                 if (deleteTickets == viewList)
                 {
-                    ConnectToServer.ViewListOfAllCustomerTickets();
+                    _db.ViewListOfAllCustomerTickets();
                     DeleteExistingOpenOrClosedTicketSubFunction();
                 }
                 else if (deleteTickets == closeSpecific)
@@ -39,11 +40,15 @@ namespace IndividualProject
 
         private static void DeleteExistingOpenOrClosedTicketSubFunction()
         {
-            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
-            string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
+            var _db = new ConnectToServer();
+            var _text = new DataToTextFile();
+
+            string currentUsername = _db.RetrieveCurrentUserFromDatabase();
+            string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
             int ticketID = OutputControl.SelectTicketID();
-            string previousTicketOwner = ConnectToServer.SelectUserAssignedToTicket(ticketID);
-            if (ConnectToServer.CheckIfTicketIDWithStatusOpenOrClosedExistsInList(ticketID) == false)
+            string previousTicketOwner = _db.SelectUserAssignedToTicket(ticketID);
+
+            if (_db.CheckIfTicketIDWithStatusOpenOrClosedExistsInList(ticketID) == false)
             {
                 Console.WriteLine($"There is no Customer Ticket with [ID = {ticketID}]\n\n(Press any key to continue)");
                 Console.ReadKey();
@@ -57,8 +62,8 @@ namespace IndividualProject
 
             if (optionYesOrNo2 == yes)
             {
-                ConnectToServer.DeleteCustomerTicket(currentUsername, ticketID);
-                DataToTextFile.DeleteTicketToUserNotification(currentUsername, previousTicketOwner, ticketID);
+                _db.DeleteCustomerTicket(currentUsername, ticketID);
+                _text.DeleteTicketToUserNotification(currentUsername, previousTicketOwner, ticketID);
                 ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
             }
             else if (optionYesOrNo2 == no)

@@ -7,8 +7,9 @@ namespace IndividualProject
     {
         public static void EditOpenTicket()
         {
-            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
-            string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
+            var _db = new ConnectToServer();
+            string currentUsername = _db.RetrieveCurrentUserFromDatabase();
+            string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
 
             OutputControl.QuasarScreen(currentUsername);
             ColorAndAnimationControl.UniversalLoadingOuput("Loading");
@@ -24,7 +25,7 @@ namespace IndividualProject
                 string editTicket = SelectMenu.MenuColumn(new List<string> { viewList, viewSpecific, back }, currentUsername, listTicketsMsg).option;
                 if (editTicket == viewList)
                 {
-                    ConnectToServer.ViewListOfOpenCustomerTickets();
+                    _db.ViewListOfOpenCustomerTickets();
                     EditOpenTicketSubFunction();
                 }
                 else if (editTicket == viewSpecific)
@@ -41,9 +42,10 @@ namespace IndividualProject
 
         private static void EditOpenTicketSubFunction()
         {
-            string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
+            var _db = new ConnectToServer();
+            string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
             int TicketID = OutputControl.SelectTicketID();
-            if (ConnectToServer.CheckIfTicketIDWithStatusOpenExistsInList(TicketID) == false)
+            if (_db.CheckIfTicketIDWithStatusOpenExistsInList(TicketID) == false)
             {
                 Console.WriteLine($"There is no Customer Ticket with [ID = {TicketID}]\n\n(Press any key to continue)");
                 Console.ReadKey();
@@ -59,8 +61,9 @@ namespace IndividualProject
 
         private static void EditTicketOptions(int ID)
         {
-            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
-            string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
+            var _db = new ConnectToServer();
+            string currentUsername = _db.RetrieveCurrentUserFromDatabase();
+            string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
 
             string edit = "Edit Ticket Comment";
             string assign = "Edit Ticket's User assignment";
@@ -74,7 +77,7 @@ namespace IndividualProject
                 if (EditCommentAndAssignment == edit)
                 {
                     string ticketComment = OutputControl.TicketComment();
-                    ConnectToServer.EditCommentOfOpenTicket(ID, ticketComment);
+                    _db.EditCommentOfOpenTicket(ID, ticketComment);
                 }
                 else if (EditCommentAndAssignment == assign)
                 {

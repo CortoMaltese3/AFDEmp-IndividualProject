@@ -6,11 +6,12 @@ namespace IndividualProject
     {
         public static void OpenTicket()
         {
-            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
+            var _db = new ConnectToServer();
+            string currentUsername = _db.RetrieveCurrentUserFromDatabase();
             string comment = OutputControl.TicketComment();
             string userAssignedTo = AssignTroubleTickets.AssignTicketToUser();
 
-            ConnectToServer.OpenNewTechnicalTicket(currentUsername, userAssignedTo, comment);
+            _db.OpenNewTechnicalTicket(currentUsername, userAssignedTo, comment);
             Console.WriteLine("\n\nPress any key to return");
             Console.ReadKey();
             ManageTroubleTickets.OpenOrCloseTroubleTicket();

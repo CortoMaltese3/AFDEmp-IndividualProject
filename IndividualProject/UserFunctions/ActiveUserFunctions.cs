@@ -6,8 +6,9 @@ namespace IndividualProject
     {
         public static void UserFunctionMenuScreen(string currentUsernameRole)
         {
-            string currentUser = ConnectToServer.RetrieveCurrentUserFromDatabase();
-            int countTickets = ConnectToServer.CountOpenTicketsAssignedToUser(currentUser);
+            var _db = new ConnectToServer();
+            string currentUser = _db.RetrieveCurrentUserFromDatabase();
+            int countTickets = _db.CountOpenTicketsAssignedToUser(currentUser);
             
             string notificationsAdmin = $"Check user notifications";
             string notificationsUser = $"Check user notifications [{countTickets}]";
@@ -78,7 +79,7 @@ namespace IndividualProject
 
                         else if (SuperAdminFunctionMenu == logOut)
                         {
-                            ConnectToServer.LoggingOffQuasar();
+                            _db.LoggingOffQuasar();
                         }
                     }
                 #endregion
@@ -116,7 +117,7 @@ namespace IndividualProject
 
                         else if (AdminFunctionMenu == logOut)
                         {
-                            ConnectToServer.LoggingOffQuasar();
+                            _db.LoggingOffQuasar();
                         }
                     }
                 #endregion
@@ -149,7 +150,7 @@ namespace IndividualProject
 
                         else if (ModeratorFunctionMenu == logOut)
                         {
-                            ConnectToServer.LoggingOffQuasar();
+                            _db.LoggingOffQuasar();
                         }
                     }
                 #endregion
@@ -177,7 +178,7 @@ namespace IndividualProject
 
                         else if (UserFunctionMenu == logOut)
                         {
-                            ConnectToServer.LoggingOffQuasar();
+                            _db.LoggingOffQuasar();
                         }
                     }
                     #endregion

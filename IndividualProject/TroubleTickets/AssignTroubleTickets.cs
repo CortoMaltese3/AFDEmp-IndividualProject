@@ -9,7 +9,9 @@ namespace IndividualProject
 
         public static string AssignTicketToUser()
         {
-            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
+            var _text = new DataToTextFile();
+            var _db = new ConnectToServer();
+            string currentUsername = _db.RetrieveCurrentUserFromDatabase();
             string assignTicket = "Would you like to assign the ticket to another user?\r\n";
             string yes = "Yes";
             string no = "No";
@@ -20,7 +22,7 @@ namespace IndividualProject
                 OutputControl.QuasarScreen(currentUsername);
                 ColorAndAnimationControl.UniversalLoadingOuput("Loading");
 
-                Dictionary<string, string> AvailableUsernamesDictionary = ConnectToServer.ShowAvailableUsersFromDatabase();
+                Dictionary<string, string> AvailableUsernamesDictionary = _db.ShowAvailableUsersFromDatabase();
                 Console.Write("\r\nPlease select a user and proceed to assign: ");
                 string usernameAssignment = InputControl.UsernameInput();
 
@@ -31,7 +33,7 @@ namespace IndividualProject
                         Console.WriteLine($"Database does not contain a User {usernameAssignment}.\n\n(Press any key to continue)");
                         Console.ReadKey();
                         OutputControl.QuasarScreen(currentUsername);
-                        AvailableUsernamesDictionary = ConnectToServer.ShowAvailableUsersFromDatabase();
+                        AvailableUsernamesDictionary = _db.ShowAvailableUsersFromDatabase();
                         Console.Write("\r\n\nPlease select a user and proceed to assign: ");
                         usernameAssignment = InputControl.UsernameInput();
                     }
@@ -40,12 +42,12 @@ namespace IndividualProject
                         Console.WriteLine("Cannot assign ticket to super_admin! Please choose a different user.\n\n(Press any key to continue)");
                         Console.ReadKey();
                         OutputControl.QuasarScreen(currentUsername);
-                        AvailableUsernamesDictionary = ConnectToServer.ShowAvailableUsersFromDatabase();
+                        AvailableUsernamesDictionary = _db.ShowAvailableUsersFromDatabase();
                         Console.Write("\r\nPlease select a user and proceed to assign: ");
                         usernameAssignment = InputControl.UsernameInput();
                     }
                 }
-                DataToTextFile.AssignTicketToUserNotification(currentUsername, usernameAssignment);
+                _text.AssignTicketToUserNotification(currentUsername, usernameAssignment);
                 return usernameAssignment;
             }
 
@@ -58,8 +60,9 @@ namespace IndividualProject
 
         public static void ChangeUserAssignmentToOpenTicket(int ID, string nextOwner)
         {
-            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
-            ConnectToServer.ChangeUserAssignedTo(nextOwner, ID);
+            var _db = new ConnectToServer();
+            string currentUsername = _db.RetrieveCurrentUserFromDatabase();
+            _db.ChangeUserAssignedTo(nextOwner, ID);
 
             if (nextOwner == currentUsername)
             {

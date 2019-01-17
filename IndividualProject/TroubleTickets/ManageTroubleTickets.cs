@@ -6,8 +6,9 @@ namespace IndividualProject
     {
         public static void OpenOrCloseTroubleTicket()
         {
-            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
-            string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
+            var _db = new ConnectToServer();
+            string currentUsername = _db.RetrieveCurrentUserFromDatabase();
+            string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
             string open = "Open new Customer Ticket";
             string close = "Close Customer Ticket";
             string back = "\r\nBack";

@@ -7,7 +7,8 @@ namespace IndividualProject
     {
         public static void CloseTicket()
         {
-            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
+            var _db = new ConnectToServer();
+            string currentUsername = _db.RetrieveCurrentUserFromDatabase();
             OutputControl.QuasarScreen(currentUsername);
             ColorAndAnimationControl.UniversalLoadingOuput("Loading");
             Console.WriteLine("CLOSE EXISTING TECHNICAL TICKETS");
@@ -22,7 +23,7 @@ namespace IndividualProject
                 string optionYesOrNo = SelectMenu.MenuColumn(new List<string> { viewList, closeSpecific, back }, currentUsername, optionsMsg).option;
                 if (optionYesOrNo == viewList)
                 {
-                    ConnectToServer.ViewListOfOpenCustomerTickets();
+                    _db.ViewListOfOpenCustomerTickets();
                     CloseCustomerTicketFunction();
                 }
                 else if (optionYesOrNo == closeSpecific)
@@ -38,11 +39,13 @@ namespace IndividualProject
 
         public static void CloseCustomerTicketFunction()
         {
-            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
+            var _db = new ConnectToServer();
+            var _text = new DataToTextFile();
+            string currentUsername = _db.RetrieveCurrentUserFromDatabase();
             int ticketID = OutputControl.SelectTicketID();
-            string previousUserAssignedTo = ConnectToServer.SelectUserAssignedToTicket(ticketID);
+            string previousUserAssignedTo = _db.SelectUserAssignedToTicket(ticketID);
 
-            if (ConnectToServer.CheckIfTicketIDWithStatusOpenExistsInList(ticketID) == false)
+            if (_db.CheckIfTicketIDWithStatusOpenExistsInList(ticketID) == false)
             {
                 Console.WriteLine($"There is no Customer Ticket with [ID = {ticketID}]\n\n(Press any key to continue)");
                 Console.ReadKey();
@@ -57,8 +60,8 @@ namespace IndividualProject
 
                 if (optionYesOrNo2 == yes)
                 {
-                    ConnectToServer.SetTicketStatusToClosed(currentUsername, ticketID);
-                    DataToTextFile.CloseTicketToUserNotification(currentUsername, previousUserAssignedTo, ticketID);
+                    _db.SetTicketStatusToClosed(currentUsername, ticketID);
+                    _text.CloseTicketToUserNotification(currentUsername, previousUserAssignedTo, ticketID);
                     ManageTroubleTickets.OpenOrCloseTroubleTicket();
                 }
                 else if (optionYesOrNo2 == no)

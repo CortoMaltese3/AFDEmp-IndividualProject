@@ -8,7 +8,8 @@ namespace IndividualProject
         //Creates the Vertical options Menu
         public static UserOptionList MenuColumn(List<string> ListOfOptions, string currentUser, string message)
         {
-            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
+            var _db = new ConnectToServer();
+            string currentUsername = _db.RetrieveCurrentUserFromDatabase();
             int currentOption = 0;
             ConsoleKeyInfo currentKeyPressed;
             do

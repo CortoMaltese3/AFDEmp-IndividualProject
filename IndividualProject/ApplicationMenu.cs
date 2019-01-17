@@ -6,6 +6,8 @@ namespace IndividualProject
     {
         public static void LoginScreen()
         {
+            var _db = new ConnectToServer();
+
             string login = "Login with your Credentials";
             string register = "New Account request";
             string quit = "Quit Quasar";
@@ -18,7 +20,7 @@ namespace IndividualProject
 
                 if (LoginRegisterQuit == login)
                 {
-                    ConnectToServer.UserLoginCredentials();
+                    _db.UserLoginCredentials();
                 }
                 else if (LoginRegisterQuit == register)
                 {
@@ -26,7 +28,7 @@ namespace IndividualProject
                 }
                 else if (LoginRegisterQuit == quit)
                 {
-                    ConnectToServer.TerminateQuasar();
+                    _db.TerminateQuasar();
                 }
             }
         }

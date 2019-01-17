@@ -6,9 +6,9 @@ using System.Data;
 namespace IndividualProject
 {
     //The ConnectToServer class handles the interactions with the Database
-    static class ConnectToServer
+    public class ConnectToServer
     {
-        public static void UserLoginCredentials()
+        public void UserLoginCredentials()
         {
             OutputControl.QuasarScreen("Not Registered");
             string username = InputControl.UsernameInput();
@@ -35,7 +35,7 @@ namespace IndividualProject
             }
         }
 
-        private static bool TestConnectionToSqlServer(this SqlConnection connectionString)
+        private bool TestConnectionToSqlServer(SqlConnection connectionString)
         {
             try
             {
@@ -50,7 +50,7 @@ namespace IndividualProject
             return true;
         }
 
-        private static bool CheckUsernameAndPasswordMatchInDatabase(string usernameCheck, string passphraseCheck)
+        private bool CheckUsernameAndPasswordMatchInDatabase(string usernameCheck, string passphraseCheck)
         {
             using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
             {
@@ -75,7 +75,7 @@ namespace IndividualProject
             }
         }
 
-        private static void SetCurrentUserStatusToActive(string currentUsername)
+        private void SetCurrentUserStatusToActive(string currentUsername)
         {
             try
             {
@@ -95,7 +95,7 @@ namespace IndividualProject
 
         }
 
-        private static void SetCurrentUserStatusToInactive(string currentUsername)
+        private void SetCurrentUserStatusToInactive(string currentUsername)
         {
             try
             {
@@ -112,7 +112,7 @@ namespace IndividualProject
             }
         }
 
-        public static string RetrieveCurrentUserFromDatabase()
+        public string RetrieveCurrentUserFromDatabase()
         {
             try
             {
@@ -131,7 +131,7 @@ namespace IndividualProject
 
         }
 
-        public static string RetrieveCurrentUsernameRoleFromDatabase()
+        public string RetrieveCurrentUsernameRoleFromDatabase()
         {
             try
             {
@@ -150,7 +150,7 @@ namespace IndividualProject
             }
         }
 
-        private static string RetrieveCurrentUserStatusFromDatabase()
+        private string RetrieveCurrentUserStatusFromDatabase()
         {
             try
             {
@@ -168,7 +168,7 @@ namespace IndividualProject
             }
         }
 
-        public static bool CheckUsernameAvailabilityInDatabase(string usernameCheck)
+        public bool CheckUsernameAvailabilityInDatabase(string usernameCheck)
         {
             try
             {
@@ -192,7 +192,7 @@ namespace IndividualProject
             return true;
         }
 
-        public static void InsertNewUserIntoDatabase(string pendingUsername, string pendingPassphrase, string pendingRole)
+        public void InsertNewUserIntoDatabase(string pendingUsername, string pendingPassphrase, string pendingRole)
         {
             try
             {
@@ -213,7 +213,7 @@ namespace IndividualProject
             }
         }
 
-        public static void RemoveUsernameFromDatabase(string username)
+        public void RemoveUsernameFromDatabase(string username)
         {
             try
             {
@@ -232,7 +232,7 @@ namespace IndividualProject
             }
         }
 
-        public static Dictionary<string, string> ShowAvailableUsersFromDatabase()
+        public Dictionary<string, string> ShowAvailableUsersFromDatabase()
         {
             Console.WriteLine("LIST OF USERS REGISTERED IN QUASAR\r\n");
             using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
@@ -255,7 +255,7 @@ namespace IndividualProject
             }
         }
 
-        public static int CountOpenTicketsAssignedToUser(string currentUsername)
+        public int CountOpenTicketsAssignedToUser(string currentUsername)
         {
             using (SqlConnection dbcon = new SqlConnection(Globals.connectionString))
             {
@@ -268,7 +268,7 @@ namespace IndividualProject
             }
         }
 
-        public static void SelectOpenTicketsAssignedToUser(string currentUsername)
+        public void SelectOpenTicketsAssignedToUser(string currentUsername)
         {
             try
             {
@@ -314,7 +314,7 @@ namespace IndividualProject
             }            
         }
 
-        public static void SelectSingleUserRole(string username, string currentUsername, string userRole)
+        public void SelectSingleUserRole(string username, string currentUsername, string userRole)
         {
             try
             {
@@ -361,7 +361,7 @@ namespace IndividualProject
             }            
         }
 
-        public static void OpenNewTechnicalTicket(string currentUsername, string userAssignedTo, string comment)
+        public void OpenNewTechnicalTicket(string currentUsername, string userAssignedTo, string comment)
         {
             try
             {
@@ -388,7 +388,7 @@ namespace IndividualProject
             }
         }
 
-        public static void SetTicketStatusToClosed(string currentUsername, int ticketID)
+        public void SetTicketStatusToClosed(string currentUsername, int ticketID)
         {
             try
             {
@@ -409,7 +409,7 @@ namespace IndividualProject
             }
         }
 
-        public static void EditCommentOfOpenTicket(int ID, string ticketComment)
+        public void EditCommentOfOpenTicket(int ID, string ticketComment)
         {
             try
             {
@@ -428,7 +428,7 @@ namespace IndividualProject
             }
         }
 
-        public static void SelectSingleCustomerTicket(int ticketID)
+        public void SelectSingleCustomerTicket(int ticketID)
         {
             try
             {
@@ -468,7 +468,7 @@ namespace IndividualProject
             }
         }
 
-        public static void ViewListOfOpenCustomerTickets()
+        public void ViewListOfOpenCustomerTickets()
         {
             try
             {
@@ -512,7 +512,7 @@ namespace IndividualProject
             }
         }
 
-        public static void ViewListOfAllCustomerTickets()
+        public void ViewListOfAllCustomerTickets()
         {
             try
             {
@@ -556,7 +556,7 @@ namespace IndividualProject
             }
         }
 
-        public static void DeleteCustomerTicket(string currentUsername, int ticketID)
+        public void DeleteCustomerTicket(string currentUsername, int ticketID)
         {
             try
             {
@@ -579,7 +579,7 @@ namespace IndividualProject
             }
         }
 
-        public static bool CheckIfTicketIDWithStatusOpenExistsInList(int ID)
+        public bool CheckIfTicketIDWithStatusOpenExistsInList(int ID)
         {
             try
             {
@@ -609,7 +609,7 @@ namespace IndividualProject
             return true;
         }
 
-        public static void ChangeUserAssignedTo(string nextOwner, int ID)
+        public void ChangeUserAssignedTo(string nextOwner, int ID)
         {
             try
             {
@@ -629,7 +629,7 @@ namespace IndividualProject
             }
         }
 
-        public static string SelectUserAssignedToTicket(int ticketID)
+        public string SelectUserAssignedToTicket(int ticketID)
         {
             try
             {
@@ -651,7 +651,7 @@ namespace IndividualProject
 
 
 
-        public static bool CheckIfTicketIDWithStatusOpenOrClosedExistsInList(int ID)
+        public bool CheckIfTicketIDWithStatusOpenOrClosedExistsInList(int ID)
         {
             try
             {
@@ -681,7 +681,7 @@ namespace IndividualProject
             return true;
         }
 
-        public static void TerminateQuasar()
+        public void TerminateQuasar()
         {
             string yes = "Yes";
             string no = "No";
@@ -702,7 +702,7 @@ namespace IndividualProject
             }
         }
 
-        public static void LoggingOffQuasar()
+        public void LoggingOffQuasar()
         {
             string yes = "Yes";
             string no = "No";

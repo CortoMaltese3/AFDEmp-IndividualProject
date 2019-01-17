@@ -10,8 +10,9 @@ namespace IndividualProject
     {
         public static void ViewExistingOpenTicketsFunction()
         {
-            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
-            string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
+            var _db = new ConnectToServer();
+            string currentUsername = _db.RetrieveCurrentUserFromDatabase();
+            string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
             OutputControl.QuasarScreen(currentUsername);
             ColorAndAnimationControl.UniversalLoadingOuput("Loading");
             Console.WriteLine("VIEW OPEN TECHNICAL TICKETS");
@@ -26,7 +27,7 @@ namespace IndividualProject
                 string viewTickets = SelectMenu.MenuColumn(new List<string> { viewList, viewSpecific, back }, currentUsername, listTicketsMsg).option;
                 if (viewTickets == viewList)
                 {
-                    ConnectToServer.ViewListOfOpenCustomerTickets();
+                    _db.ViewListOfOpenCustomerTickets();
                     ViewExistingOpenTicketsSubFunction();
                 }
                 else if (viewTickets == viewSpecific)
@@ -43,9 +44,10 @@ namespace IndividualProject
 
         private static void ViewExistingOpenTicketsSubFunction()
         {
-            string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
+            var _db = new ConnectToServer();
+            string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
             int TicketID = OutputControl.SelectTicketID();
-            if (ConnectToServer.CheckIfTicketIDWithStatusOpenExistsInList(TicketID) == false)
+            if (_db.CheckIfTicketIDWithStatusOpenExistsInList(TicketID) == false)
             {
                 Console.WriteLine($"There is no Customer Ticket with [ID = {TicketID}]\n\n(Press any key to go back to Main Menu)");
                 Console.ReadKey();
@@ -57,11 +59,12 @@ namespace IndividualProject
 
         public static void ViewSingleCustomerTicket(int ticketID)
         {
-            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
+            var _db = new ConnectToServer();
+            string currentUsername = _db.RetrieveCurrentUserFromDatabase();
             OutputControl.QuasarScreen(currentUsername);
             ColorAndAnimationControl.UniversalLoadingOuput("Loading");
             Console.WriteLine($"VIEW TECHNICAL TICKET WITH [ID = {ticketID}]");
-            ConnectToServer.SelectSingleCustomerTicket(ticketID);
+            _db.SelectSingleCustomerTicket(ticketID);
             Console.Write("Press any key to return");
             Console.ReadKey();
         }

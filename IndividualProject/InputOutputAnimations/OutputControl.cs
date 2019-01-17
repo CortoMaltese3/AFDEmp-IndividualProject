@@ -57,7 +57,8 @@ namespace IndividualProject
 
         public static string TicketComment()
         {
-            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
+            var _db = new ConnectToServer();
+            string currentUsername = _db.RetrieveCurrentUserFromDatabase();
             QuasarScreen(currentUsername);
             ColorAndAnimationControl.UniversalLoadingOuput("Loading");
             Console.Write("EDIT TECHNICAL TICKET");
@@ -101,8 +102,13 @@ namespace IndividualProject
 
         public static string SelectUserRole()
         {
-            string administrator = "Administrator", moderator = "Moderator", user = "User",
-                   selectionMsg = "\r\nChoose one of the following User Roles:\r\n", currentUser = ConnectToServer.RetrieveCurrentUserFromDatabase();
+            var _db = new ConnectToServer();
+            string administrator = "Administrator";
+            string moderator = "Moderator";
+            string user = "User";
+            string selectionMsg = "\r\nChoose one of the following User Roles:\r\n";
+            string currentUser = _db.RetrieveCurrentUserFromDatabase();
+
             while (true)
             {
                 string SelectUserRoleFromList = SelectMenu.MenuColumn(new List<string> { administrator, moderator, user }, currentUser, selectionMsg).option;

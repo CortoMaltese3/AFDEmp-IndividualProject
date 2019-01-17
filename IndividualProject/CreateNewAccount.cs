@@ -13,8 +13,10 @@ namespace IndividualProject
                 ColorAndAnimationControl.UniversalLoadingOuput("Please wait");
                 Console.Write("Registration Form:\r\nChoose your username and password. Both must be limited to 20 characters");
                 string username = InputControl.UsernameInput();
-                string passphrase = InputControl.PassphraseInput();
-                while (ConnectToServer.CheckUsernameAvailabilityInDatabase(username) == false)
+                string passphrase = InputControl.PassphraseInput();                
+                var _db = new ConnectToServer();
+
+                while (_db.CheckUsernameAvailabilityInDatabase(username) == false)
                 {
                     OutputControl.QuasarScreen("Not Registered");
                     Console.Write("\r\nThis username is already in use. Choose a different one.\r\n(Press any key to continue)");
@@ -31,7 +33,8 @@ namespace IndividualProject
 
         private static void CheckUsernameAvailabilityInPendingList(string usernameCheck, string passphraseCheck)
         {
-            string pendingUsernameCheck = DataToTextFile.GetPendingUsername();
+            var _text = new DataToTextFile();
+            string pendingUsernameCheck = _text.GetPendingUsername();
 
             if (pendingUsernameCheck == $"username: {usernameCheck}")
             {
@@ -40,7 +43,7 @@ namespace IndividualProject
             }
             else
             {
-                DataToTextFile.NewUsernameRequestToList(usernameCheck, passphraseCheck);
+                _text.NewUsernameRequestToList(usernameCheck, passphraseCheck);
                 OutputControl.QuasarScreen("Not Registered");
                 Console.WriteLine("\r\nNew account request is registered. Please wait for the administrator to grant you access.\n\nPress any key to return to Login Screen");
             }

@@ -5,12 +5,15 @@ namespace IndividualProject
 {
     class SuperAdminFunctions
     {
+        static ConnectToServer _db = new ConnectToServer();
+        static DataToTextFile _text = new DataToTextFile();
+
         //Handles creation/deleting/viewing/editing of users by super_admin
         public static void CreateNewUserFromRequestFunction()
         {
-            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
-            string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
-            string pendingUsername = DataToTextFile.GetPendingUsername();
+            string currentUsername = _db.RetrieveCurrentUserFromDatabase();
+            string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
+            string pendingUsername = _text.GetPendingUsername();
 
             if (pendingUsername == " ")
             {
@@ -22,7 +25,7 @@ namespace IndividualProject
             else
             {
                 pendingUsername = pendingUsername.Remove(0, 10);
-                string pendingPassphrase = DataToTextFile.GetPendingPassphrase().Remove(0, 12);
+                string pendingPassphrase = _text.GetPendingPassphrase().Remove(0, 12);
                 string yes = "Yes";
                 string no = "No";
                 string createUserMsg = $"\r\nYou are about to create a new username-password entry : {pendingUsername} - {pendingPassphrase}.\r\nWould you like to proceed?\r\n";
@@ -32,12 +35,12 @@ namespace IndividualProject
                 {
                     string pendingRole = OutputControl.SelectUserRole();
 
-                    ConnectToServer.InsertNewUserIntoDatabase(pendingUsername, pendingPassphrase, pendingRole);
+                    _db.InsertNewUserIntoDatabase(pendingUsername, pendingPassphrase, pendingRole);
                     OutputControl.QuasarScreen(currentUsername);
                     ColorAndAnimationControl.UniversalLoadingOuput("Creating new user in progress");
 
-                    DataToTextFile.ClearNewUserRegistrationList();
-                    DataToTextFile.CreateNewUserLogFile(pendingUsername);
+                    _text.ClearNewUserRegistrationList();
+                    _text.CreateNewUserLogFile(pendingUsername);
 
                     Console.WriteLine($"User {pendingUsername} has been created successfully. Status : {pendingRole}.\n\n(Press any key to continue)");
                     Console.ReadKey();
@@ -52,12 +55,12 @@ namespace IndividualProject
 
         public static void DeleteUserFromDatabase()
         {
-            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
-            string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
+            string currentUsername = _db.RetrieveCurrentUserFromDatabase();
+            string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
             OutputControl.QuasarScreen(currentUsername);
             ColorAndAnimationControl.UniversalLoadingOuput("Loading");
             Console.WriteLine("\r\nChoose a User from the list and proceed to delete.");
-            Dictionary<string, string> AvailableUsernamesDictionary = ConnectToServer.ShowAvailableUsersFromDatabase();
+            Dictionary<string, string> AvailableUsernamesDictionary = _db.ShowAvailableUsersFromDatabase();
 
             string username = InputControl.UsernameInput();
 
@@ -73,13 +76,13 @@ namespace IndividualProject
                     Console.WriteLine("Cannot delete super_admin! Please choose a different user.");
                 }
                 Console.WriteLine("\r\nChoose a User from the list and proceed to delete.");
-                AvailableUsernamesDictionary = ConnectToServer.ShowAvailableUsersFromDatabase();
+                AvailableUsernamesDictionary = _db.ShowAvailableUsersFromDatabase();
                 username = InputControl.UsernameInput();
             }
-            ConnectToServer.RemoveUsernameFromDatabase(username);
+            _db.RemoveUsernameFromDatabase(username);
             OutputControl.QuasarScreen(currentUsername);
             ColorAndAnimationControl.UniversalLoadingOuput("Deleting existing user in progress");
-            DataToTextFile.DeleteUserNotificationsLog(username);
+            _text.DeleteUserNotificationsLog(username);
             Console.WriteLine($"Username {username} has been successfully deleted from database.\n\n(Press any key to continue)");
             Console.ReadKey();
             ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
@@ -87,11 +90,11 @@ namespace IndividualProject
 
         public static void ShowAvailableUsersFunction()
         {
-            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
-            string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
+            string currentUsername = _db.RetrieveCurrentUserFromDatabase();
+            string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
             OutputControl.QuasarScreen(currentUsername);
             ColorAndAnimationControl.UniversalLoadingOuput("Loading");
-            ConnectToServer.ShowAvailableUsersFromDatabase();
+            _db.ShowAvailableUsersFromDatabase();
             Console.Write("\r\nPress any key to return to Functions menu");
             Console.ReadKey();
             ActiveUserFunctions.UserFunctionMenuScreen(currentUsernameRole);
@@ -100,10 +103,10 @@ namespace IndividualProject
         
         public static void AlterUserRoleStatus()
         {
-            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
+            string currentUsername = _db.RetrieveCurrentUserFromDatabase();
             OutputControl.QuasarScreen(currentUsername);
             ColorAndAnimationControl.UniversalLoadingOuput("Loading");
-            Dictionary<string, string> AvailableUsernamesDictionary = ConnectToServer.ShowAvailableUsersFromDatabase();
+            Dictionary<string, string> AvailableUsernamesDictionary = _db.ShowAvailableUsersFromDatabase();
             Console.WriteLine("\r\nChoose a User from the list and proceed to upgrade/downgrade Role Status");
             string username = InputControl.UsernameInput();
 
@@ -120,12 +123,12 @@ namespace IndividualProject
                 }
                 Console.ReadKey();
                 OutputControl.QuasarScreen(currentUsername);
-                AvailableUsernamesDictionary = ConnectToServer.ShowAvailableUsersFromDatabase();
+                AvailableUsernamesDictionary = _db.ShowAvailableUsersFromDatabase();
                 Console.WriteLine("\r\nChoose a User from the list and proceed to upgrade/downgrade Role Status");
                 username = InputControl.UsernameInput();
             }
             string userRole = OutputControl.SelectUserRole();
-            ConnectToServer.SelectSingleUserRole(username, currentUsername, userRole);
+            _db.SelectSingleUserRole(username, currentUsername, userRole);
         }
     }
 }

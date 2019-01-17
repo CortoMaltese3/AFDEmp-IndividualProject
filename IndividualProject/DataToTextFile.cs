@@ -10,7 +10,7 @@ namespace IndividualProject
     class DataToTextFile
     {
         //The NotificationsLog is Log History of the user's actions plus other user actions that involves the previous user.
-        public static void ViewUserNotificationsLog(string currentUser)
+        public void ViewUserNotificationsLog(string currentUser)
         {
             try
             {
@@ -31,7 +31,7 @@ namespace IndividualProject
 
         }
 
-        public static void DeleteUserNotificationsLog(string userToBeDeleted)
+        public void DeleteUserNotificationsLog(string userToBeDeleted)
         {
             try
             {
@@ -46,7 +46,7 @@ namespace IndividualProject
 
         }
 
-        public static void CloseTicketToUserNotification(string userClosingTheTicket, string previousTicketOwner, int ticketID)
+        public void CloseTicketToUserNotification(string userClosingTheTicket, string previousTicketOwner, int ticketID)
         {
             try
             {
@@ -63,7 +63,7 @@ namespace IndividualProject
             }
         }
 
-        public static void AssignTicketToUserNotification(string currentUserAssigning, string UserAssigningTicketTo)
+        public void AssignTicketToUserNotification(string currentUserAssigning, string UserAssigningTicketTo)
         {
             try
             {
@@ -81,7 +81,7 @@ namespace IndividualProject
         }
 
         //Gets the passphrase requested from the new user registrations list
-        public static string GetPendingPassphrase()
+        public string GetPendingPassphrase()
         {
             try
             {
@@ -97,7 +97,7 @@ namespace IndividualProject
         }
 
         //Gets the username requested from the new user registrations list
-        public static string GetPendingUsername()
+        public string GetPendingUsername()
         {
             try
             {
@@ -116,7 +116,7 @@ namespace IndividualProject
         }
 
         //Creates a folder path in which a text file will be created
-        public static void CreateDirectoryAndFile(string folderPath, string filePath)
+        public void CreateDirectoryAndFile(string folderPath, string filePath)
         {
             Directory.CreateDirectory(folderPath);
             if (!File.Exists(Globals.newUserRequestPath))
@@ -128,7 +128,7 @@ namespace IndividualProject
             }
         }
 
-        public static void NewUsernameRequestToList(string usernameAdd, string passphraseAdd)
+        public void NewUsernameRequestToList(string usernameAdd, string passphraseAdd)
         {
             try
             {
@@ -142,7 +142,7 @@ namespace IndividualProject
         }
 
         //Clears the new user registrations List to be used from the next user registering
-        public static void ClearNewUserRegistrationList()
+        public void ClearNewUserRegistrationList()
         {
             try
             {
@@ -156,7 +156,7 @@ namespace IndividualProject
         }
 
         //Creates a text file for the new user to be used as a notifications log
-        public static void CreateNewUserLogFile(string pendingUsername)
+        public void CreateNewUserLogFile(string pendingUsername)
         {
             try
             {
@@ -174,7 +174,7 @@ namespace IndividualProject
         }
 
         //Deletes a user's Notification Log if the admin removes him from the Database
-        public static void DeleteTicketToUserNotification(string userDeletingTheTicket, string previousTicketOwner, int ticketID)
+        public void DeleteTicketToUserNotification(string userDeletingTheTicket, string previousTicketOwner, int ticketID)
         {
             try
             {

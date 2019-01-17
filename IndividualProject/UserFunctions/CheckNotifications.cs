@@ -9,12 +9,15 @@ namespace IndividualProject
     {
         public static void CheckUserNotifications()
         {
-            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
-            string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
+            var _db = new ConnectToServer();
+            var _text = new DataToTextFile();
+
+            string currentUsername = _db.RetrieveCurrentUserFromDatabase();
+            string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
             OutputControl.QuasarScreen(currentUsername);
             ColorAndAnimationControl.UniversalLoadingOuput("Loading");
 
-            int countTickets = ConnectToServer.CountOpenTicketsAssignedToUser(currentUsername);
+            int countTickets = _db.CountOpenTicketsAssignedToUser(currentUsername);
             string showListOfTickets = "Show List of Tickets";
             string back = "\r\nBack";
             string showNotificationsLog = "Show notifications Log";
@@ -31,7 +34,7 @@ namespace IndividualProject
                 }
                 else
                 {
-                    ConnectToServer.SelectOpenTicketsAssignedToUser(currentUsername);
+                    _db.SelectOpenTicketsAssignedToUser(currentUsername);
                     Console.WriteLine("(Press any key to continue)");
                     Console.ReadKey();
                     CheckUserNotifications();
@@ -39,7 +42,7 @@ namespace IndividualProject
             }
             else if (viewNotificationsList == showNotificationsLog)
             {
-                DataToTextFile.ViewUserNotificationsLog(currentUsername);
+                _text.ViewUserNotificationsLog(currentUsername);
                 Console.WriteLine("(Press any key to continue)");
                 Console.ReadKey();
                 CheckUserNotifications();
@@ -52,11 +55,14 @@ namespace IndividualProject
 
         public static void CheckAdminNotifications()
         {
-            string currentUsername = ConnectToServer.RetrieveCurrentUserFromDatabase();
-            string currentUsernameRole = ConnectToServer.RetrieveCurrentUsernameRoleFromDatabase();
+            var _db = new ConnectToServer();
+            var _text = new DataToTextFile();
+
+            string currentUsername = _db.RetrieveCurrentUserFromDatabase();
+            string currentUsernameRole = _db.RetrieveCurrentUsernameRoleFromDatabase();
             OutputControl.QuasarScreen(currentUsername);
             ColorAndAnimationControl.UniversalLoadingOuput("Loading");
-            string pendingUsernameCheck = DataToTextFile.GetPendingUsername();            
+            string pendingUsernameCheck = _text.GetPendingUsername();            
 
             if (pendingUsernameCheck == " ")
             {
